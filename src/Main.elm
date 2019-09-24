@@ -4,6 +4,7 @@ import Browser
 import Html exposing (Html, button, div, li, text, ul)
 import Html.Attributes exposing (class, id, style)
 import Html.Events exposing (onClick)
+import Set exposing (Set)
 
 
 port insertBeforeChild : String -> Cmd msg
@@ -12,21 +13,25 @@ port insertBeforeChild : String -> Cmd msg
 port removeChild : String -> Cmd msg
 
 
-port done : (() -> msg) -> Sub msg
+port done : (String -> msg) -> Sub msg
 
 
 type Msg
     = InsertBeforeChild String
     | RemoveChild String
-    | Done
+    | Done String
 
 
-main : Program () String Msg
+type alias Model =
+    Set String
+
+
+main : Program () Model Msg
 main =
     Browser.element
-        { init = \_ -> ( "before", Cmd.none )
+        { init = \_ -> ( Set.empty, Cmd.none )
         , update = update
-        , subscriptions = \_ -> done (always Done)
+        , subscriptions = \_ -> done Done
         , view =
             \model ->
                 ul []
@@ -44,7 +49,7 @@ main =
         }
 
 
-update : Msg -> String -> ( String, Cmd Msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         InsertBeforeChild id ->
@@ -53,8 +58,8 @@ update msg model =
         RemoveChild id ->
             ( model, removeChild id )
 
-        Done ->
-            ( "after", Cmd.none )
+        Done id ->
+            ( Set.insert id model, Cmd.none )
 
 
 wrap : (String -> Msg) -> String -> Html Msg -> Html Msg
@@ -65,99 +70,124 @@ wrap toMsg id_ content =
         ]
 
 
+beforeOrAfter : String -> Model -> String
+beforeOrAfter id model =
+    if Set.member id model then
+        "after"
+
+    else
+        "before"
+
+
 
 -- INSERT <div>PLUGIN NODE</div> BEFORE "#child"
 
 
 {-| Cannot read property 'replaceData' of undefined
 -}
-insert1 : String -> Html Msg
+insert1 : Model -> Html Msg
 insert1 model =
     wrap InsertBeforeChild "insert1" <|
-        div [ class "parent" ] [ div [ class "child" ] [ div [] [ text model ] ] ]
+        div [ class "parent" ] [ div [ class "child" ] [ div [] [ text (beforeOrAfter "insert1" model) ] ] ]
 
 
 {-| domNode.replaceData is not a function
 -}
-insert2 : String -> Html Msg
+insert2 : Model -> Html Msg
 insert2 model =
     wrap InsertBeforeChild "insert2" <|
-        div [ class "parent" ] [ div [ class "child" ] [], text model ]
+        div [ class "parent" ] [ div [ class "child" ] [], text (beforeOrAfter "insert2" model) ]
 
 
 {-| Expected:
 
-    <div class="parent"><div>PLUGIN NODE</div><div class="child">after</div></div>
+    <div class="parent">
+        <div>PLUGIN NODE</div>
+        <div class="child">after</div>
+    </div>
 
 Actual:
 
-    <div class="parent"><div>after</div><div class="child">before</div></div>
+    <div class="parent">
+        <div>after</div>
+        <div class="child">before</div>
+    </div>
 
 -}
-insert3 : String -> Html Msg
+insert3 : Model -> Html Msg
 insert3 model =
     wrap InsertBeforeChild "insert3" <|
-        div [ class "parent" ] [ div [ class "child" ] [ text model ] ]
+        div [ class "parent" ] [ div [ class "child" ] [ text (beforeOrAfter "insert3" model) ] ]
 
 
 {-| Expected:
 
-    <div class="parent"><div>PLUGIN NODE</div><div class="child after"></div></div>
+    <div class="parent">
+        <div>PLUGIN NODE</div>
+        <div class="child after"></div>
+    </div>
 
 Actual:
 
-    <div class="parent"><div class="after">PLUGIN NODE</div><div class="child before"></div></div>
+    <div class="parent">
+        <div class="after">PLUGIN NODE</div>
+        <div class="child before"></div>
+    </div>
 
 -}
-insert4 : String -> Html Msg
+insert4 : Model -> Html Msg
 insert4 model =
     wrap InsertBeforeChild "insert4" <|
-        div [ class "parent" ] [ div [ class "child", class model ] [] ]
+        div [ class "parent" ] [ div [ class "child", class (beforeOrAfter "insert4" model) ] [] ]
 
 
 {-| No error
 -}
-insert5 : String -> Html Msg
+insert5 : Model -> Html Msg
 insert5 model =
     wrap InsertBeforeChild "insert5" <|
-        div [ class "parent" ] [ text model, div [ class "child" ] [] ]
+        div [ class "parent" ] [ text (beforeOrAfter "insert5" model), div [ class "child" ] [] ]
+
+
+
+-- REMOVE "#child"
 
 
 {-| Cannot read property 'childNodes' of undefined
 -}
-remove1 : String -> Html Msg
+remove1 : Model -> Html Msg
 remove1 model =
     wrap RemoveChild "remove1" <|
-        div [ class "parent" ] [ div [ class "child" ] [ text model ] ]
+        div [ class "parent" ] [ div [ class "child" ] [ text (beforeOrAfter "remove1" model) ] ]
 
 
 {-| Cannot read property 'childNodes' of undefined
 -}
-remove2 : String -> Html Msg
+remove2 : Model -> Html Msg
 remove2 model =
     wrap RemoveChild "remove2" <|
-        div [ class "parent" ] [ div [ class "child" ] [ div [] [ text model ] ] ]
+        div [ class "parent" ] [ div [ class "child" ] [ div [] [ text (beforeOrAfter "remove2" model) ] ] ]
 
 
 {-| Cannot read property 'replaceData' of undefined
 -}
-remove3 : String -> Html Msg
+remove3 : Model -> Html Msg
 remove3 model =
     wrap RemoveChild "remove3" <|
-        div [ class "parent" ] [ div [ class "child" ] [], text model ]
+        div [ class "parent" ] [ div [ class "child" ] [], text (beforeOrAfter "remove3" model) ]
 
 
 {-| Cannot set property 'className' of undefined
 -}
-remove4 : String -> Html Msg
+remove4 : Model -> Html Msg
 remove4 model =
     wrap RemoveChild "remove4" <|
-        div [ class "parent" ] [ div [ class "child", class model ] [] ]
+        div [ class "parent" ] [ div [ class "child", class (beforeOrAfter "remove4" model) ] [] ]
 
 
 {-| No error
 -}
-remove5 : String -> Html Msg
+remove5 : Model -> Html Msg
 remove5 model =
     wrap RemoveChild "remove5" <|
-        div [ class "parent" ] [ text model, div [ class "child" ] [] ]
+        div [ class "parent" ] [ text (beforeOrAfter "remove5" model), div [ class "child" ] [] ]

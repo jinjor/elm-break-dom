@@ -14,12 +14,12 @@
         const el = document.createElement("div");
         el.append("PLUGIN NODE");
         parent.insertBefore(el, child);
-        app.ports.done.send(null);
+        app.ports.done.send(id);
       });
       app.ports.removeChild.subscribe(id => {
         const child = document.querySelector(`#${id} .child`);
         child.remove();
-        app.ports.done.send(null);
+        app.ports.done.send(id);
       });
     </script>
   </body>
