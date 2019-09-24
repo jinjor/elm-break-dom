@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <script src="js/insertion.js"></script>
+  </head>
+  <body>
+    hoge
+    <div id="root"></div>
+    <script>
+      const app = Elm.Insertion.init({
+        node: document.getElementById("root")
+      });
+      app.ports.break.subscribe(() => {
+        const child = document.getElementById("child");
+        const el = document.createElement("div");
+        el.append("PLUGIN NODE");
+        document.getElementById("parent").insertBefore(el, child);
+        app.ports.broke.send("bye");
+      });
+    </script>
+  </body>
+</html>
