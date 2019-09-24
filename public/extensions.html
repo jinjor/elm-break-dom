@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <script src="js/extensions.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const app = Elm.Extensions.init({
+        node: document.getElementById("root")
+      });
+      app.ports.focusTextarea.subscribe(id => {
+        const textarea = document.querySelector(`#${id} textarea`);
+        textarea.focus();
+        textarea.blur();
+        app.ports.done.send(null);
+      });
+    </script>
+  </body>
+</html>
