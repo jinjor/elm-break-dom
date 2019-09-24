@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <script src="js/elm.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const app = Elm.Main.init({
+        node: document.getElementById("root")
+      });
+      app.ports.insertBeforeChild.subscribe(id => {
+        const parent = document.querySelector(`#${id} .parent`);
+        const child = document.querySelector(`#${id} .child`);
+        const el = document.createElement("div");
+        el.append("PLUGIN NODE");
+        parent.insertBefore(el, child);
+        app.ports.done.send(null);
+      });
+      app.ports.removeChild.subscribe(id => {
+        const child = document.querySelector(`#${id} .child`);
+        child.remove();
+        app.ports.done.send(null);
+      });
+    </script>
+  </body>
+</html>

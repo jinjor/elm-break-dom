@@ -1,3 +1,2 @@
 #!/bin/bash
-elm make src/Insertion.elm --output=public/js/insertion.js
-elm make src/Removal.elm --output=public/js/removal.js
+elm make src/Main.elm --output=public/js/elm.js
