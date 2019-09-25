@@ -51,9 +51,11 @@ This test coveres problematic cases of well-known extensions.
 Since this test cannot be covered by puppeteer, you need to see the result on your Chrome.
 Turn on and off the your extensions to see how the results change.
 
+For the case of inserting elements into the top of `<body>`, you can try patched version too.
+
 ## Known Extensions
 
-Describing where and when an element is inserted.
+Describing where and when an element is inserted. More informarion is welcome.
 
 | Plugin (Users)               | Where                       | When                     | Workaround                        |
 | :--------------------------- | :-------------------------- | :----------------------- | :-------------------------------- |
