@@ -1,7 +1,6 @@
 <html>
   <head>
     <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
-    <script src="./js/extensions.js"></script>
   </head>
   <body>
     <script src="https://unpkg.com/mocha/mocha.js"></script>
@@ -88,20 +87,43 @@
 
     <div id="root"></div>
     <script>
+      const patchMode =
+        new URLSearchParams(location.search).get("src") === "patched";
       const elementMode =
         new URLSearchParams(location.search).get("main") === "element";
-      const main = elementMode ? Elm.Element : Elm.Application;
-      const app = main.init({
-        node: document.getElementById("root")
-      });
-      app.ports.focusTextarea.subscribe(id => {
-        const textarea = document.querySelector(`#${id} textarea`);
-        textarea.focus();
-        setTimeout(() => {
-          textarea.blur();
-          app.ports.done.send(id);
-        }, 30);
-      });
+      const src = patchMode ? "js/extensions-patched.js" : "js/extensions.js";
+      requireScript(src).then(initElm);
+
+      function requireScript(src) {
+        return new Promise((resolve, reject) => {
+          if (document.querySelector(`script[src="${src}"]`)) {
+            return resolve();
+          }
+          const script = document.createElement("script");
+          script.src = src;
+          document.head.appendChild(script);
+          script.onload = function() {
+            resolve();
+          };
+          script.onerror = function(e) {
+            reject(new Error("Failed to load " + src));
+          };
+        });
+      }
+      function initElm() {
+        const main = elementMode ? Elm.Element : Elm.Application;
+        const app = main.init({
+          node: document.getElementById("root")
+        });
+        app.ports.focusTextarea.subscribe(id => {
+          const textarea = document.querySelector(`#${id} textarea`);
+          textarea.focus();
+          setTimeout(() => {
+            textarea.blur();
+            app.ports.done.send(id);
+          }, 30);
+        });
+      }
     </script>
   </body>
 </html>

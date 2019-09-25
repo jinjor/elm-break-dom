@@ -2,7 +2,7 @@ port module Extensions exposing (Model, Msg, init, main, noop, onUrlRequest, sub
 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
-import Html exposing (Html, a, button, div, form, h2, hr, li, text, textarea, ul)
+import Html exposing (Html, a, button, div, form, h1, h2, hr, li, text, textarea, ul)
 import Html.Attributes exposing (class, href, id, rows, style, target, value)
 import Html.Events exposing (onClick)
 import Set exposing (Set)
@@ -84,20 +84,35 @@ view model =
     div []
         [ div [ id "mocha" ]
             [ div [ class "suite" ]
-                [ h2 []
-                    [ div
-                        [ style "margin-bottom" "1em" ]
-                        [ a
-                            [ target "_blank"
-                            , href "https://github.com/jinjor/elm-break-dom"
-                            ]
-                            [ text "Source (GitHub)" ]
+                [ h2
+                    [ style "margin-bottom" "1em" ]
+                    [ a
+                        [ target "_blank"
+                        , href "https://github.com/jinjor/elm-break-dom"
                         ]
-                    , ul []
-                        [ li [] [ text "- ", a [ href "?" ] [ text "application" ] ]
-                        , li [] [ text "- ", a [ href "?main=element" ] [ text "element" ] ]
-                        , li [] [ text "- ", a [ href "?test=manual" ] [ text "application (manual)" ] ]
-                        , li [] [ text "- ", a [ href "?main=element&test=manual" ] [ text "element (manual)" ] ]
+                        [ text "Source (GitHub)" ]
+                    ]
+                ]
+            , div [ class "suite" ]
+                [ h1 [] [ text "Variations" ]
+                , ul []
+                    [ li [ class "suite" ]
+                        [ h1 [] [ text "Original" ]
+                        , ul []
+                            [ li [ class "test" ] [ h2 [] [ a [ href "?" ] [ text "application" ] ] ]
+                            , li [ class "test" ] [ h2 [] [ a [ href "?main=element" ] [ text "element" ] ] ]
+                            , li [ class "test" ] [ h2 [] [ a [ href "?test=manual" ] [ text "application (manual)" ] ] ]
+                            , li [ class "test" ] [ h2 [] [ a [ href "?main=element&test=manual" ] [ text "element (manual)" ] ] ]
+                            ]
+                        ]
+                    , li [ class "suite" ]
+                        [ h1 [] [ text "Patched" ]
+                        , ul []
+                            [ li [ class "test" ] [ h2 [] [ a [ href "?src=patched" ] [ text "application" ] ] ]
+                            , li [ class "test" ] [ h2 [] [ a [ href "?src=patched&main=element" ] [ text "element" ] ] ]
+                            , li [ class "test" ] [ h2 [] [ a [ href "?src=patched&test=manual" ] [ text "application (manual)" ] ] ]
+                            , li [ class "test" ] [ h2 [] [ a [ href "?src=patched&main=element&test=manual" ] [ text "element (manual)" ] ] ]
+                            ]
                         ]
                     ]
                 ]
