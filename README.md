@@ -32,11 +32,13 @@ npm run test:extensions # Note: some extensions work only on served pages
 
 Describing where and when an element is inserted.
 
-| Plugin (Users)               | Where                  | When                  | Workaround                         |
-| :--------------------------- | :--------------------- | :-------------------- | :--------------------------------- |
-| [Grammarly][1] (10,000,000+) | **middle in `<body>`** | focus on `<textarea>` | [`data-gramm_editor="false"`][1-1] |
-| [ChromeVox][2] (161,918)     | **top in `<body>`**    | laod                  | ?                                  |
+| Plugin (Users)               | Where                       | When                  | Workaround                         |
+| :--------------------------- | :-------------------------- | :-------------------- | :--------------------------------- |
+| [Grammarly][1] (10,000,000+) | **middle in `<body>`**      | focus on `<textarea>` | [`data-gramm_editor="false"`][1-1] |
+| [ChromeVox][2] (161,918)     | **top in `<body>`**         | load                  | ?                                  |
+| [Viber][3] (133,220)         | **top, bottom in `<body>`** | load                  | ?                                  |
 
 [1]: https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
 [1-1]: https://github.com/elm/html/issues/44#issuecomment-534665947
 [2]: https://chrome.google.com/webstore/detail/chromevox-classic-extensi/kgejglhpjiefppelpmljglcjbhoiplfn
+[3]: https://chrome.google.com/webstore/detail/viber/dafalpmmoljglecaoelijmbkhpdoobmm

@@ -24,11 +24,10 @@
               }
             });
           });
-          describe("ChromeVox", function() {
+          describe("First update (for ChromeVox or Viber)", function() {
             it("should update dom after inserting element", async function() {
-              document.querySelector("#update button").click(); // insert element
-              await new Promise(resolve => setTimeout(resolve, 100));
-              document.querySelector("#update button").click(); // update dom
+              await new Promise(resolve => setTimeout(resolve, 100)); // wait for inserting ChromeVox
+              document.querySelector("#update button").click();
               await new Promise(resolve => setTimeout(resolve, 100));
               if (error) {
                 throw error;
@@ -63,16 +62,6 @@
                 throw new Error("not found: textarea.after");
               }
             });
-            afterEach(function() {
-              if (
-                !document.getElementsByTagName("grammarly-extension").length
-              ) {
-                console.log("WARN: Grammarly has not been tested.");
-              }
-            });
-          });
-          describe("Vibar", function() {
-            it("TODO", async function() {});
           });
           afterEach(function() {
             if (error) {
