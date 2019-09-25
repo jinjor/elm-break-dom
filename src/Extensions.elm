@@ -1,10 +1,12 @@
-port module Extensions exposing (main)
+port module Extensions exposing (Model, Msg, init, main, noop, onUrlRequest, subscriptions, update, view)
 
-import Browser
-import Html exposing (Html, button, form, li, text, textarea, ul)
-import Html.Attributes exposing (class, id, rows, style, value)
+import Browser exposing (UrlRequest(..))
+import Browser.Navigation as Nav
+import Html exposing (Html, a, button, div, form, h2, hr, li, text, textarea, ul)
+import Html.Attributes exposing (class, href, id, rows, style, target, value)
 import Html.Events exposing (onClick)
 import Set exposing (Set)
+import Url
 
 
 port focusTextarea : String -> Cmd msg
@@ -14,8 +16,20 @@ port done : (String -> msg) -> Sub msg
 
 
 type Msg
-    = FocusTextarea String
+    = NoOp
+    | UrlRequest UrlRequest
+    | FocusTextarea String
     | Done String
+
+
+onUrlRequest : UrlRequest -> Msg
+onUrlRequest =
+    UrlRequest
+
+
+noop : Msg
+noop =
+    NoOp
 
 
 type alias Model =
@@ -25,27 +39,76 @@ type alias Model =
 main : Program () Model Msg
 main =
     Browser.element
-        { init = \_ -> ( Set.empty, Cmd.none )
+        { init = init
         , update = update
-        , subscriptions = \_ -> done Done
-        , view =
-            \model ->
-                ul []
-                    [ textarea1 model
-                    , textarea2 model
-                    , textarea3 model
-                    ]
+        , subscriptions = subscriptions
+        , view = view
         }
+
+
+init : () -> ( Model, Cmd Msg )
+init _ =
+    ( Set.empty, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
+        UrlRequest urlRequest ->
+            ( model
+            , case urlRequest of
+                Internal url ->
+                    Nav.load (Url.toString url)
+
+                External url ->
+                    Nav.load url
+            )
+
         FocusTextarea id ->
             ( model, focusTextarea id )
 
         Done id ->
             ( Set.insert id model, Cmd.none )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    done Done
+
+
+view : Model -> Html Msg
+view model =
+    div []
+        [ div [ id "mocha" ]
+            [ div [ class "suite" ]
+                [ h2 []
+                    [ div
+                        [ style "margin-bottom" "1em" ]
+                        [ a
+                            [ target "_blank"
+                            , href "https://github.com/jinjor/elm-break-dom"
+                            ]
+                            [ text "Source (GitHub)" ]
+                        ]
+                    , ul []
+                        [ div [] [ text "- ", a [ href "?" ] [ text "application" ] ]
+                        , div [] [ text "- ", a [ href "?test=manual" ] [ text "application (manual)" ] ]
+                        , div [] [ text "- ", a [ href "?main=element" ] [ text "element" ] ]
+                        , div [] [ text "- ", a [ href "?main=element&test=manual" ] [ text "element (manual)" ] ]
+                        ]
+                    ]
+                ]
+            ]
+        , hr [] []
+        , ul []
+            [ textarea1 model
+            , textarea2 model
+            , textarea3 model
+            ]
+        ]
 
 
 wrap : (String -> Msg) -> String -> Html Msg -> Html Msg

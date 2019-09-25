@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "npm run test:basics && npm run test:extensions",
-    "test:basics": "./build.sh && mocha test/test.js",
+    "build": "./build.sh",
+    "test": "run-s test:basics test:extensions",
+    "test:basics": "mocha test/test.js",
     "test:extensions": "run-p server open",
-    "server": "http-server",
+    "server": "http-server -c-1",
     "open": "open-cli http://localhost:8080/"
   },
   "author": "",
