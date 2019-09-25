@@ -27,3 +27,15 @@ Run extension tests (manually with your chrome).
 ```shell
 npm run test:extensions # Note: some extensions work only on served pages
 ```
+
+## Known Plugins
+
+| Plugin (Users)               | Where in `<body>` | When to insert        | Workaround                         |
+| :--------------------------- | :---------------- | :-------------------- | :--------------------------------- |
+| [Grammarly][1] (10,000,000+) | ?                 | ?                     | ?                                  |
+|                              | middle            | focus on `<textarea>` | [`data-gramm_editor="false"`][1-1] |
+| [ChromeVox][2] (161,918)     | ?                 | ?                     | ?                                  |
+
+[1]: https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
+[1-1]: https://github.com/elm/html/issues/44#issuecomment-534665947
+[2]: https://chrome.google.com/webstore/detail/chromevox-classic-extensi/kgejglhpjiefppelpmljglcjbhoiplfn
