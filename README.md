@@ -30,11 +30,12 @@ npm run test:extensions # Note: some extensions work only on served pages
 
 ## Known Plugins
 
-| Plugin (Users)               | Where in `<body>` | When to insert        | Workaround                         |
-| :--------------------------- | :---------------- | :-------------------- | :--------------------------------- |
-| [Grammarly][1] (10,000,000+) | ?                 | ?                     | ?                                  |
-|                              | middle            | focus on `<textarea>` | [`data-gramm_editor="false"`][1-1] |
-| [ChromeVox][2] (161,918)     | ?                 | ?                     | ?                                  |
+Describing where and when an element is inserted.
+
+| Plugin (Users)               | Where                  | When                  | Workaround                         |
+| :--------------------------- | :--------------------- | :-------------------- | :--------------------------------- |
+| [Grammarly][1] (10,000,000+) | **middle in `<body>`** | focus on `<textarea>` | [`data-gramm_editor="false"`][1-1] |
+| [ChromeVox][2] (161,918)     | **top in `<body>`**    | laod                  | ?                                  |
 
 [1]: https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
 [1-1]: https://github.com/elm/html/issues/44#issuecomment-534665947
