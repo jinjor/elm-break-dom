@@ -1,10 +1,15 @@
 const puppeteer = require("puppeteer");
 const assert = require("assert");
 const express = require("express");
+const fs = require("fs");
+const rimraf = require("rimraf");
 
 const headless = process.env.HEADLESS === "false" ? false : true;
 
-describe("All", function() {
+rimraf.sync("screenshots");
+fs.mkdirSync("screenshots");
+
+describe("Basics", function() {
   this.slow(1000);
   let browser;
   let page;
@@ -16,7 +21,7 @@ describe("All", function() {
       error = e;
     });
     await page.goto(`file://${__dirname}/../public/basics.html`);
-    await page.screenshot({ path: "screenshots/basics-init.png" });
+    await page.screenshot({ path: "screenshots/basics-before.png" });
   });
   beforeEach(async function() {
     error = undefined;
@@ -128,6 +133,7 @@ describe("No extensions", function() {
       it("passes all tests without extension", async function() {
         await page.goto(`http://localhost:${port}?main=${main}`);
         await page.waitForSelector("ul");
+        await page.screenshot({ path: `screenshots/${main}-before.png` });
 
         for (let i = 0; i < 20; i++) {
           await page.waitFor(100);
