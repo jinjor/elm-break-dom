@@ -9,6 +9,9 @@ import Set exposing (Set)
 import Url
 
 
+port insertIntoBody : Bool -> Cmd msg
+
+
 port insertBeforeChild : String -> Cmd msg
 
 
@@ -21,6 +24,7 @@ port done : (String -> msg) -> Sub msg
 type Msg
     = NoOp
     | UrlRequest UrlRequest
+    | InsertIntoBody Bool
     | InsertBeforeChild String
     | RemoveChild String
     | Done String
@@ -71,6 +75,9 @@ update msg model =
                     Nav.load url
             )
 
+        InsertIntoBody top ->
+            ( model, insertIntoBody top )
+
         InsertBeforeChild id ->
             ( model, insertBeforeChild id )
 
@@ -89,7 +96,9 @@ subscriptions _ =
 view : Model -> Html Msg
 view model =
     ul []
-        [ insert1 model
+        [ insertIntoBody1 model
+        , insertIntoBody2 model
+        , insert1 model
         , insert2 model
         , insert3 model
         , insert4 model
@@ -120,7 +129,25 @@ beforeOrAfter id model =
 
 
 
--- INSERT <div>PLUGIN NODE</div> BEFORE "#child"
+-- INSERT INTO <body>
+
+
+{-| -}
+insertIntoBody1 : Model -> Html Msg
+insertIntoBody1 _ =
+    wrap (always (InsertIntoBody True)) "insert-into-body1" <|
+        text ""
+
+
+{-| -}
+insertIntoBody2 : Model -> Html Msg
+insertIntoBody2 _ =
+    wrap (always (InsertIntoBody False)) "insert-into-body2" <|
+        text ""
+
+
+
+-- INSERT <div>EXTENSION NODE</div> BEFORE "#child"
 
 
 {-| Cannot read property 'replaceData' of undefined
@@ -131,18 +158,10 @@ insert1 model =
         div [ class "parent" ] [ div [ class "child" ] [ div [] [ text (beforeOrAfter "insert1" model) ] ] ]
 
 
-{-| domNode.replaceData is not a function
--}
-insert2 : Model -> Html Msg
-insert2 model =
-    wrap InsertBeforeChild "insert2" <|
-        div [ class "parent" ] [ div [ class "child" ] [], text (beforeOrAfter "insert2" model) ]
-
-
 {-| Expected:
 
     <div class="parent">
-        <div>PLUGIN NODE</div>
+        <div>EXTENSION NODE</div>
         <div class="child">after</div>
     </div>
 
@@ -154,23 +173,31 @@ Actual:
     </div>
 
 -}
+insert2 : Model -> Html Msg
+insert2 model =
+    wrap InsertBeforeChild "insert2" <|
+        div [ class "parent" ] [ div [ class "child" ] [ text (beforeOrAfter "insert2" model) ] ]
+
+
+{-| domNode.replaceData is not a function
+-}
 insert3 : Model -> Html Msg
 insert3 model =
     wrap InsertBeforeChild "insert3" <|
-        div [ class "parent" ] [ div [ class "child" ] [ text (beforeOrAfter "insert3" model) ] ]
+        div [ class "parent" ] [ div [ class "child" ] [], text (beforeOrAfter "insert3" model) ]
 
 
 {-| Expected:
 
     <div class="parent">
-        <div>PLUGIN NODE</div>
+        <div>EXTENSION NODE</div>
         <div class="child after"></div>
     </div>
 
 Actual:
 
     <div class="parent">
-        <div class="after">PLUGIN NODE</div>
+        <div class="after">EXTENSION NODE</div>
         <div class="child before"></div>
     </div>
 
