@@ -4,8 +4,56 @@
   </head>
   <body>
     <script src="https://unpkg.com/mocha/mocha.js"></script>
+    <script></script>
+
+    <div id="root"></div>
     <script>
-      setTimeout(() => {
+      const patchMode =
+        new URLSearchParams(location.search).get("src") === "patched";
+      const elementMode =
+        new URLSearchParams(location.search).get("main") === "element";
+      const manualMode =
+        new URLSearchParams(location.search).get("test") === "manual";
+
+      (async () => {
+        const src = patchMode ? "js/extensions-patched.js" : "js/extensions.js";
+        await requireScript(src);
+        initElm();
+        await new Promise(resolve => setTimeout(resolve, 100));
+        runMocha();
+      })();
+
+      function requireScript(src) {
+        return new Promise((resolve, reject) => {
+          if (document.querySelector(`script[src="${src}"]`)) {
+            return resolve();
+          }
+          const script = document.createElement("script");
+          script.src = src;
+          document.head.appendChild(script);
+          script.onload = function() {
+            resolve();
+          };
+          script.onerror = function(e) {
+            reject(new Error("Failed to load " + src));
+          };
+        });
+      }
+      function initElm() {
+        const main = elementMode ? Elm.Element : Elm.Application;
+        const app = main.init({
+          node: document.getElementById("root")
+        });
+        app.ports.focusTextarea.subscribe(id => {
+          const textarea = document.querySelector(`#${id} textarea`);
+          textarea.focus();
+          setTimeout(() => {
+            textarea.blur();
+            app.ports.done.send(id);
+          }, 30);
+        });
+      }
+      function runMocha() {
         mocha.setup("bdd");
         describe("Extentions", function() {
           this.slow(1000);
@@ -77,52 +125,9 @@
             console.log("done");
           });
         });
-        const manualMode =
-          new URLSearchParams(location.search).get("test") === "manual";
         if (!manualMode) {
           mocha.run();
         }
-      }, 100);
-    </script>
-
-    <div id="root"></div>
-    <script>
-      const patchMode =
-        new URLSearchParams(location.search).get("src") === "patched";
-      const elementMode =
-        new URLSearchParams(location.search).get("main") === "element";
-      const src = patchMode ? "js/extensions-patched.js" : "js/extensions.js";
-      requireScript(src).then(initElm);
-
-      function requireScript(src) {
-        return new Promise((resolve, reject) => {
-          if (document.querySelector(`script[src="${src}"]`)) {
-            return resolve();
-          }
-          const script = document.createElement("script");
-          script.src = src;
-          document.head.appendChild(script);
-          script.onload = function() {
-            resolve();
-          };
-          script.onerror = function(e) {
-            reject(new Error("Failed to load " + src));
-          };
-        });
-      }
-      function initElm() {
-        const main = elementMode ? Elm.Element : Elm.Application;
-        const app = main.init({
-          node: document.getElementById("root")
-        });
-        app.ports.focusTextarea.subscribe(id => {
-          const textarea = document.querySelector(`#${id} textarea`);
-          textarea.focus();
-          setTimeout(() => {
-            textarea.blur();
-            app.ports.done.send(id);
-          }, 30);
-        });
       }
     </script>
   </body>
