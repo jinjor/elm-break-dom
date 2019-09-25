@@ -4,20 +4,11 @@
     <script src="js/extensions.js"></script>
   </head>
   <body>
-    <div id="mocha">
-      <div id="run">
-        <button id="run-button">Run Tests</button>
-      </div>
-    </div>
-
+    <div id="mocha"></div>
     <script src="https://unpkg.com/mocha/mocha.js"></script>
     <script class="mocha-init">
       mocha.setup("bdd");
       mocha.checkLeaks();
-      document.getElementById("run-button").onclick = () => {
-        document.getElementById("run").remove();
-        mocha.run();
-      };
     </script>
     <script>
       describe("Extentions", function() {
@@ -58,7 +49,7 @@
           });
           afterEach(function() {
             if (!document.getElementsByTagName("grammarly-extension").length) {
-              throw new Error("Grammarly has not been tested.");
+              console.log("WARN: Grammarly has not been tested.");
             }
           });
         });
@@ -72,9 +63,9 @@
         });
       });
     </script>
-    <!-- <script class="mocha-exec">
+    <script class="mocha-exec">
       mocha.run();
-    </script> -->
+    </script>
 
     <hr />
     <!------------------------------------------------------------------------>
