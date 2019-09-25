@@ -7,7 +7,7 @@
     "test:basics": "./build.sh && mocha test/test.js",
     "test:extensions": "run-p server open",
     "server": "http-server",
-    "open": "open-cli http://localhost:8080/extensions.html"
+    "open": "open-cli http://localhost:8080/"
   },
   "author": "",
   "license": "MIT",

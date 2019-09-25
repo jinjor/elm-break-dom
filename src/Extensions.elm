@@ -120,14 +120,14 @@ Expected:
 
     <div class="parent">
         <grammarly-extension></grammarly-extension>
-        <textarea class="child after"></textarea>
+        <textarea class="after"></textarea>
     </div>
 
 Actual:
 
     <div class="parent">
         <grammarly-extension class="after"></grammarly-extension>
-        <textarea class="child before"></textarea>
+        <textarea class="before"></textarea>
     </div>
 
 -}

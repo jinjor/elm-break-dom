@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const assert = require("assert");
 const headless = process.env.HEADLESS === "false" ? false : true;
 
-describe("Basics", function() {
+describe("All", function() {
   this.slow(1000);
   let browser;
   let page;
@@ -13,7 +13,7 @@ describe("Basics", function() {
     page.on("pageerror", function(e) {
       error = e;
     });
-    await page.goto(`file://${__dirname}/../public/index.html`);
+    await page.goto(`file://${__dirname}/../public/basics.html`);
     await page.screenshot({ path: "screenshots/basics-init.png" });
   });
   beforeEach(async function() {
@@ -80,6 +80,51 @@ describe("Basics", function() {
       await page.waitFor(100);
       assert(!error, error);
     });
+  });
+  after(async function() {
+    if (browser) {
+      await browser.close();
+    }
+  });
+});
+
+describe("No extensions", function() {
+  this.slow(10000);
+  this.timeout(10000);
+  let browser;
+  let page;
+  let error;
+  let result;
+  before(async function() {
+    browser = await puppeteer.launch({ headless });
+    page = await browser.newPage();
+    await page.exposeFunction("done", success => {
+      result = success;
+    });
+    page.on("console", async msg => {
+      // console.log(...(await msg.args()));
+      const args = await msg.args();
+      const values = await Promise.all(
+        args.map(arg => arg.executionContext().evaluate(a => a, arg))
+      );
+      console.log(...values);
+    });
+    page.on("pageerror", function(e) {
+      error = e;
+    });
+    await page.goto(`file://${__dirname}/../public/index.html`);
+    await page.waitForSelector("ul");
+    await page.screenshot({ path: "screenshots/extensions-init.png" });
+  });
+  it("passes all tests without extension", async function() {
+    for (let i = 0; i < 20; i++) {
+      await page.waitFor(100);
+      if (result !== undefined) {
+        break;
+      }
+    }
+    assert(!error, error);
+    assert.equal(result, true);
   });
   after(async function() {
     if (browser) {
