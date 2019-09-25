@@ -94,17 +94,18 @@ view model =
                             [ text "Source (GitHub)" ]
                         ]
                     , ul []
-                        [ div [] [ text "- ", a [ href "?" ] [ text "application" ] ]
-                        , div [] [ text "- ", a [ href "?test=manual" ] [ text "application (manual)" ] ]
-                        , div [] [ text "- ", a [ href "?main=element" ] [ text "element" ] ]
-                        , div [] [ text "- ", a [ href "?main=element&test=manual" ] [ text "element (manual)" ] ]
+                        [ li [] [ text "- ", a [ href "?" ] [ text "application" ] ]
+                        , li [] [ text "- ", a [ href "?main=element" ] [ text "element" ] ]
+                        , li [] [ text "- ", a [ href "?test=manual" ] [ text "application (manual)" ] ]
+                        , li [] [ text "- ", a [ href "?main=element&test=manual" ] [ text "element (manual)" ] ]
                         ]
                     ]
                 ]
             ]
         , hr [] []
         , ul []
-            [ textarea1 model
+            [ justUpdate model
+            , textarea1 model
             , textarea2 model
             , textarea3 model
             ]
@@ -130,6 +131,14 @@ beforeOrAfter id model =
 
 
 -- VARIOUS PATTERNS
+
+
+{-| Just call update
+-}
+justUpdate : Model -> Html Msg
+justUpdate _ =
+    wrap (always NoOp) "update" <|
+        text ""
 
 
 {-| for Grammarly

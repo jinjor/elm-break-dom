@@ -1,5 +1,7 @@
 const puppeteer = require("puppeteer");
 const assert = require("assert");
+const express = require("express");
+
 const headless = process.env.HEADLESS === "false" ? false : true;
 
 describe("All", function() {
@@ -89,20 +91,24 @@ describe("All", function() {
 });
 
 describe("No extensions", function() {
+  const port = 3000;
   this.slow(10000);
   this.timeout(10000);
   let browser;
   let page;
+  let server;
   let error;
   let result;
   before(async function() {
+    const app = express();
+    app.use(express.static(`${__dirname}/../public`));
+    server = app.listen(port);
     browser = await puppeteer.launch({ headless });
     page = await browser.newPage();
     await page.exposeFunction("done", success => {
       result = success;
     });
     page.on("console", async msg => {
-      // console.log(...(await msg.args()));
       const args = await msg.args();
       const values = await Promise.all(
         args.map(arg => arg.executionContext().evaluate(a => a, arg))
@@ -112,23 +118,35 @@ describe("No extensions", function() {
     page.on("pageerror", function(e) {
       error = e;
     });
-    await page.goto(`file://${__dirname}/../public/index.html`);
-    await page.waitForSelector("ul");
-    await page.screenshot({ path: "screenshots/extensions-init.png" });
   });
-  it("passes all tests without extension", async function() {
-    for (let i = 0; i < 20; i++) {
-      await page.waitFor(100);
-      if (result !== undefined) {
-        break;
-      }
-    }
-    assert(!error, error);
-    assert.equal(result, true);
+  beforeEach(function() {
+    error = undefined;
+    result = undefined;
   });
+  for (let main of ["application", "element"]) {
+    describe(main, function() {
+      it("passes all tests without extension", async function() {
+        await page.goto(`http://localhost:${port}?main=${main}`);
+        await page.waitForSelector("ul");
+
+        for (let i = 0; i < 20; i++) {
+          await page.waitFor(100);
+          if (result !== undefined) {
+            break;
+          }
+        }
+        assert(!error, error);
+        assert.equal(result, true);
+      });
+    });
+  }
+
   after(async function() {
     if (browser) {
       await browser.close();
+    }
+    if (server) {
+      await server.close();
     }
   });
 });

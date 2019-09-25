@@ -1,7 +1,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
-    <script src="js/extensions.js"></script>
+    <script src="./js/extensions.js"></script>
   </head>
   <body>
     <script src="https://unpkg.com/mocha/mocha.js"></script>
@@ -24,22 +24,33 @@
               }
             });
           });
-          describe("Edit textarea (for Grammarly)", function() {
-            it("1", async function() {
+          describe("ChromeVox", function() {
+            it("should update dom after inserting element", async function() {
+              document.querySelector("#update button").click(); // insert element
+              await new Promise(resolve => setTimeout(resolve, 100));
+              document.querySelector("#update button").click(); // update dom
+              await new Promise(resolve => setTimeout(resolve, 100));
+              if (error) {
+                throw error;
+              }
+            });
+          });
+          describe("Grammarly", function() {
+            it("should update dom after focusing on textarea 1", async function() {
               document.querySelector("#textarea1 button").click();
               await new Promise(resolve => setTimeout(resolve, 100));
               if (error) {
                 throw error;
               }
             });
-            it("2", async function() {
+            it("should update dom after focusing on textarea 2", async function() {
               document.querySelector("#textarea2 button").click();
               await new Promise(resolve => setTimeout(resolve, 100));
               if (error) {
                 throw error;
               }
             });
-            it("3", async function() {
+            it("should update dom after focusing on textarea 3", async function() {
               document.querySelector("#textarea3 button").click();
               await new Promise(resolve => setTimeout(resolve, 100));
               if (error) {
@@ -59,9 +70,6 @@
                 console.log("WARN: Grammarly has not been tested.");
               }
             });
-          });
-          describe("ChromeVox", function() {
-            it("TODO", async function() {});
           });
           describe("Vibar", function() {
             it("TODO", async function() {});
