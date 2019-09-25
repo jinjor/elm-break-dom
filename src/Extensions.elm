@@ -83,15 +83,16 @@ view : Model -> Html Msg
 view model =
     div []
         [ div [ id "mocha" ]
-            [ div [ class "suite" ]
+            [ div [ class "suite", style "margin-bottom" "1em" ]
                 [ h2
-                    [ style "margin-bottom" "1em" ]
+                    []
                     [ a
                         [ target "_blank"
                         , href "https://github.com/jinjor/elm-break-dom"
                         ]
                         [ text "Source (GitHub)" ]
                     ]
+                , h2 [ style "cursor" "default", style "margin-top" "1em" ] [ text "Go to chrome://extensions/ to enable/disable extensions." ]
                 ]
             , div [ class "suite" ]
                 [ h1 [] [ text "Variations" ]
