@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "build": "./build.sh",
-    "test": "run-s test:basics test:extensions",
-    "test:basics": "mocha test/test.js",
+    "test": "run-s test:simple test:extensions",
+    "test:simple": "mocha test/test.js",
     "test:extensions": "run-p server open",
     "server": "http-server -c-1",
     "open": "open-cli http://localhost:8080/"

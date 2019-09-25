@@ -1,10 +1,12 @@
-port module Main exposing (main)
+port module Simple.Common exposing (Model, Msg, init, main, noop, onUrlRequest, subscriptions, update, view)
 
-import Browser
+import Browser exposing (UrlRequest(..))
+import Browser.Navigation as Nav
 import Html exposing (Html, button, div, li, text, ul)
 import Html.Attributes exposing (class, id, style)
 import Html.Events exposing (onClick)
 import Set exposing (Set)
+import Url
 
 
 port insertBeforeChild : String -> Cmd msg
@@ -17,9 +19,21 @@ port done : (String -> msg) -> Sub msg
 
 
 type Msg
-    = InsertBeforeChild String
+    = NoOp
+    | UrlRequest UrlRequest
+    | InsertBeforeChild String
     | RemoveChild String
     | Done String
+
+
+onUrlRequest : UrlRequest -> Msg
+onUrlRequest =
+    UrlRequest
+
+
+noop : Msg
+noop =
+    NoOp
 
 
 type alias Model =
@@ -29,29 +43,34 @@ type alias Model =
 main : Program () Model Msg
 main =
     Browser.element
-        { init = \_ -> ( Set.empty, Cmd.none )
+        { init = init
         , update = update
-        , subscriptions = \_ -> done Done
-        , view =
-            \model ->
-                ul []
-                    [ insert1 model
-                    , insert2 model
-                    , insert3 model
-                    , insert4 model
-                    , insert5 model
-                    , remove1 model
-                    , remove2 model
-                    , remove3 model
-                    , remove4 model
-                    , remove5 model
-                    ]
+        , subscriptions = subscriptions
+        , view = view
         }
+
+
+init : () -> ( Model, Cmd Msg )
+init _ =
+    ( Set.empty, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
+        UrlRequest urlRequest ->
+            ( model
+            , case urlRequest of
+                Internal url ->
+                    Nav.load (Url.toString url)
+
+                External url ->
+                    Nav.load url
+            )
+
         InsertBeforeChild id ->
             ( model, insertBeforeChild id )
 
@@ -60,6 +79,27 @@ update msg model =
 
         Done id ->
             ( Set.insert id model, Cmd.none )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    done Done
+
+
+view : Model -> Html Msg
+view model =
+    ul []
+        [ insert1 model
+        , insert2 model
+        , insert3 model
+        , insert4 model
+        , insert5 model
+        , remove1 model
+        , remove2 model
+        , remove3 model
+        , remove4 model
+        , remove5 model
+        ]
 
 
 wrap : (String -> Msg) -> String -> Html Msg -> Html Msg

@@ -16,7 +16,7 @@ Tests for [this issue](https://github.com/elm/html/issues/44).
 npm install
 ```
 
-### Run basic tests (automatically with puppeteer)
+### Run simple tests (automatically with puppeteer)
 
 ```shell
 npm test
@@ -29,7 +29,7 @@ For each test case,
 - Elm will update Virtual DOM.
   See the [source](./src/Main.elm) to find where in the DOM is updated in each case.
 
-If you want manual testing, run `npm run build` and open `public/basics.html`.
+If you want manual testing, run `npm run build` and open `public/simple.html`.
 (Note: You cannot test after an error is thrown. Reload to test another.)
 
 ### Run extension tests (manually with your chrome)

@@ -9,7 +9,9 @@ const manualMode = params.get("test") === "manual";
 })();
 
 function initElm() {
-  const main = elementMode ? Elm.Element : Elm.Application;
+  const main = elementMode
+    ? Elm.Extensions.Element
+    : Elm.Extensions.Application;
   const app = main.init({
     node: document.getElementById("root")
   });
@@ -91,7 +93,6 @@ function runMocha() {
       if (window.done) {
         window.done(successful);
       }
-      console.log("done");
     });
   });
   if (!manualMode) {

@@ -3,8 +3,8 @@ set -eu
 cd `dirname $0`
 
 rm -rf public/js
-npx elm make src/Main.elm --output=public/js/elm.js
-npx elm make src/Element.elm src/Application.elm --output=public/js/extensions.js
+npx elm make src/Simple/Element.elm src/Simple/Application.elm --output=public/js/simple.js
+npx elm make src/Extensions/Element.elm src/Extensions/Application.elm --output=public/js/extensions.js
 
 # patch
 root_id=root # Note: <div id="$root_id"> must exist before Elm.Main.init()

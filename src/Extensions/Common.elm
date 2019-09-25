@@ -1,4 +1,4 @@
-port module Extensions exposing (Model, Msg, init, main, noop, onUrlRequest, subscriptions, update, view)
+port module Extensions.Common exposing (Model, Msg, init, main, noop, onUrlRequest, subscriptions, update, view)
 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav

@@ -9,7 +9,7 @@ const headless = process.env.HEADLESS === "false" ? false : true;
 rimraf.sync("screenshots");
 fs.mkdirSync("screenshots");
 
-describe("Basics", function() {
+describe("Simple", function() {
   this.slow(1000);
   let browser;
   let page;
@@ -20,8 +20,8 @@ describe("Basics", function() {
     page.on("pageerror", function(e) {
       error = e;
     });
-    await page.goto(`file://${__dirname}/../public/basics.html`);
-    await page.screenshot({ path: "screenshots/basics-before.png" });
+    await page.goto(`file://${__dirname}/../public/simple.html`);
+    await page.screenshot({ path: "screenshots/simple-before.png" });
   });
   beforeEach(async function() {
     error = undefined;
