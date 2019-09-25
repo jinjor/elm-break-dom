@@ -90,6 +90,7 @@ function runMocha() {
       }
     });
     after(function() {
+      scrollTo(0, 0);
       if (window.done) {
         window.done(successful);
       }
