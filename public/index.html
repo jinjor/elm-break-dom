@@ -20,7 +20,6 @@
     <script src="https://unpkg.com/mocha/mocha.js"></script>
     <script class="mocha-init">
       mocha.setup("bdd");
-      mocha.checkLeaks();
     </script>
     <script>
       describe("Extentions", function() {
@@ -32,7 +31,14 @@
             error = e;
           };
         });
-        describe("Grammarly", function() {
+        describe("Load this page", function() {
+          it("should load this page without errors", async function() {
+            if (error) {
+              throw error;
+            }
+          });
+        });
+        describe("Edit textarea (for Grammarly)", function() {
           it("1", async function() {
             document.querySelector("#textarea1 button").click();
             await new Promise(resolve => setTimeout(resolve, 100));
@@ -66,7 +72,13 @@
             }
           });
         });
-        describe("Another Extensions", function() {
+        describe("ChromeVox", function() {
+          it("TODO", async function() {});
+        });
+        describe("Vibar", function() {
+          it("TODO", async function() {});
+        });
+        describe("Other Extensions", function() {
           it("should also be listed here", async function() {});
         });
         afterEach(function() {
