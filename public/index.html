@@ -5,11 +5,17 @@
   </head>
   <body>
     <div id="mocha">
-      <h2 class="suite">
-        <a target="_blank" href="https://github.com/jinjor/elm-break-dom"
-          >Source (GitHub)</a
-        >
-      </h2>
+      <div class="suite">
+        <h2>
+          Run <a href="?manual=1">manually</a> or
+          <a href="?manual=0">automatically</a>
+        </h2>
+        <h2>
+          <a target="_blank" href="https://github.com/jinjor/elm-break-dom"
+            >Source (GitHub)</a
+          >
+        </h2>
+      </div>
     </div>
     <script src="https://unpkg.com/mocha/mocha.js"></script>
     <script class="mocha-init">
@@ -79,7 +85,9 @@
       });
     </script>
     <script class="mocha-exec">
-      mocha.run();
+      if (new URLSearchParams(location.search).get("manual") !== "1") {
+        mocha.run();
+      }
     </script>
 
     <hr />
