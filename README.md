@@ -63,11 +63,11 @@ Describing where and when an element is inserted, thanks to the discussion in th
 | Plugin (Users)                        | Where in `<body>`      | When                     | Workaround                                               |
 | :------------------------------------ | :--------------------- | :----------------------- | :------------------------------------------------------- |
 | [Google Translate][gtr] (10,000,000+) | **middle**             | translate the page       | `<meta name="google" content="notranslate">` in `<head>` |
-| Google Translate                      | bottom                 | select words             | [patch the output][patch]                                |
+| Google Translate                      | bottom                 | select words             | [patch the output][patch], use `Browser.element`         |
 | [Grammarly][grammarly] (10,000,000+)  | **middle**             | focus on `<textarea>`    | [`data-gramm_editor="false"`][w-grammarly]               |
 | [Dark Reader][dark] (1,763,020)       | **middle (sometimes)** | laod                     | [make `<style>` the last child ][w-dark]                 |
-| [ChromeVox][chrome-vox] (161,918)     | top                    | load, focus on something | [patch the output][patch]                                |
-| [Viber][viber] (133,220)              | top, bottom            | load                     | [patch the output][patch]                                |
+| [ChromeVox][chrome-vox] (161,918)     | top                    | load, focus on something | [patch the output][patch], use `Browser.element`         |
+| [Viber][viber] (133,220)              | top, bottom            | load                     | [patch the output][patch], use `Browser.element`         |
 
 [gtr]: https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb
 [grammarly]: https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
