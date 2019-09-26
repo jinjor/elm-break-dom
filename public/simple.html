@@ -30,6 +30,19 @@
         child.remove();
         app.ports.done.send(id);
       });
+      app.ports.wrapChild.subscribe(id => {
+        const parent = document.querySelector(`#${id} .parent`);
+        const child = document.querySelector(`#${id} .child`);
+        const wrapper = document.createElement("font"); // simulate Google Translate
+        parent.appendChild(wrapper);
+        wrapper.appendChild(child);
+        app.ports.done.send(id);
+      });
+      app.ports.updateAttribute.subscribe(id => {
+        const parent = document.querySelector(`#${id} .parent`);
+        parent.setAttribute("title", "break"); // simulate Google Translate
+        app.ports.done.send(id);
+      });
     </script>
   </body>
 </html>

@@ -2,8 +2,8 @@ port module Simple.Common exposing (Model, Msg, init, main, noop, onUrlRequest, 
 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
-import Html exposing (Html, button, div, li, text, ul)
-import Html.Attributes exposing (class, id, style)
+import Html exposing (Html, button, div, li, node, text, ul)
+import Html.Attributes exposing (class, id, style, title)
 import Html.Events exposing (onClick)
 import Set exposing (Set)
 import Url
@@ -18,6 +18,12 @@ port insertBeforeChild : String -> Cmd msg
 port removeChild : String -> Cmd msg
 
 
+port wrapChild : String -> Cmd msg
+
+
+port updateAttribute : String -> Cmd msg
+
+
 port done : (String -> msg) -> Sub msg
 
 
@@ -27,6 +33,8 @@ type Msg
     | InsertIntoBody Bool
     | InsertBeforeChild String
     | RemoveChild String
+    | WrapChild String
+    | UpdateAttribute String
     | Done String
 
 
@@ -84,6 +92,12 @@ update msg model =
         RemoveChild id ->
             ( model, removeChild id )
 
+        WrapChild id ->
+            ( model, wrapChild id )
+
+        UpdateAttribute id ->
+            ( model, updateAttribute id )
+
         Done id ->
             ( Set.insert id model, Cmd.none )
 
@@ -108,6 +122,17 @@ view model =
         , remove3 model
         , remove4 model
         , remove5 model
+        , wrap1 model
+        , wrap2 model
+        , wrap3 model
+        , wrap4 model
+        , wrap5 model
+        , wrap6 model
+        , wrap7 model
+        , wrap8 model
+        , updateAttribute1 model
+        , updateAttribute2 model
+        , updateAttribute3 model
         ]
 
 
@@ -147,7 +172,7 @@ insertIntoBody2 _ =
 
 
 
--- INSERT <div>EXTENSION NODE</div> BEFORE "#child"
+-- INSERT <div>EXTENSION NODE</div> BEFORE ".child"
 
 
 {-| Cannot read property 'replaceData' of undefined
@@ -217,7 +242,7 @@ insert5 model =
 
 
 
--- REMOVE "#child"
+-- REMOVE ".child"
 
 
 {-| Cannot read property 'childNodes' of undefined
@@ -258,3 +283,116 @@ remove5 : Model -> Html Msg
 remove5 model =
     wrap RemoveChild "remove5" <|
         div [ class "parent" ] [ text (beforeOrAfter "remove5" model), div [ class "child" ] [] ]
+
+
+
+-- WRAP ".child" into <font>
+
+
+{-| -}
+wrap1 : Model -> Html Msg
+wrap1 model =
+    wrap WrapChild "wrap1" <|
+        div [ class "parent" ] [ div [ class "child" ] [ text (beforeOrAfter "wrap1" model) ] ]
+
+
+{-| -}
+wrap2 : Model -> Html Msg
+wrap2 model =
+    wrap WrapChild "wrap2" <|
+        div [ class "parent" ] [ div [ class "child", class (beforeOrAfter "wrap2" model) ] [] ]
+
+
+{-| -}
+wrap3 : Model -> Html Msg
+wrap3 model =
+    wrap WrapChild "wrap3" <|
+        div [ class "parent" ] [ div [ class "child" ] [], text (beforeOrAfter "wrap3" model) ]
+
+
+{-| -}
+wrap4 : Model -> Html Msg
+wrap4 model =
+    wrap WrapChild "wrap4" <|
+        div [ class "parent" ] [ text (beforeOrAfter "wrap4" model), div [ class "child" ] [] ]
+
+
+{-| -}
+wrap5 : Model -> Html Msg
+wrap5 model =
+    wrap WrapChild "wrap5" <|
+        div [ class "parent" ] [ node "font" [ class "child" ] [ text (beforeOrAfter "wrap5" model) ] ]
+
+
+{-| Expected:
+
+    <font><font class="child after"></font></font>
+
+or
+
+    <font class="child after"></font>
+
+Actual:
+
+    <font class="child after"><font class="child before"></font></font>
+
+-}
+wrap6 : Model -> Html Msg
+wrap6 model =
+    wrap WrapChild "wrap6" <|
+        div [ class "parent" ] [ node "font" [ class "child", class (beforeOrAfter "wrap6" model) ] [] ]
+
+
+{-| -}
+wrap7 : Model -> Html Msg
+wrap7 model =
+    wrap WrapChild "wrap7" <|
+        div [ class "parent" ] [ node "font" [ class "child" ] [], text (beforeOrAfter "wrap7" model) ]
+
+
+{-| -}
+wrap8 : Model -> Html Msg
+wrap8 model =
+    wrap WrapChild "wrap8" <|
+        div [ class "parent" ] [ text (beforeOrAfter "wrap8" model), node "font" [ class "child" ] [] ]
+
+
+
+-- REPLACE title of ".parent" WITH "break"
+
+
+{-| This should be safe.
+-}
+updateAttribute1 : Model -> Html Msg
+updateAttribute1 model =
+    wrap UpdateAttribute "update-attribute1" <|
+        div
+            [ class "parent"
+            , class (beforeOrAfter "update-attribute1" model)
+            ]
+            [ text (beforeOrAfter "update-attribute1" model) ]
+
+
+{-| This should be safe.
+-}
+updateAttribute2 : Model -> Html Msg
+updateAttribute2 model =
+    wrap UpdateAttribute "update-attribute2" <|
+        div
+            [ class "parent"
+            , title "hello"
+            , class (beforeOrAfter "update-attribute2" model)
+            ]
+            [ text (beforeOrAfter "update-attribute2" model) ]
+
+
+{-| -}
+updateAttribute3 : Model -> Html Msg
+updateAttribute3 model =
+    wrap UpdateAttribute "update-attribute3" <|
+        div
+            [ class "parent"
+            , title (beforeOrAfter "update-attribute3" model)
+            , class (beforeOrAfter "update-attribute3" model)
+            ]
+            [ text (beforeOrAfter "update-attribute2" model) ]

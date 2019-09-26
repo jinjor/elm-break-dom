@@ -128,6 +128,67 @@ describe("Simple", function() {
           assert(!error, error);
         });
       });
+      describe("Wrap target element", function() {
+        it("...and update target's child", async function() {
+          await page.click("#wrap1 button");
+          await page.waitFor(100);
+          assert(!error, error);
+        });
+        it("...and update target's class", async function() {
+          await page.click("#wrap2 button");
+          await page.waitFor(100);
+          assert(!error, error);
+        });
+        it("...and update target's next element", async function() {
+          await page.click("#wrap3 button");
+          await page.waitFor(100);
+          assert(!error, error);
+        });
+        it("...and update target's previous element", async function() {
+          await page.click("#wrap4 button");
+          await page.waitFor(100);
+          assert(!error, error);
+        });
+        it("...and update target's child (same tag)", async function() {
+          await page.click("#wrap5 button");
+          await page.waitFor(100);
+          assert(!error, error);
+        });
+        it("...and update target's class (same tag)", async function() {
+          await page.click("#wrap6 button");
+          await page.waitFor(100);
+          assert.equal((await page.$$("#wrap6 .child.before")).length, 0);
+          assert.equal((await page.$$("#wrap6 .child.after")).length, 1);
+          assert(!error, error);
+        });
+        it("...and update target's next element (same tag)", async function() {
+          await page.click("#wrap7 button");
+          await page.waitFor(100);
+          assert(!error, error);
+        });
+        it("...and update target's previous element (same tag)", async function() {
+          await page.click("#wrap8 button");
+          await page.waitFor(100);
+          assert(!error, error);
+        });
+      });
+      describe("Update target attribute", function() {
+        it("...and update target and it's child 1", async function() {
+          await page.click("#update-attribute1 button");
+          await page.waitFor(100);
+          assert(!error, error);
+        });
+        it("...and update target and it's child 2", async function() {
+          await page.click("#update-attribute2 button");
+          await page.waitFor(100);
+          assert(!error, error);
+        });
+        it("...and update target's attribute", async function() {
+          await page.click("#update-attribute3 button");
+          await page.waitFor(100);
+          assert(!error, error);
+        });
+      });
     });
   }
   after(async function() {

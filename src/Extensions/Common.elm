@@ -2,7 +2,7 @@ port module Extensions.Common exposing (Model, Msg, init, main, noop, onUrlReque
 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
-import Html exposing (Html, a, button, div, form, h1, h2, hr, li, text, textarea, ul)
+import Html exposing (Html, a, button, div, form, h1, h2, hr, li, node, text, textarea, ul)
 import Html.Attributes exposing (class, href, id, rows, style, target, value)
 import Html.Events exposing (onClick)
 import Set exposing (Set)
@@ -249,7 +249,7 @@ style1 model =
     wrap Done "style1" <|
         div []
             [ text (beforeOrAfter "style1" model)
-            , Html.node "style" [] [ text "#style1 { color: red; }" ]
+            , node "style" [] [ text "#style1 { color: red; }" ]
             ]
 
 
@@ -262,6 +262,6 @@ style2 : Model -> Html Msg
 style2 model =
     wrap Done "style2" <|
         div []
-            [ Html.node "style" [] [ text "#style2 { color: red; }" ]
+            [ node "style" [] [ text "#style2 { color: red; }" ]
             , text (beforeOrAfter "style2" model)
             ]
