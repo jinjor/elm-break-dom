@@ -58,19 +58,24 @@ For the case of inserting elements into the top of `<body>`, you can try patched
 
 ## Known Extensions
 
-Describing where and when an element is inserted. More informarion is welcome.
+Describing where and when an element is inserted, thanks to the discussion in the [discourse thread](https://discourse.elm-lang.org/t/runtime-errors-caused-by-chrome-extensions/4381). More informarion is welcome.
 
-| Plugin (Users)               | Where                       | When                     | Workaround                        |
-| :--------------------------- | :-------------------------- | :----------------------- | :-------------------------------- |
-| [Grammarly][1] (10,000,000+) | **middle in `<body>`**      | focus on `<textarea>`    | [`data-gramm_editor="false"`][p1] |
-| [ChromeVox][2] (161,918)     | **top in `<body>`**         | load, focus on something | [patch to output][p2]             |
-| [Viber][3] (133,220)         | **top, bottom in `<body>`** | load                     | [patch to output][p2]             |
+| Plugin (Users)                        | Where in `<body>` | When                     | Workaround                                               |
+| :------------------------------------ | :---------------- | :----------------------- | :------------------------------------------------------- |
+| [Google Translate][gtr] (10,000,000+) | **middle**        | TODO                     | `<meta name="google" content="notranslate">` in `<head>` |
+| [Grammarly][grammarly] (10,000,000+)  | **middle**        | focus on `<textarea>`    | [`data-gramm_editor="false"`][w-grammarly]               |
+| [Dark Reader][dark] (1,763,020)       | **middle**        | TODO                     | [wrap `<style>` tag ][w-dark]                            |
+| [ChromeVox][chrome-vox] (161,918)     | top               | load, focus on something | [patch to output][patch]                                 |
+| [Viber][viber] (133,220)              | top, bottom       | load                     | [patch to output][patch]                                 |
 
-[1]: https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
-[2]: https://chrome.google.com/webstore/detail/chromevox-classic-extensi/kgejglhpjiefppelpmljglcjbhoiplfn
-[3]: https://chrome.google.com/webstore/detail/viber/dafalpmmoljglecaoelijmbkhpdoobmm
-[p1]: https://github.com/elm/html/issues/44#issuecomment-534665947
-[p2]: ./build.sh
+[gtr]: https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb
+[grammarly]: https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
+[dark]: https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh
+[chrome-vox]: https://chrome.google.com/webstore/detail/chromevox-classic-extensi/kgejglhpjiefppelpmljglcjbhoiplfn
+[viber]: https://chrome.google.com/webstore/detail/viber/dafalpmmoljglecaoelijmbkhpdoobmm
+[w-grammarly]: https://github.com/elm/html/issues/44#issuecomment-534665947
+[w-dark]: https://github.com/mdgriffith/elm-ui/commit/02e9919a47d50a71fbc92338a8a38def853ffa0f
+[patch]: ./build.sh
 
 ## TODO
 
