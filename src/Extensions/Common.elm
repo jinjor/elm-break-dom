@@ -124,6 +124,8 @@ view model =
             , textarea1 model
             , textarea2 model
             , textarea3 model
+            , style1 model
+            , style2 model
             ]
         ]
 
@@ -234,4 +236,32 @@ textarea3 model =
                 , class (beforeOrAfter "textarea3" model)
                 ]
                 []
+            ]
+
+
+{-| For "Dark Reader"
+
+This should be safe.
+
+-}
+style1 : Model -> Html Msg
+style1 model =
+    wrap Done "style1" <|
+        div []
+            [ text (beforeOrAfter "style1" model)
+            , Html.node "style" [] [ text "#style1 { color: red; }" ]
+            ]
+
+
+{-| For Dark Reader
+
+domNode.replaceData is not a function
+
+-}
+style2 : Model -> Html Msg
+style2 model =
+    wrap Done "style2" <|
+        div []
+            [ Html.node "style" [] [ text "#style2 { color: red; }" ]
+            , text (beforeOrAfter "style2" model)
             ]

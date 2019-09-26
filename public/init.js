@@ -43,9 +43,25 @@ function runMocha() {
       });
     });
     describe("First update (for ChromeVox or Viber)", function() {
-      it("should update dom after inserting element", async function() {
+      it("should safely update dom after load", async function() {
         await new Promise(resolve => setTimeout(resolve, 100)); // wait for inserting ChromeVox
         document.querySelector("#update button").click();
+        await new Promise(resolve => setTimeout(resolve, 100));
+        if (error) {
+          throw error;
+        }
+      });
+    });
+    describe("Dark Reader", function() {
+      it("should safely update dom after load 1", async function() {
+        document.querySelector("#style1 button").click();
+        await new Promise(resolve => setTimeout(resolve, 100));
+        if (error) {
+          throw error;
+        }
+      });
+      it("should safely update dom after load 2", async function() {
+        document.querySelector("#style2 button").click();
         await new Promise(resolve => setTimeout(resolve, 100));
         if (error) {
           throw error;

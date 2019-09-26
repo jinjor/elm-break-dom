@@ -65,7 +65,7 @@ Describing where and when an element is inserted, thanks to the discussion in th
 | [Google Translate][gtr] (10,000,000+) | **middle**             | translate the page       | `<meta name="google" content="notranslate">` in `<head>` |
 | Google Translate                      | bottom                 | select words             | [patch the output][patch]                                |
 | [Grammarly][grammarly] (10,000,000+)  | **middle**             | focus on `<textarea>`    | [`data-gramm_editor="false"`][w-grammarly]               |
-| [Dark Reader][dark] (1,763,020)       | **middle (sometimes)** | laod                     | [wrap `<style>` tag ][w-dark]                            |
+| [Dark Reader][dark] (1,763,020)       | **middle (sometimes)** | laod                     | [make `<style>` the last child ][w-dark]                 |
 | [ChromeVox][chrome-vox] (161,918)     | top                    | load, focus on something | [patch the output][patch]                                |
 | [Viber][viber] (133,220)              | top, bottom            | load                     | [patch the output][patch]                                |
 
