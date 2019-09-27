@@ -60,14 +60,14 @@ For the case of inserting elements into the top of `<body>`, you can try patched
 
 Describing where and when an element is inserted, thanks to the discussion in the [discourse thread](https://discourse.elm-lang.org/t/runtime-errors-caused-by-chrome-extensions/4381). More informarion is welcome.
 
-| Plugin (Users)                        | Where in `<body>`      | When                     | Workaround                                               |
-| :------------------------------------ | :--------------------- | :----------------------- | :------------------------------------------------------- |
-| [Google Translate][gtr] (10,000,000+) | **middle**             | translate the page       | `<meta name="google" content="notranslate">` in `<head>` |
-| Google Translate                      | bottom                 | select words             | [patch the output][patch], use `Browser.element`         |
-| [Grammarly][grammarly] (10,000,000+)  | **middle**             | focus on `<textarea>`    | [`data-gramm_editor="false"`][w-grammarly]               |
-| [Dark Reader][dark] (1,763,020)       | **middle (sometimes)** | laod                     | [make `<style>` the last child ][w-dark]                 |
-| [ChromeVox][chrome-vox] (161,918)     | top                    | load, focus on something | [patch the output][patch], use `Browser.element`         |
-| [Viber][viber] (133,220)              | top, bottom            | load                     | [patch the output][patch], use `Browser.element`         |
+| Plugin (Users)                        | Where in `<body>`      | When                     | Workaround (keep enabled)                                                  | Workaround (disable)                                     |     |
+| :------------------------------------ | :--------------------- | :----------------------- | :------------------------------------------------------------------------- | :------------------------------------------------------- | :-- |
+| [Google Translate][gtr] (10,000,000+) | **middle**             | translate the page       |                                                                            | `<meta name="google" content="notranslate">` in `<head>` |
+| Google Translate                      | bottom                 | select words             | [patch the output][patch], use `Browser.element`                           |                                                          |
+| [Grammarly][grammarly] (10,000,000+)  | **middle**             | focus on `<textarea>`    |                                                                            | [`data-gramm_editor="false"`][w-grammarly]               |
+| [Dark Reader][dark] (1,763,020)       | **middle (sometimes)** | laod                     | [make `<style>` the last child][w-dark], avoid using `<style>` in `<body>` |                                                          |
+| [ChromeVox][chrome-vox] (161,918)     | top                    | load, focus on something | [patch the output][patch], use `Browser.element`                           |                                                          |
+| [Viber][viber] (133,220)              | top, bottom            | load                     | [patch the output][patch], use `Browser.element`                           |                                                          |
 
 [gtr]: https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb
 [grammarly]: https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
@@ -78,10 +78,14 @@ Describing where and when an element is inserted, thanks to the discussion in th
 [w-dark]: https://github.com/mdgriffith/elm-ui/commit/02e9919a47d50a71fbc92338a8a38def853ffa0f
 [patch]: ./build.sh
 
-Some of the extensions insert elements in `<head>` or _after_ `<body>`. They are excluded from this list because it has no harm.
+Note:
+
+- For "Where in `<body>`" Column, `top` and `bottom` breaks `Browser.application` and `middle` breaks both `Browser.application` and `Browser.element`. `middle` contains modifications to all descendant elements in the `<body>`.
+- Some of the extensions insert elements in `<head>` or _after_ `<body>`. They are excluded from this list because it has no harm.
 
 ## TODO
 
+- How about `Browser.document`?
 - Tests to cover `Html.Keyed` and `Html.Lazy`
 - Tests with `--optimize`
 - Better patch
