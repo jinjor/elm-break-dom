@@ -30,7 +30,9 @@ describe("Simple", function() {
         args.map(arg => arg.executionContext().evaluate(a => a, arg))
       );
       const strings = values
-        .filter(v => !v.startsWith("Compiled in DEV mode"))
+        .filter(
+          v => typeof v !== "string" || !v.startsWith("Compiled in DEV mode")
+        )
         .map(v => chalk.gray(v));
       strings.length && console.log(...strings);
     });

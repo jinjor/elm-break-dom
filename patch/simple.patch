@@ -1,0 +1,76 @@
+--- public/js/original.js	2019-10-02 06:25:23.000000000 +0900
++++ public/js/simple.js	2019-10-02 11:13:14.000000000 +0900
+@@ -2720,7 +2720,9 @@
+ 
+ 	if (tag === 0)
+ 	{
+-		return _VirtualDom_doc.createTextNode(vNode.a);
++		const n = _VirtualDom_doc.createTextNode(vNode.a);
++		n.created_by_elm = true;
++		return n
+ 	}
+ 
+ 	if (tag === 4)
+@@ -2755,6 +2757,7 @@
+ 	var domNode = vNode.f
+ 		? _VirtualDom_doc.createElementNS(vNode.f, vNode.c)
+ 		: _VirtualDom_doc.createElement(vNode.c);
++	domNode.created_by_elm = true;
+ 
+ 	if (_VirtualDom_divertHrefToApp && vNode.c == 'a')
+ 	{
+@@ -3614,14 +3617,38 @@
+ 
+ 	var vKids = vNode.e;
+ 	var childNodes = domNode.childNodes;
+-	for (var j = 0; j < vKids.length; j++)
++	for (var j = 0, k = 0; j < Math.max(vKids.length, childNodes.length); j++, k++)
+ 	{
+ 		low++;
+ 		var vKid = tag === 1 ? vKids[j] : vKids[j].b;
+ 		var nextLow = low + (vKid.b || 0);
+ 		if (low <= index && index <= nextLow)
+ 		{
+-			i = _VirtualDom_addDomNodesHelp(childNodes[j], vKid, patches, i, low, nextLow, eventNode);
++			// 1. if unknown nodes have been inserted
++			if(childNodes.length > vKids.length) {
++				// skip them
++				while(!childNodes[k].created_by_elm) {
++					k++
++				}
++			}
++			// 2. if existing node has been removed
++			if(childNodes.length < vKids.length) {
++				if(childNodes[k]) {
++					// replace tha node using the old vdom
++					_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
++				} else {
++					// or append node using the old vdom
++					domNode.appendChild(_VirtualDom_render(vKids[j], eventNode));
++				}
++			}
++			// 3. if existing node has been replaced with unknown node
++			if(childNodes.length === vKids.length && !childNodes[k].created_by_elm) {
++				// replace tha node using the old vdom
++				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
++			}
++
++			i = _VirtualDom_addDomNodesHelp(childNodes[k], vKid, patches, i, low, nextLow, eventNode);
++
+ 			if (!(patch = patches[i]) || (index = patch.r) > high)
+ 			{
+ 				return i;
+@@ -3675,6 +3703,13 @@
+ 			return domNode;
+ 
+ 		case 3:
++			if(!domNode.replaceData) {
++			  // TODO: this should not be necessary
++				const textNode = document.createTextNode(patch.s);
++				domNode.parentNode.insertBefore(textNode, domNode);
++				domNode.remove();
++				return textNode;
++			}
+ 			domNode.replaceData(0, domNode.length, patch.s);
+ 			return domNode;
+ 
