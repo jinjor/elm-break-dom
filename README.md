@@ -95,7 +95,7 @@ cat elm.js\
   > elm-patched.js
 ```
 
-Note: This is just a workaround, _NOT_ a fix. For `Browser.application`, the root should be always `<body>` element. It is [deliberately designed](https://github.com/elm/browser/blob/1.0.0/notes/navigation-in-elements.md) that way.
+Note: This is just a workaround, _NOT_ a fix. For `Browser.application`, the root should be always `<body>` element. This is [by design](https://github.com/elm/browser/blob/1.0.0/notes/navigation-in-elements.md).
 
 ## TODO
 
