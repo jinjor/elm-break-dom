@@ -1,5 +1,5 @@
---- public/js/original.js	2019-10-02 06:25:23.000000000 +0900
-+++ public/js/simple.js	2019-10-02 11:13:14.000000000 +0900
+--- public/js/simple.js	2019-10-03 10:42:01.000000000 +0900
++++ public/js/simple-patched.js	2019-10-03 11:05:20.000000000 +0900
 @@ -2720,7 +2720,9 @@
  
  	if (tag === 0)
@@ -19,7 +19,7 @@
  
  	if (_VirtualDom_divertHrefToApp && vNode.c == 'a')
  	{
-@@ -3614,14 +3617,38 @@
+@@ -3614,14 +3617,37 @@
  
  	var vKids = vNode.e;
  	var childNodes = domNode.childNodes;
@@ -56,16 +56,15 @@
 +			}
 +
 +			i = _VirtualDom_addDomNodesHelp(childNodes[k], vKid, patches, i, low, nextLow, eventNode);
-+
  			if (!(patch = patches[i]) || (index = patch.r) > high)
  			{
  				return i;
-@@ -3675,6 +3703,13 @@
+@@ -3675,6 +3701,13 @@
  			return domNode;
  
  		case 3:
 +			if(!domNode.replaceData) {
-+			  // TODO: this should not be necessary
++				// TODO: this should not be necessary
 +				const textNode = document.createTextNode(patch.s);
 +				domNode.parentNode.insertBefore(textNode, domNode);
 +				domNode.remove();

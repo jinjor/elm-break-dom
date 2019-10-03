@@ -83,6 +83,20 @@ Note:
 - For "Where in `<body>`" Column, `top` and `bottom` breaks `Browser.application` and `middle` breaks both `Browser.application` and `Browser.element`. `middle` contains modifications to all descendant elements in the `<body>`.
 - Some of the extensions insert elements in `<head>` or _after_ `<body>`. They are excluded from this list because it has no harm.
 
+## Patch for `Browser.application`
+
+Here is a simple patch (thanks to [a discourse comment](https://discourse.elm-lang.org/t/fullscreen-elm-app-in-0-19-childnode-issue-reopened/3174/2)) for `Browser.application`.
+
+```shell
+root_id=root # Note: <div id="$root_id"> must exist before Elm.Main.init()
+cat elm.js\
+  | sed "s/var bodyNode = _VirtualDom_doc.body;/var bodyNode = _VirtualDom_doc.getElementById('$root_id');/"\
+  | sed "s/var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.body);/var nextNode = _VirtualDom_node('div')(_List_Nil)(doc.body);/"\
+  > elm-patched.js
+```
+
+Note: This is just a workaround, _NOT_ a fix. For `Browser.application`, the root should be always `<body>` element. It is [deliberately designed](https://github.com/elm/browser/blob/1.0.0/notes/navigation-in-elements.md) that way.
+
 ## TODO
 
 - How about `Browser.document`?
