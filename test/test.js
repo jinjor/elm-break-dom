@@ -80,7 +80,7 @@ describe("Simple", function() {
           await page.click("#insert2 button");
           await page.waitFor(100);
           assert.equal(
-            await page.$eval("#insert2 .child", el => el.textContent),
+            await page.$eval("#insert2 .target", el => el.textContent),
             "after"
           );
           assert(!error, error);
@@ -93,8 +93,8 @@ describe("Simple", function() {
         it("...and update target's class", async function() {
           await page.click("#insert4 button");
           await page.waitFor(100);
-          assert.equal((await page.$$("#insert4 .child.before")).length, 0);
-          assert.equal((await page.$$("#insert4 .child.after")).length, 1);
+          assert.equal((await page.$$("#insert4 .target.before")).length, 0);
+          assert.equal((await page.$$("#insert4 .target.after")).length, 1);
           assert(!error, error);
         });
         it("...and update target's previous element", async function() {
@@ -159,8 +159,8 @@ describe("Simple", function() {
         it("...and update target's class (same tag)", async function() {
           await page.click("#wrap6 button");
           await page.waitFor(100);
-          assert.equal((await page.$$("#wrap6 .child.before")).length, 0);
-          assert.equal((await page.$$("#wrap6 .child.after")).length, 1);
+          assert.equal((await page.$$("#wrap6 .target.before")).length, 0);
+          assert.equal((await page.$$("#wrap6 .target.after")).length, 1);
           assert(!error, error);
         });
         it("...and update target's next element (same tag)", async function() {

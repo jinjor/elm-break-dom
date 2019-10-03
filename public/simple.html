@@ -17,29 +17,29 @@
         document.body.insertAdjacentHTML(position, "<div>EXTENSION NODE</div>");
         app.ports.done.send("");
       });
-      app.ports.insertBeforeChild.subscribe(id => {
-        const parent = document.querySelector(`#${id} .parent`);
-        const child = document.querySelector(`#${id} .child`);
+      app.ports.insertBeforeTarget.subscribe(id => {
+        const target = document.querySelector(`#${id} .target`);
+        const parent = target.parentElement;
         const el = document.createElement("div");
         el.append("EXTENSION NODE");
-        parent.insertBefore(el, child);
+        parent.insertBefore(el, target);
         app.ports.done.send(id);
       });
-      app.ports.removeChild.subscribe(id => {
-        const child = document.querySelector(`#${id} .child`);
-        child.remove();
+      app.ports.removeTarget.subscribe(id => {
+        const target = document.querySelector(`#${id} .target`);
+        target.remove();
         app.ports.done.send(id);
       });
-      app.ports.wrapChild.subscribe(id => {
-        const parent = document.querySelector(`#${id} .parent`);
-        const child = document.querySelector(`#${id} .child`);
+      app.ports.wrapTarget.subscribe(id => {
+        const target = document.querySelector(`#${id} .target`);
+        const parent = target.parentElement;
         const wrapper = document.createElement("font"); // simulate Google Translate
         parent.appendChild(wrapper);
-        wrapper.appendChild(child);
+        wrapper.appendChild(target);
         app.ports.done.send(id);
       });
       app.ports.updateAttribute.subscribe(id => {
-        const parent = document.querySelector(`#${id} .parent`);
+        const parent = document.querySelector(`#${id} .target`);
         parent.setAttribute("title", "break"); // simulate Google Translate
         app.ports.done.send(id);
       });

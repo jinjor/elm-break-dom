@@ -168,8 +168,7 @@ textarea1 : Model -> Html Msg
 textarea1 model =
     wrap FocusTextarea "textarea1" <|
         form
-            [ class "parent"
-            , style "position" "relative"
+            [ style "position" "relative"
             ]
             [ text (beforeOrAfter "textarea1" model)
             , textarea
@@ -191,8 +190,7 @@ textarea2 : Model -> Html Msg
 textarea2 model =
     wrap FocusTextarea "textarea2" <|
         form
-            [ class "parent"
-            , style "position" "relative"
+            [ style "position" "relative"
             ]
             [ textarea
                 [ style "display" "block"
@@ -208,14 +206,14 @@ textarea2 model =
 
 Expected:
 
-    <div class="parent">
+    <div>
         <grammarly-extension></grammarly-extension>
         <textarea class="after"></textarea>
     </div>
 
 Actual:
 
-    <div class="parent">
+    <div>
         <grammarly-extension class="after"></grammarly-extension>
         <textarea class="before"></textarea>
     </div>
@@ -225,8 +223,7 @@ textarea3 : Model -> Html Msg
 textarea3 model =
     wrap FocusTextarea "textarea3" <|
         form
-            [ class "parent"
-            , style "position" "relative"
+            [ style "position" "relative"
             ]
             [ textarea
                 [ style "display" "block"
