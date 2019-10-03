@@ -76,7 +76,7 @@ Describing where and when an element is inserted, thanks to the discussion in th
 [viber]: https://chrome.google.com/webstore/detail/viber/dafalpmmoljglecaoelijmbkhpdoobmm
 [w-grammarly]: https://github.com/elm/html/issues/44#issuecomment-534665947
 [w-dark]: https://github.com/mdgriffith/elm-ui/commit/02e9919a47d50a71fbc92338a8a38def853ffa0f
-[patch]: ./build.sh
+[patch]: #patch-for-browserapplication
 
 Note:
 
