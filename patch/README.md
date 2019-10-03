@@ -1,6 +1,6 @@
 # Patch (WIP)
 
-[This patch](./simple.patch) tries to solve the problem in the following way.
+[This patch](./VirtualDom.patch) tries to solve the problem in the following way.
 
 1. Mark the DOM node as `created_by_elm`
 2. If unknown nodes have been inserted, skip them.

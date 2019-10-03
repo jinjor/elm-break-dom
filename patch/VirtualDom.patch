@@ -1,34 +1,34 @@
---- public/js/simple.js	2019-10-03 10:42:01.000000000 +0900
-+++ public/js/simple-patched.js	2019-10-03 11:05:20.000000000 +0900
-@@ -2720,7 +2720,9 @@
+--- Kernel/original_VirtualDom.js	2019-10-04 06:46:25.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-04 07:34:19.000000000 +0900
+@@ -419,7 +419,9 @@
  
- 	if (tag === 0)
+ 	if (tag === __2_TEXT)
  	{
--		return _VirtualDom_doc.createTextNode(vNode.a);
-+		const n = _VirtualDom_doc.createTextNode(vNode.a);
+-		return _VirtualDom_doc.createTextNode(vNode.__text);
++		var n = _VirtualDom_doc.createTextNode(vNode.__text);
 +		n.created_by_elm = true;
 +		return n
  	}
  
- 	if (tag === 4)
-@@ -2755,6 +2757,7 @@
- 	var domNode = vNode.f
- 		? _VirtualDom_doc.createElementNS(vNode.f, vNode.c)
- 		: _VirtualDom_doc.createElement(vNode.c);
+ 	if (tag === __2_TAGGER)
+@@ -454,6 +456,7 @@
+ 	var domNode = vNode.__namespace
+ 		? _VirtualDom_doc.createElementNS(vNode.__namespace, vNode.__tag)
+ 		: _VirtualDom_doc.createElement(vNode.__tag);
 +	domNode.created_by_elm = true;
  
- 	if (_VirtualDom_divertHrefToApp && vNode.c == 'a')
+ 	if (_VirtualDom_divertHrefToApp && vNode.__tag == 'a')
  	{
-@@ -3614,14 +3617,37 @@
+@@ -1313,14 +1316,36 @@
  
- 	var vKids = vNode.e;
+ 	var vKids = vNode.__kids;
  	var childNodes = domNode.childNodes;
 -	for (var j = 0; j < vKids.length; j++)
 +	for (var j = 0, k = 0; j < Math.max(vKids.length, childNodes.length); j++, k++)
  	{
  		low++;
- 		var vKid = tag === 1 ? vKids[j] : vKids[j].b;
- 		var nextLow = low + (vKid.b || 0);
+ 		var vKid = tag === __2_NODE ? vKids[j] : vKids[j].b;
+ 		var nextLow = low + (vKid.__descendantsCount || 0);
  		if (low <= index && index <= nextLow)
  		{
 -			i = _VirtualDom_addDomNodesHelp(childNodes[j], vKid, patches, i, low, nextLow, eventNode);
@@ -54,22 +54,21 @@
 +				// replace tha node using the old vdom
 +				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
 +			}
-+
 +			i = _VirtualDom_addDomNodesHelp(childNodes[k], vKid, patches, i, low, nextLow, eventNode);
- 			if (!(patch = patches[i]) || (index = patch.r) > high)
+ 			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -3675,6 +3701,13 @@
+@@ -1374,6 +1399,13 @@
  			return domNode;
  
- 		case 3:
-+			if(!domNode.replaceData) {
-+				// TODO: this should not be necessary
-+				const textNode = document.createTextNode(patch.s);
-+				domNode.parentNode.insertBefore(textNode, domNode);
-+				domNode.remove();
-+				return textNode;
-+			}
- 			domNode.replaceData(0, domNode.length, patch.s);
+ 		case __3_TEXT:
++				if(!domNode.replaceData) {
++					// TODO: this should not be necessary
++					const textNode = document.createTextNode(patch.s);
++					domNode.parentNode.insertBefore(textNode, domNode);
++					domNode.remove();
++					return textNode;
++				}
+ 			domNode.replaceData(0, domNode.length, patch.__data);
  			return domNode;
  
