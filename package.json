@@ -10,7 +10,8 @@
     "test:extensions": "run-p server open:extensions",
     "server": "http-server -c-1",
     "open:simple": "open-cli http://localhost:8080/simple.html",
-    "open:extensions": "open-cli http://localhost:8080/"
+    "open:extensions": "open-cli http://localhost:8080/",
+    "clean": "git clean -xdf"
   },
   "author": "",
   "license": "MIT",

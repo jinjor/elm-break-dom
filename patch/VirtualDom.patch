@@ -1,5 +1,5 @@
---- Kernel/original_VirtualDom.js	2019-10-04 06:46:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-04 07:34:19.000000000 +0900
+--- Kernel/original_VirtualDom.js	2019-10-04 08:12:49.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-04 08:12:49.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)

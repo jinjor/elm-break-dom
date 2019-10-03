@@ -12,10 +12,11 @@ ELM_HOME=`pwd`
 # setup
 if [ ! -e $package ]; then
   git clone $repo
+  rm -rf $package/.git
   ln -s $package/src/Elm/Kernel Kernel
   cp Kernel/VirtualDom.js Kernel/original_VirtualDom.js
   # apply the latest patch
-  patch -u -p0 -o Kernel/VirtualDom.js < patch/VirtualDom.patch
+  patch -u -p0 < patch/VirtualDom.patch
 fi
 
 # save current patch
