@@ -22,8 +22,11 @@ npm install
 npm run build
 ```
 
-This will build two apps (simple.js and extensions.js).
-Each of those will be built both with `Browser.application` and with `Browser.element`.
+This will build two apps (`simple.js` and `extensions.js`).
+Each of those have both version of `Browser.application` and `Browser.element`.
+
+This will also build patched versions of them (`simple-patched.js` and `extensions-patched.js`).
+They are built with patched version of `elm/virtual-dom` using `patch/VirtualDom.patch` (See the [detail](./patch/README.md)).
 
 ### Run simple tests (automatically with puppeteer)
 
@@ -63,11 +66,11 @@ Describing where and when an element is inserted, thanks to the discussion in th
 | Plugin (Users)                        | Where in `<body>`      | When                     | Workaround (keep enabled)                                                  | Workaround (disable)                                     |     |
 | :------------------------------------ | :--------------------- | :----------------------- | :------------------------------------------------------------------------- | :------------------------------------------------------- | :-- |
 | [Google Translate][gtr] (10,000,000+) | **middle**             | translate the page       |                                                                            | `<meta name="google" content="notranslate">` in `<head>` |
-| Google Translate                      | bottom                 | select words             | [patch the output][patch], use `Browser.element`                           |                                                          |
+| Google Translate                      | bottom                 | select words             | [rough patch][patch], use `Browser.element`                                |                                                          |
 | [Grammarly][grammarly] (10,000,000+)  | **middle**             | focus on `<textarea>`    |                                                                            | [`data-gramm_editor="false"`][w-grammarly]               |
 | [Dark Reader][dark] (1,763,020)       | **middle (sometimes)** | laod                     | [make `<style>` the last child][w-dark], avoid using `<style>` in `<body>` |                                                          |
-| [ChromeVox][chrome-vox] (161,918)     | top                    | load, focus on something | [patch the output][patch], use `Browser.element`                           |                                                          |
-| [Viber][viber] (133,220)              | top, bottom            | load                     | [patch the output][patch], use `Browser.element`                           |                                                          |
+| [ChromeVox][chrome-vox] (161,918)     | top                    | load, focus on something | [rough patch][patch], use `Browser.element`                                |                                                          |
+| [Viber][viber] (133,220)              | top, bottom            | load                     | [rough patch][patch], use `Browser.element`                                |                                                          |
 
 [gtr]: https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb
 [grammarly]: https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
@@ -96,6 +99,7 @@ cat elm.js\
 ```
 
 Note: This is just a workaround, _NOT_ a fix. For `Browser.application`, the root should be always `<body>` element. This is [by design](https://github.com/elm/browser/blob/1.0.0/notes/navigation-in-elements.md).
+Note: This will be no use once [this patch](./patch/README.md) is merged.
 
 ## TODO
 
