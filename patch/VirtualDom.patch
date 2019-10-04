@@ -1,5 +1,5 @@
---- Kernel/original_VirtualDom.js	2019-10-04 08:12:49.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-04 08:12:49.000000000 +0900
+--- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-05 05:58:27.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -19,7 +19,7 @@
  
  	if (_VirtualDom_divertHrefToApp && vNode.__tag == 'a')
  	{
-@@ -1313,14 +1316,36 @@
+@@ -1313,14 +1316,38 @@
  
  	var vKids = vNode.__kids;
  	var childNodes = domNode.childNodes;
@@ -50,25 +50,94 @@
 +				}
 +			}
 +			// 3. if existing node has been replaced with unknown node
-+			if(childNodes.length === vKids.length && !childNodes[k].created_by_elm) {
-+				// replace tha node using the old vdom
-+				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
++			if(childNodes.length === vKids.length) {
++				if(!childNodes[k].created_by_elm) {
++					// replace tha node using the old vdom
++					_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
++				}
 +			}
 +			i = _VirtualDom_addDomNodesHelp(childNodes[k], vKid, patches, i, low, nextLow, eventNode);
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1374,6 +1399,13 @@
+@@ -1367,20 +1394,32 @@
+ 	switch (patch.$)
+ 	{
+ 		case __3_REDRAW:
++			// console.log("3_REDRAW")
+ 			return _VirtualDom_applyPatchRedraw(domNode, patch.__data, patch.__eventNode);
+ 
+ 		case __3_FACTS:
++			// console.log("3_FACTS")
+ 			_VirtualDom_applyFacts(domNode, patch.__eventNode, patch.__data);
  			return domNode;
  
  		case __3_TEXT:
-+				if(!domNode.replaceData) {
-+					// TODO: this should not be necessary
-+					const textNode = document.createTextNode(patch.s);
-+					domNode.parentNode.insertBefore(textNode, domNode);
-+					domNode.remove();
-+					return textNode;
-+				}
++			// console.log("3_TEXT")
++			// if(!domNode.replaceData) {
++			// 	// TODO: this should not be necessary
++			// 	const textNode = document.createTextNode(patch.s);
++			// 	domNode.parentNode.insertBefore(textNode, domNode);
++			// 	domNode.remove();
++			// 	return textNode;
++			// }
  			domNode.replaceData(0, domNode.length, patch.__data);
  			return domNode;
  
+ 		case __3_THUNK:
++			// console.log("3_THUNK")
+ 			return _VirtualDom_applyPatchesHelp(domNode, patch.__data);
+ 
+ 		case __3_TAGGER:
++			// console.log("3_TAGGER")
+ 			if (domNode.elm_event_node_ref)
+ 			{
+ 				domNode.elm_event_node_ref.__tagger = patch.__data;
+@@ -1392,14 +1431,27 @@
+ 			return domNode;
+ 
+ 		case __3_REMOVE_LAST:
++			// console.log("3_REMOVE_LAST")
+ 			var data = patch.__data;
+ 			for (var i = 0; i < data.__diff; i++)
+ 			{
+ 				domNode.removeChild(domNode.childNodes[data.__length]);
+ 			}
++			// var removed = 0;
++			// var index = domNode.childNodes.length - 1;
++			// while (removed < data.__length)
++			// {
++			// 	const childNode = domNode.childNodes[index];
++			// 	if(childNode.created_by_elm) {
++			// 		domNode.removeChild(childNode);
++			// 		removed++;
++			// 	}
++			// 	index--;
++			// }
+ 			return domNode;
+ 
+ 		case __3_APPEND:
++			// console.log("3_APPEND")
+ 			var data = patch.__data;
+ 			var kids = data.__kids;
+ 			var i = data.__length;
+@@ -1411,6 +1463,7 @@
+ 			return domNode;
+ 
+ 		case __3_REMOVE:
++			// console.log("3_REMOVE")
+ 			var data = patch.__data;
+ 			if (!data)
+ 			{
+@@ -1426,9 +1479,11 @@
+ 			return domNode;
+ 
+ 		case __3_REORDER:
++			// console.log("3_REORDER")
+ 			return _VirtualDom_applyPatchReorder(domNode, patch);
+ 
+ 		case __3_CUSTOM:
++			// console.log("3_CUSTOM")
+ 			return patch.__data(domNode);
+ 
+ 		default:

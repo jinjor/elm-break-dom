@@ -12,8 +12,8 @@ rimraf.sync("screenshots");
 fs.mkdirSync("screenshots");
 
 describe("Simple", function() {
-  this.slow(50000);
-  this.timeout(10000);
+  this.slow(5000);
+  this.timeout(1000);
   let server;
   let browser;
   let page;
