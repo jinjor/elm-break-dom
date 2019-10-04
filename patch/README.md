@@ -26,6 +26,9 @@ TODO includes:
 - Insert / Remove many extension nodes
 - Insert / Remove nodes after interruption
 - Sorting nodes
+- Events
+- `Html.map`
+- `Html.Attributes.map`
 - `Html.Keyed`
 - `Html.Lazy`
 - Tests with real extensions
