@@ -12,8 +12,8 @@ rimraf.sync("screenshots");
 fs.mkdirSync("screenshots");
 
 describe("Simple", function() {
-  this.slow(5000);
-  this.timeout(1000);
+  this.slow(2000);
+  this.timeout(3000);
   let server;
   let browser;
   let page;
@@ -60,7 +60,12 @@ describe("Simple", function() {
           });
           beforeEach(async function() {
             await page.reload();
-            await page.waitForSelector("ul");
+            try {
+              await page.waitForSelector("ul", { timeout: 100 });
+            } catch (e) {
+              await page.$eval("body", body => console.log(body.innerHTML));
+              throw e;
+            }
           });
           describe("Insert into <body>", function() {
             it("at the top", async function() {

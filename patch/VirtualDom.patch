@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-05 05:58:27.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-05 07:14:55.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -93,27 +93,38 @@
  			if (domNode.elm_event_node_ref)
  			{
  				domNode.elm_event_node_ref.__tagger = patch.__data;
-@@ -1392,14 +1431,27 @@
+@@ -1392,14 +1431,36 @@
  			return domNode;
  
  		case __3_REMOVE_LAST:
 +			// console.log("3_REMOVE_LAST")
  			var data = patch.__data;
- 			for (var i = 0; i < data.__diff; i++)
+-			for (var i = 0; i < data.__diff; i++)
++			if(domNode.childNodes.length === data.__diff + data.__length)
  			{
- 				domNode.removeChild(domNode.childNodes[data.__length]);
+-				domNode.removeChild(domNode.childNodes[data.__length]);
++				// original logic
++				for (var i = 0; i < data.__diff; i++)
++				{
++					domNode.removeChild(domNode.childNodes[data.__length]);
++				}
++			}
++			else
++			{
++				// there should have been some interruptions
++				var removed = 0;
++				var index = domNode.childNodes.length - 1;
++				while (removed < data.__diff)
++				{
++					var childNode = domNode.childNodes[index];
++					if(childNode.created_by_elm)
++					{
++						domNode.removeChild(childNode);
++						removed++;
++					}
++					index--;
++				}
  			}
-+			// var removed = 0;
-+			// var index = domNode.childNodes.length - 1;
-+			// while (removed < data.__length)
-+			// {
-+			// 	const childNode = domNode.childNodes[index];
-+			// 	if(childNode.created_by_elm) {
-+			// 		domNode.removeChild(childNode);
-+			// 		removed++;
-+			// 	}
-+			// 	index--;
-+			// }
  			return domNode;
  
  		case __3_APPEND:
@@ -121,7 +132,7 @@
  			var data = patch.__data;
  			var kids = data.__kids;
  			var i = data.__length;
-@@ -1411,6 +1463,7 @@
+@@ -1411,6 +1472,7 @@
  			return domNode;
  
  		case __3_REMOVE:
@@ -129,7 +140,7 @@
  			var data = patch.__data;
  			if (!data)
  			{
-@@ -1426,9 +1479,11 @@
+@@ -1426,9 +1488,11 @@
  			return domNode;
  
  		case __3_REORDER:
