@@ -183,19 +183,19 @@ describe("Simple", function() {
               assert(!error, error);
               assert.equal((await page.$$("#insert18 .e1")).length, 1);
             });
-            it("...and insert remove <div> after target", async function() {
+            it("...and remove <div> after target", async function() {
               await page.click("#insert19 button");
               await page.waitFor(100);
               assert(!error, error);
               assert.equal((await page.$$("#insert19 .e1")).length, 0);
             });
-            it("...and insert remove <a> after target", async function() {
+            it("...and remove <a> after target", async function() {
               await page.click("#insert20 button");
               await page.waitFor(100);
               assert(!error, error);
               assert.equal((await page.$$("#insert20 .e1")).length, 0);
             });
-            it("...and insert remove text after target", async function() {
+            it("...and remove text after target", async function() {
               await page.click("#insert21 button");
               await page.waitFor(100);
               assert(!error, error);
