@@ -2,7 +2,7 @@ port module Simple.Common exposing (Model, Msg, init, main, noop, onUrlRequest, 
 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
-import Html exposing (Html, button, div, li, node, text, ul)
+import Html exposing (Html, a, button, div, li, node, text, ul)
 import Html.Attributes exposing (class, id, style, title)
 import Html.Events exposing (onClick)
 import Set exposing (Set)
@@ -117,6 +117,22 @@ view model =
         , insert3 model
         , insert4 model
         , insert5 model
+        , insert6 model
+        , insert7 model
+        , insert8 model
+        , insert9 model
+        , insert10 model
+        , insert11 model
+        , insert12 model
+        , insert13 model
+        , insert14 model
+        , insert15 model
+        , insert16 model
+        , insert17 model
+        , insert18 model
+        , insert19 model
+        , insert20 model
+        , insert21 model
         , remove1 model
         , remove2 model
         , remove3 model
@@ -239,6 +255,200 @@ insert5 : Model -> Html Msg
 insert5 model =
     wrap InsertBeforeTarget "insert5" <|
         div [] [ text (beforeOrAfter "insert5" model), div [ class "target" ] [] ]
+
+
+insert6 : Model -> Html Msg
+insert6 model =
+    wrap InsertBeforeTarget "insert6" <|
+        div []
+            [ if beforeOrAfter "insert6" model == "before" then
+                text "1"
+
+              else
+                div [ class "e1" ] []
+            , div [ class "target" ] []
+            ]
+
+
+insert7 : Model -> Html Msg
+insert7 model =
+    wrap InsertBeforeTarget "insert7" <|
+        div []
+            [ if beforeOrAfter "insert7" model == "before" then
+                div [ class "e1" ] []
+
+              else
+                text ""
+            , div [ class "target" ] []
+            ]
+
+
+insert8 : Model -> Html Msg
+insert8 model =
+    wrap InsertBeforeTarget "insert8" <|
+        div []
+            (if beforeOrAfter "insert8" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                []
+            )
+
+
+insert9 : Model -> Html Msg
+insert9 model =
+    wrap InsertBeforeTarget "insert9" <|
+        div []
+            (if beforeOrAfter "insert9" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ text "", div [ class "target" ] [] ]
+            )
+
+
+insert10 : Model -> Html Msg
+insert10 model =
+    wrap InsertBeforeTarget "insert10" <|
+        div []
+            (if beforeOrAfter "insert10" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ div [ class "e1" ] [], div [ class "target" ] [] ]
+            )
+
+
+insert11 : Model -> Html Msg
+insert11 model =
+    wrap InsertBeforeTarget "insert11" <|
+        div []
+            (if beforeOrAfter "insert11" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ a [ class "e1" ] [], div [ class "target" ] [] ]
+            )
+
+
+insert12 : Model -> Html Msg
+insert12 model =
+    wrap InsertBeforeTarget "insert12" <|
+        div []
+            (if beforeOrAfter "insert12" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ a [ class "e1" ] [] ]
+            )
+
+
+insert13 : Model -> Html Msg
+insert13 model =
+    wrap InsertBeforeTarget "insert13" <|
+        div []
+            (if beforeOrAfter "insert13" model == "before" then
+                [ div [ class "e1" ] [], div [ class "target" ] [] ]
+
+             else
+                [ div [ class "target" ] [] ]
+            )
+
+
+insert14 : Model -> Html Msg
+insert14 model =
+    wrap InsertBeforeTarget "insert14" <|
+        div []
+            (if beforeOrAfter "insert14" model == "before" then
+                [ a [ class "e1" ] [], div [ class "target" ] [] ]
+
+             else
+                [ div [ class "target" ] [] ]
+            )
+
+
+insert15 : Model -> Html Msg
+insert15 model =
+    wrap InsertBeforeTarget "insert15" <|
+        div []
+            (if beforeOrAfter "insert15" model == "before" then
+                [ text "", div [ class "target" ] [] ]
+
+             else
+                [ div [ class "target" ] [] ]
+            )
+
+
+insert16 : Model -> Html Msg
+insert16 model =
+    wrap InsertBeforeTarget "insert16" <|
+        div []
+            (if beforeOrAfter "insert16" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ div [ class "target" ] [], text "" ]
+            )
+
+
+insert17 : Model -> Html Msg
+insert17 model =
+    wrap InsertBeforeTarget "insert17" <|
+        div []
+            (if beforeOrAfter "insert17" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ div [ class "target" ] [], div [ class "e1" ] [] ]
+            )
+
+
+insert18 : Model -> Html Msg
+insert18 model =
+    wrap InsertBeforeTarget "insert18" <|
+        div []
+            (if beforeOrAfter "insert18" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ div [ class "target" ] [], a [ class "e1" ] [] ]
+            )
+
+
+insert19 : Model -> Html Msg
+insert19 model =
+    wrap InsertBeforeTarget "insert19" <|
+        div []
+            (if beforeOrAfter "insert19" model == "before" then
+                [ div [ class "target" ] [], div [ class "e1" ] [] ]
+
+             else
+                [ div [ class "target" ] [] ]
+            )
+
+
+insert20 : Model -> Html Msg
+insert20 model =
+    wrap InsertBeforeTarget "insert20" <|
+        div []
+            (if beforeOrAfter "insert20" model == "before" then
+                [ div [ class "target" ] [], a [ class "e1" ] [] ]
+
+             else
+                [ div [ class "target" ] [] ]
+            )
+
+
+insert21 : Model -> Html Msg
+insert21 model =
+    wrap InsertBeforeTarget "insert21" <|
+        div []
+            (if beforeOrAfter "insert21" model == "before" then
+                [ div [ class "target" ] [], text "" ]
+
+             else
+                [ div [ class "target" ] [] ]
+            )
 
 
 

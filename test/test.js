@@ -109,6 +109,97 @@ describe("Simple", function() {
               await page.waitFor(100);
               assert(!error, error);
             });
+            it("...and replace previous element (text -> div)", async function() {
+              await page.click("#insert6 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert6 .e1")).length, 1);
+            });
+            it("...and replace previous element (div -> text)", async function() {
+              await page.click("#insert7 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert7 .e1")).length, 0);
+            });
+            it("...and remove target", async function() {
+              await page.click("#insert8 button");
+              await page.waitFor(100);
+              assert(!error, error);
+            });
+            it("...and insert text before target", async function() {
+              await page.click("#insert9 button");
+              await page.waitFor(100);
+              assert(!error, error);
+            });
+            it("...and insert <div> before target", async function() {
+              await page.click("#insert10 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert10 .e1")).length, 1);
+            });
+            it("...and insert <a> before target", async function() {
+              await page.click("#insert11 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert11 .e1")).length, 1);
+            });
+            it("...and replace target with <a>", async function() {
+              await page.click("#insert12 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert12 .e1")).length, 1);
+            });
+            it("...and remove target's previous <div>", async function() {
+              await page.click("#insert13 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert13 .e1")).length, 0);
+            });
+            it("...and remove target's previous <a>", async function() {
+              await page.click("#insert14 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert14 .e1")).length, 0);
+            });
+            it("...and remove target's previous text", async function() {
+              await page.click("#insert15 button");
+              await page.waitFor(100);
+              assert(!error, error);
+            });
+            it("...and insert text after target", async function() {
+              await page.click("#insert16 button");
+              await page.waitFor(100);
+              assert(!error, error);
+            });
+            it("...and insert <div> after target", async function() {
+              await page.click("#insert17 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert17 .e1")).length, 1);
+            });
+            it("...and insert <a> after target", async function() {
+              await page.click("#insert18 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert18 .e1")).length, 1);
+            });
+            it("...and insert remove <div> after target", async function() {
+              await page.click("#insert19 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert19 .e1")).length, 0);
+            });
+            it("...and insert remove <a> after target", async function() {
+              await page.click("#insert20 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#insert20 .e1")).length, 0);
+            });
+            it("...and insert remove text after target", async function() {
+              await page.click("#insert21 button");
+              await page.waitFor(100);
+              assert(!error, error);
+            });
           });
           describe("Remove target element", function() {
             it("...and update target's grand child", async function() {
