@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-05 10:05:52.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-05 10:08:26.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -69,7 +69,7 @@
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1367,20 +1403,33 @@
+@@ -1367,20 +1403,25 @@
  	switch (patch.$)
  	{
  		case __3_REDRAW:
@@ -83,14 +83,6 @@
  
  		case __3_TEXT:
 +			// console.log("3_TEXT")
-+			// if(!domNode.replaceData) {
-+			// 	console.log(domNode.tagName, domNode.outerHTML);
-+			// 	// TODO: this should not be necessary
-+			// 	const textNode = document.createTextNode(patch.__data);
-+			// 	domNode.parentNode.replaceChild(textNode, domNode);
-+			// 	// domNode.remove();
-+			// 	return textNode;
-+			// }
  			domNode.replaceData(0, domNode.length, patch.__data);
  			return domNode;
  
@@ -103,7 +95,7 @@
  			if (domNode.elm_event_node_ref)
  			{
  				domNode.elm_event_node_ref.__tagger = patch.__data;
-@@ -1392,14 +1441,36 @@
+@@ -1392,14 +1433,36 @@
  			return domNode;
  
  		case __3_REMOVE_LAST:
@@ -142,7 +134,7 @@
  			var data = patch.__data;
  			var kids = data.__kids;
  			var i = data.__length;
-@@ -1411,6 +1482,7 @@
+@@ -1411,6 +1474,7 @@
  			return domNode;
  
  		case __3_REMOVE:
@@ -150,7 +142,7 @@
  			var data = patch.__data;
  			if (!data)
  			{
-@@ -1426,9 +1498,11 @@
+@@ -1426,9 +1490,11 @@
  			return domNode;
  
  		case __3_REORDER:
