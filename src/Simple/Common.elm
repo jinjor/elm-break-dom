@@ -2,14 +2,14 @@ port module Simple.Common exposing (Model, Msg, init, main, noop, onUrlRequest, 
 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
+import Dict exposing (Dict)
 import Html exposing (Html, a, button, div, li, node, text, ul)
 import Html.Attributes exposing (class, id, style, title)
 import Html.Events exposing (onClick)
-import Set exposing (Set)
 import Url
 
 
-port insertIntoBody : Bool -> Cmd msg
+port insertIntoBody : ( String, Int, Int ) -> Cmd msg
 
 
 port insertBeforeTarget : String -> Cmd msg
@@ -30,7 +30,7 @@ port done : (String -> msg) -> Sub msg
 type Msg
     = NoOp
     | UrlRequest UrlRequest
-    | InsertIntoBody Bool
+    | InsertIntoBody Int Int String
     | InsertBeforeTarget String
     | RemoveTarget String
     | WrapTarget String
@@ -49,7 +49,7 @@ noop =
 
 
 type alias Model =
-    Set String
+    Dict String Int
 
 
 main : Program () Model Msg
@@ -64,7 +64,7 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Set.empty, Cmd.none )
+    ( Dict.empty, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -83,8 +83,8 @@ update msg model =
                     Nav.load url
             )
 
-        InsertIntoBody top ->
-            ( model, insertIntoBody top )
+        InsertIntoBody top bottom id ->
+            ( model, insertIntoBody ( id, top, bottom ) )
 
         InsertBeforeTarget id ->
             ( model, insertBeforeTarget id )
@@ -99,7 +99,18 @@ update msg model =
             ( model, updateAttribute id )
 
         Done id ->
-            ( Set.insert id model, Cmd.none )
+            ( Dict.update id
+                (\maybeCount ->
+                    case maybeCount of
+                        Just n ->
+                            Just (n + 1)
+
+                        Nothing ->
+                            Just 0
+                )
+                model
+            , Cmd.none
+            )
 
 
 subscriptions : Model -> Sub Msg
@@ -112,6 +123,12 @@ view model =
     ul []
         [ insertIntoBody1 model
         , insertIntoBody2 model
+        , insertIntoBody3 model
+        , insertIntoBody4 model
+        , insertIntoBody5 model
+        , insertIntoBody6 model
+        , insertIntoBody7 model
+        , insertIntoBody8 model
         , insert1 model
         , insert2 model
         , insert3 model
@@ -146,6 +163,15 @@ view model =
         , wrap6 model
         , wrap7 model
         , wrap8 model
+        , wrap9 model
+        , wrap10 model
+        , wrap11 model
+        , wrap12 model
+        , wrap13 model
+        , wrap14 model
+        , wrap15 model
+        , wrap16 model
+        , wrap17 model
         , updateAttribute1 model
         , updateAttribute2 model
         , updateAttribute3 model
@@ -162,7 +188,7 @@ wrap toMsg id_ content =
 
 beforeOrAfter : String -> Model -> String
 beforeOrAfter id model =
-    if Set.member id model then
+    if Dict.member id model then
         "after"
 
     else
@@ -173,26 +199,58 @@ beforeOrAfter id model =
 -- INSERT INTO <body>
 
 
-{-| -}
 insertIntoBody1 : Model -> Html Msg
-insertIntoBody1 _ =
-    wrap (always (InsertIntoBody True)) "insert-into-body1" <|
-        text ""
+insertIntoBody1 model =
+    wrap (InsertIntoBody 0 0) "insert-into-body1" <|
+        text (beforeOrAfter "insert-into-body1" model)
 
 
-{-| -}
 insertIntoBody2 : Model -> Html Msg
-insertIntoBody2 _ =
-    wrap (always (InsertIntoBody False)) "insert-into-body2" <|
-        text ""
+insertIntoBody2 model =
+    wrap (InsertIntoBody 0 1) "insert-into-body2" <|
+        text (beforeOrAfter "insert-into-body2" model)
+
+
+insertIntoBody3 : Model -> Html Msg
+insertIntoBody3 model =
+    wrap (InsertIntoBody 0 2) "insert-into-body3" <|
+        text (beforeOrAfter "insert-into-body3" model)
+
+
+insertIntoBody4 : Model -> Html Msg
+insertIntoBody4 model =
+    wrap (InsertIntoBody 1 0) "insert-into-body4" <|
+        text (beforeOrAfter "insert-into-body4" model)
+
+
+insertIntoBody5 : Model -> Html Msg
+insertIntoBody5 model =
+    wrap (InsertIntoBody 1 1) "insert-into-body5" <|
+        text (beforeOrAfter "insert-into-body5" model)
+
+
+insertIntoBody6 : Model -> Html Msg
+insertIntoBody6 model =
+    wrap (InsertIntoBody 1 2) "insert-into-body6" <|
+        text (beforeOrAfter "insert-into-body6" model)
+
+
+insertIntoBody7 : Model -> Html Msg
+insertIntoBody7 model =
+    wrap (InsertIntoBody 2 0) "insert-into-body7" <|
+        text (beforeOrAfter "insert-into-body7" model)
+
+
+insertIntoBody8 : Model -> Html Msg
+insertIntoBody8 model =
+    wrap (InsertIntoBody 2 1) "insert-into-body8" <|
+        text (beforeOrAfter "insert-into-body8" model)
 
 
 
 -- INSERT <div>EXTENSION NODE</div> BEFORE ".target"
 
 
-{-| Cannot read property 'replaceData' of undefined
--}
 insert1 : Model -> Html Msg
 insert1 model =
     wrap InsertBeforeTarget "insert1" <|
@@ -220,8 +278,6 @@ insert2 model =
         div [] [ div [ class "target" ] [ text (beforeOrAfter "insert2" model) ] ]
 
 
-{-| domNode.replaceData is not a function
--}
 insert3 : Model -> Html Msg
 insert3 model =
     wrap InsertBeforeTarget "insert3" <|
@@ -249,8 +305,6 @@ insert4 model =
         div [] [ div [ class "target", class (beforeOrAfter "insert4" model) ] [] ]
 
 
-{-| No error
--}
 insert5 : Model -> Html Msg
 insert5 model =
     wrap InsertBeforeTarget "insert5" <|
@@ -455,40 +509,30 @@ insert21 model =
 -- REMOVE ".target"
 
 
-{-| Cannot read property 'childNodes' of undefined
--}
 remove1 : Model -> Html Msg
 remove1 model =
     wrap RemoveTarget "remove1" <|
         div [] [ div [ class "target" ] [ text (beforeOrAfter "remove1" model) ] ]
 
 
-{-| Cannot read property 'childNodes' of undefined
--}
 remove2 : Model -> Html Msg
 remove2 model =
     wrap RemoveTarget "remove2" <|
         div [] [ div [ class "target" ] [ div [] [ text (beforeOrAfter "remove2" model) ] ] ]
 
 
-{-| Cannot read property 'replaceData' of undefined
--}
 remove3 : Model -> Html Msg
 remove3 model =
     wrap RemoveTarget "remove3" <|
         div [] [ div [ class "target" ] [], text (beforeOrAfter "remove3" model) ]
 
 
-{-| Cannot set property 'className' of undefined
--}
 remove4 : Model -> Html Msg
 remove4 model =
     wrap RemoveTarget "remove4" <|
         div [] [ div [ class "target", class (beforeOrAfter "remove4" model) ] [] ]
 
 
-{-| No error
--}
 remove5 : Model -> Html Msg
 remove5 model =
     wrap RemoveTarget "remove5" <|
@@ -499,35 +543,30 @@ remove5 model =
 -- WRAP ".target" into <font>
 
 
-{-| -}
 wrap1 : Model -> Html Msg
 wrap1 model =
     wrap WrapTarget "wrap1" <|
         div [] [ div [ class "target" ] [ text (beforeOrAfter "wrap1" model) ] ]
 
 
-{-| -}
 wrap2 : Model -> Html Msg
 wrap2 model =
     wrap WrapTarget "wrap2" <|
         div [] [ div [ class "target", class (beforeOrAfter "wrap2" model) ] [] ]
 
 
-{-| -}
 wrap3 : Model -> Html Msg
 wrap3 model =
     wrap WrapTarget "wrap3" <|
         div [] [ div [ class "target" ] [], text (beforeOrAfter "wrap3" model) ]
 
 
-{-| -}
 wrap4 : Model -> Html Msg
 wrap4 model =
     wrap WrapTarget "wrap4" <|
         div [] [ text (beforeOrAfter "wrap4" model), div [ class "target" ] [] ]
 
 
-{-| -}
 wrap5 : Model -> Html Msg
 wrap5 model =
     wrap WrapTarget "wrap5" <|
@@ -553,26 +592,138 @@ wrap6 model =
         div [] [ node "font" [ class "target", class (beforeOrAfter "wrap6" model) ] [] ]
 
 
-{-| -}
 wrap7 : Model -> Html Msg
 wrap7 model =
     wrap WrapTarget "wrap7" <|
         div [] [ node "font" [ class "target" ] [], text (beforeOrAfter "wrap7" model) ]
 
 
-{-| -}
 wrap8 : Model -> Html Msg
 wrap8 model =
     wrap WrapTarget "wrap8" <|
         div [] [ text (beforeOrAfter "wrap8" model), node "font" [ class "target" ] [] ]
 
 
+wrap9 : Model -> Html Msg
+wrap9 model =
+    wrap WrapTarget "wrap9" <|
+        div []
+            [ if beforeOrAfter "wrap9" model == "before" then
+                div [ class "target" ] []
+
+              else
+                text ""
+            ]
+
+
+wrap10 : Model -> Html Msg
+wrap10 model =
+    wrap WrapTarget "wrap10" <|
+        div []
+            [ if beforeOrAfter "wrap10" model == "before" then
+                div [ class "target" ] []
+
+              else
+                a [ class "e1" ] []
+            ]
+
+
+wrap11 : Model -> Html Msg
+wrap11 model =
+    wrap WrapTarget "wrap11" <|
+        div []
+            [ if beforeOrAfter "wrap11" model == "before" then
+                div [ class "target" ] []
+
+              else
+                node "font" [ class "e1" ] [ text "" ]
+            ]
+
+
+wrap12 : Model -> Html Msg
+wrap12 model =
+    wrap WrapTarget "wrap12" <|
+        div []
+            (if beforeOrAfter "wrap12" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                []
+            )
+
+
+wrap13 : Model -> Html Msg
+wrap13 model =
+    wrap WrapTarget "wrap13" <|
+        div []
+            (if beforeOrAfter "wrap13" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ text "1", text "2" ]
+            )
+
+
+wrap14 : Model -> Html Msg
+wrap14 model =
+    wrap WrapTarget "wrap14" <|
+        div []
+            (if beforeOrAfter "wrap14" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ a [ class "e1" ] []
+                , a [ class "e2" ] []
+                ]
+            )
+
+
+wrap15 : Model -> Html Msg
+wrap15 model =
+    wrap WrapTarget "wrap15" <|
+        div []
+            (if beforeOrAfter "wrap15" model == "before" then
+                [ div [ class "target", class "e1" ] [] ]
+
+             else
+                [ div [ class "target", class "e2" ] []
+                , a [ class "e3" ] []
+                ]
+            )
+
+
+wrap16 : Model -> Html Msg
+wrap16 model =
+    wrap WrapTarget "wrap16" <|
+        div []
+            (if beforeOrAfter "wrap16" model == "before" then
+                [ div [ class "target", class "e1" ] [] ]
+
+             else
+                [ a [ class "e3" ] []
+                , div [ class "target", class "e2" ] []
+                ]
+            )
+
+
+wrap17 : Model -> Html Msg
+wrap17 model =
+    wrap WrapTarget "wrap17" <|
+        div []
+            (if beforeOrAfter "wrap17" model == "before" then
+                [ div [ class "target", class "e1" ] [] ]
+
+             else
+                [ node "font" [ class "e3" ] []
+                , div [ class "target", class "e2" ] []
+                ]
+            )
+
+
 
 -- REPLACE title of ".target" WITH "break"
 
 
-{-| This should be safe.
--}
 updateAttribute1 : Model -> Html Msg
 updateAttribute1 model =
     wrap UpdateAttribute "update-attribute1" <|
@@ -583,8 +734,6 @@ updateAttribute1 model =
             [ text (beforeOrAfter "update-attribute1" model) ]
 
 
-{-| This should be safe.
--}
 updateAttribute2 : Model -> Html Msg
 updateAttribute2 model =
     wrap UpdateAttribute "update-attribute2" <|
@@ -596,7 +745,6 @@ updateAttribute2 model =
             [ text (beforeOrAfter "update-attribute2" model) ]
 
 
-{-| -}
 updateAttribute3 : Model -> Html Msg
 updateAttribute3 model =
     wrap UpdateAttribute "update-attribute3" <|

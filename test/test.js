@@ -11,6 +11,10 @@ const headless = process.env.HEADLESS === "false" ? false : true;
 rimraf.sync("screenshots");
 fs.mkdirSync("screenshots");
 
+async function assertCount(page, selector, n) {
+  assert.equal((await page.$$(selector)).length, n);
+}
+
 describe("Simple", function() {
   this.slow(2000);
   this.timeout(3000);
@@ -68,18 +72,61 @@ describe("Simple", function() {
             }
           });
           describe("Insert into <body>", function() {
-            it("at the top", async function() {
+            it("at (top = 0, bottom = 0)", async function() {
               await page.click("#insert-into-body1 button");
               await page.waitFor(100);
-              await page.screenshot({
-                path: `screenshots/debug-body-top-${main}.png`
-              });
               assert(!error, error);
+              await assertCount(page, "body > .top", 0);
+              await assertCount(page, "body > .bottom", 0);
             });
-            it("at the bottom", async function() {
+            it("at (top = 0, bottom = 1)", async function() {
               await page.click("#insert-into-body2 button");
               await page.waitFor(100);
               assert(!error, error);
+              await assertCount(page, "body > .top", 0);
+              await assertCount(page, "body > .bottom", 1);
+            });
+            it("at (top = 0, bottom = 2)", async function() {
+              await page.click("#insert-into-body3 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 0);
+              await assertCount(page, "body > .bottom", 2);
+            });
+            it("at (top = 1, bottom = 0)", async function() {
+              await page.click("#insert-into-body4 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 1);
+              await assertCount(page, "body > .bottom", 0);
+            });
+            it("at (top = 1, bottom = 1)", async function() {
+              await page.click("#insert-into-body5 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 1);
+              await assertCount(page, "body > .bottom", 1);
+            });
+            it("at (top = 1, bottom = 2)", async function() {
+              await page.click("#insert-into-body6 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 1);
+              await assertCount(page, "body > .bottom", 2);
+            });
+            it("at (top = 2, bottom = 0)", async function() {
+              await page.click("#insert-into-body7 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 2);
+              await assertCount(page, "body > .bottom", 0);
+            });
+            it("at (top = 2, bottom = 1)", async function() {
+              await page.click("#insert-into-body8 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 2);
+              await assertCount(page, "body > .bottom", 1);
             });
           });
           describe("Insert before target element", function() {
@@ -265,9 +312,9 @@ describe("Simple", function() {
             it("...and update target's class (same tag)", async function() {
               await page.click("#wrap6 button");
               await page.waitFor(100);
+              assert(!error, error);
               assert.equal((await page.$$("#wrap6 .target.before")).length, 0);
               assert.equal((await page.$$("#wrap6 .target.after")).length, 1);
-              assert(!error, error);
             });
             it("...and update target's next element (same tag)", async function() {
               await page.click("#wrap7 button");
@@ -278,6 +325,73 @@ describe("Simple", function() {
               await page.click("#wrap8 button");
               await page.waitFor(100);
               assert(!error, error);
+            });
+            it("...and replace target with text", async function() {
+              await page.click("#wrap9 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#wrap9 .target")).length, 0);
+            });
+            it("...and replace target with <a>", async function() {
+              await page.click("#wrap10 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#wrap10 .target")).length, 0);
+              assert.equal((await page.$$("#wrap10 .e1")).length, 1);
+            });
+            it("...and replace target with <font> (same tag)", async function() {
+              await page.click("#wrap11 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#wrap11 .target")).length, 0);
+              assert.equal((await page.$$("#wrap11 .e1")).length, 1);
+            });
+            it("...and remove target", async function() {
+              await page.click("#wrap12 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#wrap12 .target")).length, 0);
+            });
+            it("...and replace with 2 text nodes", async function() {
+              await page.click("#wrap13 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#wrap13 .target")).length, 0);
+            });
+            it("...and replace with 2 <a> nodes", async function() {
+              await page.click("#wrap14 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#wrap14 .target")).length, 0);
+              assert.equal((await page.$$("#wrap14 .e1")).length, 1);
+              assert.equal((await page.$$("#wrap14 .e2")).length, 1);
+            });
+            it("...and insert <a> after target", async function() {
+              await page.click("#wrap15 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#wrap15 .target")).length, 1);
+              assert.equal((await page.$$("#wrap15 .e1")).length, 0);
+              assert.equal((await page.$$("#wrap15 .e2")).length, 1);
+              assert.equal((await page.$$("#wrap15 .e3")).length, 1);
+            });
+            it("...and insert <a> before target", async function() {
+              await page.click("#wrap16 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#wrap16 .target")).length, 1);
+              assert.equal((await page.$$("#wrap16 .e1")).length, 0);
+              assert.equal((await page.$$("#wrap16 .e2")).length, 1);
+              assert.equal((await page.$$("#wrap16 .e3")).length, 1);
+            });
+            it("...and insert <font> before target", async function() {
+              await page.click("#wrap17 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.equal((await page.$$("#wrap17 .target")).length, 1);
+              assert.equal((await page.$$("#wrap17 .e1")).length, 0);
+              assert.equal((await page.$$("#wrap17 .e2")).length, 1);
+              assert.equal((await page.$$("#wrap17 .e3")).length, 1);
             });
           });
           describe("Update target attribute", function() {
