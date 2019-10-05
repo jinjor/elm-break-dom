@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-05 11:48:14.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-05 21:18:52.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -69,9 +69,37 @@
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1393,9 +1429,29 @@
+@@ -1367,20 +1403,25 @@
+ 	switch (patch.$)
+ 	{
+ 		case __3_REDRAW:
++			// console.log("3_REDRAW")
+ 			return _VirtualDom_applyPatchRedraw(domNode, patch.__data, patch.__eventNode);
+ 
+ 		case __3_FACTS:
++			// console.log("3_FACTS")
+ 			_VirtualDom_applyFacts(domNode, patch.__eventNode, patch.__data);
+ 			return domNode;
+ 
+ 		case __3_TEXT:
++			// console.log("3_TEXT")
+ 			domNode.replaceData(0, domNode.length, patch.__data);
+ 			return domNode;
+ 
+ 		case __3_THUNK:
++			// console.log("3_THUNK")
+ 			return _VirtualDom_applyPatchesHelp(domNode, patch.__data);
+ 
+ 		case __3_TAGGER:
++			// console.log("3_TAGGER")
+ 			if (domNode.elm_event_node_ref)
+ 			{
+ 				domNode.elm_event_node_ref.__tagger = patch.__data;
+@@ -1392,14 +1433,36 @@
+ 			return domNode;
  
  		case __3_REMOVE_LAST:
++			// console.log("3_REMOVE_LAST")
  			var data = patch.__data;
 -			for (var i = 0; i < data.__diff; i++)
 +			if(domNode.childNodes.length === data.__diff + data.__length)
@@ -101,3 +129,28 @@
  			}
  			return domNode;
  
+ 		case __3_APPEND:
++			// console.log("3_APPEND")
+ 			var data = patch.__data;
+ 			var kids = data.__kids;
+ 			var i = data.__length;
+@@ -1411,6 +1474,7 @@
+ 			return domNode;
+ 
+ 		case __3_REMOVE:
++			// console.log("3_REMOVE")
+ 			var data = patch.__data;
+ 			if (!data)
+ 			{
+@@ -1426,9 +1490,11 @@
+ 			return domNode;
+ 
+ 		case __3_REORDER:
++			// console.log("3_REORDER")
+ 			return _VirtualDom_applyPatchReorder(domNode, patch);
+ 
+ 		case __3_CUSTOM:
++			// console.log("3_CUSTOM")
+ 			return patch.__data(domNode);
+ 
+ 		default:
