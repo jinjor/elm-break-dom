@@ -12,8 +12,8 @@ rimraf.sync("screenshots");
 fs.mkdirSync("screenshots");
 
 describe("Simple", function() {
-  this.slow(50000);
-  this.timeout(10000);
+  this.slow(2000);
+  this.timeout(3000);
   let server;
   let browser;
   let page;
@@ -30,9 +30,12 @@ describe("Simple", function() {
         args.map(arg => arg.executionContext().evaluate(a => a, arg))
       );
       const strings = values
-        .filter(
-          v => typeof v !== "string" || !v.startsWith("Compiled in DEV mode")
-        )
+        .filter(v => {
+          if (typeof v === "string") {
+            return !v.startsWith("Compiled in DEV mode");
+          }
+          return true;
+        })
         .map(v => chalk.gray(v));
       strings.length && console.log(...strings);
     });
@@ -57,7 +60,12 @@ describe("Simple", function() {
           });
           beforeEach(async function() {
             await page.reload();
-            await page.waitForSelector("ul");
+            try {
+              await page.waitForSelector("ul", { timeout: 100 });
+            } catch (e) {
+              await page.$eval("body", body => console.log(body.innerHTML));
+              throw e;
+            }
           });
           describe("Insert into <body>", function() {
             it("at the top", async function() {
@@ -326,7 +334,12 @@ describe("No extensions", function() {
         args.map(arg => arg.executionContext().evaluate(a => a, arg))
       );
       const strings = values
-        .filter(v => !v.startsWith("Compiled in DEV mode"))
+        .filter(v => {
+          if (typeof v === "string") {
+            return !v.startsWith("Compiled in DEV mode");
+          }
+          return true;
+        })
         .map(v => chalk.gray(v));
       strings.length && console.log(...strings);
     });
