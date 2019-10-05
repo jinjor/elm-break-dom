@@ -167,6 +167,8 @@ view model =
         , append8 model
         , append9 model
         , append10 model
+        , append11 model
+        , append12 model
         , remove1 model
         , remove2 model
         , remove3 model
@@ -630,6 +632,30 @@ append10 model =
         div [ class "target" ]
             (if beforeOrAfter "append10" model == "before" then
                 [ div [ class "e1" ] [], div [ class "e2" ] [] ]
+
+             else
+                []
+            )
+
+
+append11 : Model -> Html Msg
+append11 model =
+    wrap AppendToTarget "append11" <|
+        div []
+            (if beforeOrAfter "append11" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ text "" ]
+            )
+
+
+append12 : Model -> Html Msg
+append12 model =
+    wrap AppendToTarget "append12" <|
+        div []
+            (if beforeOrAfter "append12" model == "before" then
+                [ div [ class "target" ] [] ]
 
              else
                 []

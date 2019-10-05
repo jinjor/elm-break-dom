@@ -325,6 +325,20 @@ describe("Simple", function() {
               await assertCount(page, "#append10 .e1", 0);
               await assertCount(page, "#append10 .e2", 0);
             });
+            it("...and replace target with text", async function() {
+              await page.click("#append11 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append11 .target", 0);
+              await assertCount(page, "#append11 .ext", 0);
+            });
+            it("...and remove target", async function() {
+              await page.click("#append12 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append12 .target", 0);
+              await assertCount(page, "#append12 .ext", 0);
+            });
           });
           describe("Remove target element", function() {
             it("...and update target's grand child", async function() {
