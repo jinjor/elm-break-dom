@@ -5,6 +5,12 @@ const main = elementMode ? Elm.Simple.Element : Elm.Simple.Application;
 const app = main.init({
   node: document.getElementById("root")
 });
+app.ports.event.subscribe(s => {
+  if (window.notifyEvent) {
+    window.notifyEvent(s);
+  }
+  app.ports.done.send("");
+});
 app.ports.insertIntoBody.subscribe(([id, top, bottom]) => {
   for (let i = 0; i < top; i++) {
     const node = `<div class="top">EXTENSION NODE</div>`;

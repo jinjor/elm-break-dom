@@ -9,6 +9,9 @@ import Html.Events exposing (onClick)
 import Url
 
 
+port event : String -> Cmd msg
+
+
 port insertIntoBody : ( String, Int, Int ) -> Cmd msg
 
 
@@ -33,6 +36,7 @@ port done : (String -> msg) -> Sub msg
 type Msg
     = NoOp
     | UrlRequest UrlRequest
+    | Event String
     | InsertIntoBody Int Int String
     | InsertBeforeTarget String
     | AppendToTarget String
@@ -86,6 +90,9 @@ update msg model =
                 External url ->
                     Nav.load url
             )
+
+        Event s ->
+            ( model, event s )
 
         InsertIntoBody top bottom id ->
             ( model, insertIntoBody ( id, top, bottom ) )
@@ -201,6 +208,12 @@ view model =
         , updateAttribute1 model
         , updateAttribute2 model
         , updateAttribute3 model
+        , event1 model
+        , event2 model
+        , event3 model
+        , event4 model
+        , event5 model
+        , event6 model
         ]
 
 
@@ -979,3 +992,87 @@ updateAttribute3 model =
             , class (beforeOrAfter "update-attribute3" model)
             ]
             [ text (beforeOrAfter "update-attribute2" model) ]
+
+
+
+-- EVENTS
+
+
+event1 : Model -> Html Msg
+event1 model =
+    wrap InsertBeforeTarget "event1" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , onClick (Event "a")
+                ]
+                [ text (beforeOrAfter "event1" model) ]
+            ]
+
+
+event2 : Model -> Html Msg
+event2 model =
+    wrap InsertBeforeTarget "event2" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , Html.Attributes.map Event (onClick "a")
+                ]
+                [ text (beforeOrAfter "event2" model) ]
+            ]
+
+
+event3 : Model -> Html Msg
+event3 model =
+    wrap InsertBeforeTarget "event3" <|
+        div []
+            [ Html.map Event <|
+                a
+                    [ class "target"
+                    , class "button"
+                    , onClick "a"
+                    ]
+                    [ text (beforeOrAfter "event3" model) ]
+            ]
+
+
+event4 : Model -> Html Msg
+event4 model =
+    wrap InsertBeforeTarget "event4" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , onClick (Event (beforeOrAfter "event4" model))
+                ]
+                []
+            ]
+
+
+event5 : Model -> Html Msg
+event5 model =
+    wrap InsertBeforeTarget "event5" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , Html.Attributes.map Event (onClick (beforeOrAfter "event5" model))
+                ]
+                []
+            ]
+
+
+event6 : Model -> Html Msg
+event6 model =
+    wrap InsertBeforeTarget "event6" <|
+        div []
+            [ Html.map Event <|
+                a
+                    [ class "target"
+                    , class "button"
+                    , onClick (beforeOrAfter "event6" model)
+                    ]
+                    []
+            ]

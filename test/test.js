@@ -22,12 +22,16 @@ describe("Simple", function() {
   let browser;
   let page;
   let error;
+  let eventResult;
   before(async function() {
     const app = express();
     app.use(express.static(`${__dirname}/../public`));
     server = app.listen(port);
     browser = await puppeteer.launch({ headless });
     page = await browser.newPage();
+    await page.exposeFunction("notifyEvent", s => {
+      eventResult.push(s);
+    });
     page.on("console", async msg => {
       const args = await msg.args();
       const values = await Promise.all(
@@ -49,6 +53,7 @@ describe("Simple", function() {
   });
   beforeEach(async function() {
     error = undefined;
+    eventResult = [];
   });
   for (let version of ["Original", "Patched"]) {
     describe(version, function() {
@@ -500,6 +505,56 @@ describe("Simple", function() {
               await page.click("#update-attribute3 button");
               await page.waitFor(100);
               assert(!error, error);
+            });
+          });
+          describe("Events", function() {
+            it("insert before target, update target's child, event from target", async function() {
+              await page.click("#event1 button");
+              await page.waitFor(100);
+              await page.click("#event1 .button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.deepEqual(eventResult, ["a"]);
+            });
+            it("insert before target, update target's child, event from target (with Html.Attributes.map)", async function() {
+              await page.click("#event2 button");
+              await page.waitFor(100);
+              await page.click("#event2 .button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.deepEqual(eventResult, ["a"]);
+            });
+            it("insert before target, update target's child, event from target (with Html.map)", async function() {
+              await page.click("#event3 button");
+              await page.waitFor(100);
+              await page.click("#event3 .button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.deepEqual(eventResult, ["a"]);
+            });
+            it("insert before target, update target's event handler, event from target", async function() {
+              await page.click("#event4 button");
+              await page.waitFor(100);
+              await page.click("#event4 .button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.deepEqual(eventResult, ["after"]);
+            });
+            it("insert before target, update target's event handler, event from target (with Html.Attributes.map)", async function() {
+              await page.click("#event5 button");
+              await page.waitFor(100);
+              await page.click("#event5 .button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.deepEqual(eventResult, ["after"]);
+            });
+            it("insert before target, update target's event handler, event from target (with Html.map)", async function() {
+              await page.click("#event6 button");
+              await page.waitFor(100);
+              await page.click("#event6 .button");
+              await page.waitFor(100);
+              assert(!error, error);
+              assert.deepEqual(eventResult, ["after"]);
             });
           });
         });
