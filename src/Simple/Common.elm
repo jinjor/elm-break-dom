@@ -2,10 +2,10 @@ port module Simple.Common exposing (Model, Msg, init, main, noop, onUrlRequest, 
 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
+import Dict exposing (Dict)
 import Html exposing (Html, a, button, div, li, node, text, ul)
 import Html.Attributes exposing (class, id, style, title)
 import Html.Events exposing (onClick)
-import Set exposing (Set)
 import Url
 
 
@@ -49,7 +49,7 @@ noop =
 
 
 type alias Model =
-    Set String
+    Dict String Int
 
 
 main : Program () Model Msg
@@ -64,7 +64,7 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Set.empty, Cmd.none )
+    ( Dict.empty, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -99,7 +99,18 @@ update msg model =
             ( model, updateAttribute id )
 
         Done id ->
-            ( Set.insert id model, Cmd.none )
+            ( Dict.update id
+                (\maybeCount ->
+                    case maybeCount of
+                        Just n ->
+                            Just (n + 1)
+
+                        Nothing ->
+                            Just 0
+                )
+                model
+            , Cmd.none
+            )
 
 
 subscriptions : Model -> Sub Msg
@@ -177,7 +188,7 @@ wrap toMsg id_ content =
 
 beforeOrAfter : String -> Model -> String
 beforeOrAfter id model =
-    if Set.member id model then
+    if Dict.member id model then
         "after"
 
     else
