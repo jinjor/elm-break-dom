@@ -157,6 +157,13 @@ view model =
         , insert19 model
         , insert20 model
         , insert21 model
+        , insert22 model
+        , insert23 model
+        , insert24 model
+        , insert25 model
+        , insert26 model
+        , insert27 model
+        , insert28 model
         , append1 model
         , append2 model
         , append3 model
@@ -522,6 +529,67 @@ insert21 model =
              else
                 [ div [ class "target" ] [] ]
             )
+
+
+insert22 : Model -> Html Msg
+insert22 model =
+    wrap InsertBeforeTarget "insert22" <|
+        Html.map identity <|
+            div [] [ div [ class "target" ] [ text (beforeOrAfter "insert22" model) ] ]
+
+
+insert23 : Model -> Html Msg
+insert23 model =
+    wrap InsertBeforeTarget "insert23" <|
+        Html.map identity <|
+            div [] [ div [ class "target", class (beforeOrAfter "insert23" model) ] [] ]
+
+
+insert24 : Model -> Html Msg
+insert24 model =
+    wrap InsertBeforeTarget "insert24" <|
+        div []
+            [ Html.map identity <|
+                div [ class "target", class (beforeOrAfter "insert24" model) ] []
+            ]
+
+
+insert25 : Model -> Html Msg
+insert25 model =
+    wrap InsertBeforeTarget "insert25" <|
+        div []
+            [ Html.map identity <|
+                div [ class "target" ] []
+            , text (beforeOrAfter "insert25" model)
+            ]
+
+
+insert26 : Model -> Html Msg
+insert26 model =
+    wrap InsertBeforeTarget "insert26" <|
+        div []
+            [ text (beforeOrAfter "insert26" model)
+            , Html.map identity <|
+                div [ class "target" ] []
+            ]
+
+
+insert27 : Model -> Html Msg
+insert27 model =
+    wrap InsertBeforeTarget "insert27" <|
+        div []
+            [ Html.map identity (text "")
+            , div [ class "target", class (beforeOrAfter "insert27" model) ] []
+            ]
+
+
+insert28 : Model -> Html Msg
+insert28 model =
+    wrap InsertBeforeTarget "insert28" <|
+        div []
+            [ div [ class "target", class (beforeOrAfter "insert28" model) ] []
+            , Html.map identity (text "")
+            ]
 
 
 

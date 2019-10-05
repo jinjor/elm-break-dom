@@ -255,6 +255,13 @@ describe("Simple", function() {
               await page.waitFor(100);
               assert(!error, error);
             });
+            it("22-28", async function() {
+              for (let i = 22; i <= 28; i++) {
+                await page.click(`#insert${i} button`);
+                await page.waitFor(50);
+                assert(!error, error);
+              }
+            });
           });
           describe("Append to target element", function() {
             it("...and update target's attribute", async function() {
