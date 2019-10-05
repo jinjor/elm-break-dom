@@ -11,6 +11,10 @@ const headless = process.env.HEADLESS === "false" ? false : true;
 rimraf.sync("screenshots");
 fs.mkdirSync("screenshots");
 
+async function assertCount(page, selector, n) {
+  assert.equal((await page.$$(selector)).length, n);
+}
+
 describe("Simple", function() {
   this.slow(2000);
   this.timeout(3000);
@@ -68,18 +72,61 @@ describe("Simple", function() {
             }
           });
           describe("Insert into <body>", function() {
-            it("at the top", async function() {
+            it("at (top = 0, bottom = 0)", async function() {
               await page.click("#insert-into-body1 button");
               await page.waitFor(100);
-              await page.screenshot({
-                path: `screenshots/debug-body-top-${main}.png`
-              });
               assert(!error, error);
+              await assertCount(page, "body > .top", 0);
+              await assertCount(page, "body > .bottom", 0);
             });
-            it("at the bottom", async function() {
+            it("at (top = 0, bottom = 1)", async function() {
               await page.click("#insert-into-body2 button");
               await page.waitFor(100);
               assert(!error, error);
+              await assertCount(page, "body > .top", 0);
+              await assertCount(page, "body > .bottom", 1);
+            });
+            it("at (top = 0, bottom = 2)", async function() {
+              await page.click("#insert-into-body3 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 0);
+              await assertCount(page, "body > .bottom", 2);
+            });
+            it("at (top = 1, bottom = 0)", async function() {
+              await page.click("#insert-into-body4 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 1);
+              await assertCount(page, "body > .bottom", 0);
+            });
+            it("at (top = 1, bottom = 1)", async function() {
+              await page.click("#insert-into-body5 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 1);
+              await assertCount(page, "body > .bottom", 1);
+            });
+            it("at (top = 1, bottom = 2)", async function() {
+              await page.click("#insert-into-body6 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 1);
+              await assertCount(page, "body > .bottom", 2);
+            });
+            it("at (top = 2, bottom = 0)", async function() {
+              await page.click("#insert-into-body7 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 2);
+              await assertCount(page, "body > .bottom", 0);
+            });
+            it("at (top = 2, bottom = 1)", async function() {
+              await page.click("#insert-into-body8 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "body > .top", 2);
+              await assertCount(page, "body > .bottom", 1);
             });
           });
           describe("Insert before target element", function() {

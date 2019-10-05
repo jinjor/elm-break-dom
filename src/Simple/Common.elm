@@ -9,7 +9,7 @@ import Set exposing (Set)
 import Url
 
 
-port insertIntoBody : Bool -> Cmd msg
+port insertIntoBody : ( String, Int, Int ) -> Cmd msg
 
 
 port insertBeforeTarget : String -> Cmd msg
@@ -30,7 +30,7 @@ port done : (String -> msg) -> Sub msg
 type Msg
     = NoOp
     | UrlRequest UrlRequest
-    | InsertIntoBody Bool
+    | InsertIntoBody Int Int String
     | InsertBeforeTarget String
     | RemoveTarget String
     | WrapTarget String
@@ -83,8 +83,8 @@ update msg model =
                     Nav.load url
             )
 
-        InsertIntoBody top ->
-            ( model, insertIntoBody top )
+        InsertIntoBody top bottom id ->
+            ( model, insertIntoBody ( id, top, bottom ) )
 
         InsertBeforeTarget id ->
             ( model, insertBeforeTarget id )
@@ -112,6 +112,12 @@ view model =
     ul []
         [ insertIntoBody1 model
         , insertIntoBody2 model
+        , insertIntoBody3 model
+        , insertIntoBody4 model
+        , insertIntoBody5 model
+        , insertIntoBody6 model
+        , insertIntoBody7 model
+        , insertIntoBody8 model
         , insert1 model
         , insert2 model
         , insert3 model
@@ -183,15 +189,51 @@ beforeOrAfter id model =
 
 
 insertIntoBody1 : Model -> Html Msg
-insertIntoBody1 _ =
-    wrap (always (InsertIntoBody True)) "insert-into-body1" <|
-        text ""
+insertIntoBody1 model =
+    wrap (InsertIntoBody 0 0) "insert-into-body1" <|
+        text (beforeOrAfter "insert-into-body1" model)
 
 
 insertIntoBody2 : Model -> Html Msg
-insertIntoBody2 _ =
-    wrap (always (InsertIntoBody False)) "insert-into-body2" <|
-        text ""
+insertIntoBody2 model =
+    wrap (InsertIntoBody 0 1) "insert-into-body2" <|
+        text (beforeOrAfter "insert-into-body2" model)
+
+
+insertIntoBody3 : Model -> Html Msg
+insertIntoBody3 model =
+    wrap (InsertIntoBody 0 2) "insert-into-body3" <|
+        text (beforeOrAfter "insert-into-body3" model)
+
+
+insertIntoBody4 : Model -> Html Msg
+insertIntoBody4 model =
+    wrap (InsertIntoBody 1 0) "insert-into-body4" <|
+        text (beforeOrAfter "insert-into-body4" model)
+
+
+insertIntoBody5 : Model -> Html Msg
+insertIntoBody5 model =
+    wrap (InsertIntoBody 1 1) "insert-into-body5" <|
+        text (beforeOrAfter "insert-into-body5" model)
+
+
+insertIntoBody6 : Model -> Html Msg
+insertIntoBody6 model =
+    wrap (InsertIntoBody 1 2) "insert-into-body6" <|
+        text (beforeOrAfter "insert-into-body6" model)
+
+
+insertIntoBody7 : Model -> Html Msg
+insertIntoBody7 model =
+    wrap (InsertIntoBody 2 0) "insert-into-body7" <|
+        text (beforeOrAfter "insert-into-body7" model)
+
+
+insertIntoBody8 : Model -> Html Msg
+insertIntoBody8 model =
+    wrap (InsertIntoBody 2 1) "insert-into-body8" <|
+        text (beforeOrAfter "insert-into-body8" model)
 
 
 
