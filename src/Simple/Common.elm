@@ -146,6 +146,15 @@ view model =
         , wrap6 model
         , wrap7 model
         , wrap8 model
+        , wrap9 model
+        , wrap10 model
+        , wrap11 model
+        , wrap12 model
+        , wrap13 model
+        , wrap14 model
+        , wrap15 model
+        , wrap16 model
+        , wrap17 model
         , updateAttribute1 model
         , updateAttribute2 model
         , updateAttribute3 model
@@ -540,6 +549,122 @@ wrap8 : Model -> Html Msg
 wrap8 model =
     wrap WrapTarget "wrap8" <|
         div [] [ text (beforeOrAfter "wrap8" model), node "font" [ class "target" ] [] ]
+
+
+wrap9 : Model -> Html Msg
+wrap9 model =
+    wrap WrapTarget "wrap9" <|
+        div []
+            [ if beforeOrAfter "wrap9" model == "before" then
+                div [ class "target" ] []
+
+              else
+                text ""
+            ]
+
+
+wrap10 : Model -> Html Msg
+wrap10 model =
+    wrap WrapTarget "wrap10" <|
+        div []
+            [ if beforeOrAfter "wrap10" model == "before" then
+                div [ class "target" ] []
+
+              else
+                a [ class "e1" ] []
+            ]
+
+
+wrap11 : Model -> Html Msg
+wrap11 model =
+    wrap WrapTarget "wrap11" <|
+        div []
+            [ if beforeOrAfter "wrap11" model == "before" then
+                div [ class "target" ] []
+
+              else
+                node "font" [ class "e1" ] [ text "" ]
+            ]
+
+
+wrap12 : Model -> Html Msg
+wrap12 model =
+    wrap WrapTarget "wrap12" <|
+        div []
+            (if beforeOrAfter "wrap12" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                []
+            )
+
+
+wrap13 : Model -> Html Msg
+wrap13 model =
+    wrap WrapTarget "wrap13" <|
+        div []
+            (if beforeOrAfter "wrap13" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ text "1", text "2" ]
+            )
+
+
+wrap14 : Model -> Html Msg
+wrap14 model =
+    wrap WrapTarget "wrap14" <|
+        div []
+            (if beforeOrAfter "wrap14" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ a [ class "e1" ] []
+                , a [ class "e2" ] []
+                ]
+            )
+
+
+wrap15 : Model -> Html Msg
+wrap15 model =
+    wrap WrapTarget "wrap15" <|
+        div []
+            (if beforeOrAfter "wrap15" model == "before" then
+                [ div [ class "target", class "e1" ] [] ]
+
+             else
+                [ div [ class "target", class "e2" ] []
+                , a [ class "e3" ] []
+                ]
+            )
+
+
+wrap16 : Model -> Html Msg
+wrap16 model =
+    wrap WrapTarget "wrap16" <|
+        div []
+            (if beforeOrAfter "wrap16" model == "before" then
+                [ div [ class "target", class "e1" ] [] ]
+
+             else
+                [ a [ class "e3" ] []
+                , div [ class "target", class "e2" ] []
+                ]
+            )
+
+
+wrap17 : Model -> Html Msg
+wrap17 model =
+    wrap WrapTarget "wrap17" <|
+        div []
+            (if beforeOrAfter "wrap17" model == "before" then
+                [ div [ class "target", class "e1" ] [] ]
+
+             else
+                [ node "font" [ class "e3" ] []
+                , div [ class "target", class "e2" ] []
+                ]
+            )
 
 
 
