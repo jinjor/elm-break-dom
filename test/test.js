@@ -256,6 +256,76 @@ describe("Simple", function() {
               assert(!error, error);
             });
           });
+          describe("Append to target element", function() {
+            it("...and update target's attribute", async function() {
+              await page.click("#append1 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append1 .ext", 1);
+              await assertCount(page, "#append1 .target.before", 0);
+              await assertCount(page, "#append1 .target.after", 1);
+            });
+            it("...and update target's child", async function() {
+              await page.click("#append2 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append2 .ext", 1);
+            });
+            it("...and insert text into target", async function() {
+              await page.click("#append3 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append3 .ext", 1);
+            });
+            it("...and insert <div> into target", async function() {
+              await page.click("#append4 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append4 .ext", 1);
+              await assertCount(page, "#append4 .e1", 1);
+            });
+            it("...and insert <a> into target", async function() {
+              await page.click("#append5 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append5 .ext", 1);
+              await assertCount(page, "#append5 .e1", 1);
+            });
+            it("...and remove text from target", async function() {
+              await page.click("#append6 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append6 .ext", 1);
+            });
+            it("...and remove <div> from target", async function() {
+              await page.click("#append7 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append7 .ext", 1);
+              await assertCount(page, "#append7 .e1", 0);
+            });
+            it("...and remove <a> from target", async function() {
+              await page.click("#append8 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append8 .ext", 1);
+              await assertCount(page, "#append8 .e1", 0);
+            });
+            it("...and remove 2 texts from target", async function() {
+              await page.click("#append9 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append9 .ext", 1);
+            });
+            it("...and remove 2 <div>s from target", async function() {
+              await page.click("#append10 button");
+              await page.waitFor(100);
+              assert(!error, error);
+              await assertCount(page, "#append10 .ext", 1);
+              await assertCount(page, "#append10 .e1", 0);
+              await assertCount(page, "#append10 .e2", 0);
+            });
+          });
           describe("Remove target element", function() {
             it("...and update target's grand child", async function() {
               await page.click("#remove1 button");

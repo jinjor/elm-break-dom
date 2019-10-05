@@ -15,6 +15,9 @@ port insertIntoBody : ( String, Int, Int ) -> Cmd msg
 port insertBeforeTarget : String -> Cmd msg
 
 
+port appendToTarget : String -> Cmd msg
+
+
 port removeTarget : String -> Cmd msg
 
 
@@ -32,6 +35,7 @@ type Msg
     | UrlRequest UrlRequest
     | InsertIntoBody Int Int String
     | InsertBeforeTarget String
+    | AppendToTarget String
     | RemoveTarget String
     | WrapTarget String
     | UpdateAttribute String
@@ -88,6 +92,9 @@ update msg model =
 
         InsertBeforeTarget id ->
             ( model, insertBeforeTarget id )
+
+        AppendToTarget id ->
+            ( model, appendToTarget id )
 
         RemoveTarget id ->
             ( model, removeTarget id )
@@ -150,6 +157,16 @@ view model =
         , insert19 model
         , insert20 model
         , insert21 model
+        , append1 model
+        , append2 model
+        , append3 model
+        , append4 model
+        , append5 model
+        , append6 model
+        , append7 model
+        , append8 model
+        , append9 model
+        , append10 model
         , remove1 model
         , remove2 model
         , remove3 model
@@ -502,6 +519,120 @@ insert21 model =
 
              else
                 [ div [ class "target" ] [] ]
+            )
+
+
+
+-- APPEND TO ".target"
+
+
+append1 : Model -> Html Msg
+append1 model =
+    wrap AppendToTarget "append1" <|
+        div [ class "target", class (beforeOrAfter "append1" model) ]
+            []
+
+
+append2 : Model -> Html Msg
+append2 model =
+    wrap AppendToTarget "append2" <|
+        div [ class "target" ]
+            [ text (beforeOrAfter "append2" model) ]
+
+
+append3 : Model -> Html Msg
+append3 model =
+    wrap AppendToTarget "append3" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append3" model == "before" then
+                []
+
+             else
+                [ text "" ]
+            )
+
+
+append4 : Model -> Html Msg
+append4 model =
+    wrap AppendToTarget "append4" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append4" model == "before" then
+                []
+
+             else
+                [ div [ class "e1" ] [ text "" ] ]
+            )
+
+
+append5 : Model -> Html Msg
+append5 model =
+    wrap AppendToTarget "append5" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append5" model == "before" then
+                []
+
+             else
+                [ a [ class "e1" ] [ text "" ] ]
+            )
+
+
+append6 : Model -> Html Msg
+append6 model =
+    wrap AppendToTarget "append6" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append6" model == "before" then
+                [ text "" ]
+
+             else
+                []
+            )
+
+
+append7 : Model -> Html Msg
+append7 model =
+    wrap AppendToTarget "append7" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append7" model == "before" then
+                [ div [ class "e1" ] [ text "" ] ]
+
+             else
+                []
+            )
+
+
+append8 : Model -> Html Msg
+append8 model =
+    wrap AppendToTarget "append8" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append8" model == "before" then
+                [ a [ class "e1" ] [ text "" ] ]
+
+             else
+                []
+            )
+
+
+append9 : Model -> Html Msg
+append9 model =
+    wrap AppendToTarget "append9" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append9" model == "before" then
+                [ text "", text "" ]
+
+             else
+                []
+            )
+
+
+append10 : Model -> Html Msg
+append10 model =
+    wrap AppendToTarget "append10" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append10" model == "before" then
+                [ div [ class "e1" ] [], div [ class "e2" ] [] ]
+
+             else
+                []
             )
 
 

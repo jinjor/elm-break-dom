@@ -24,6 +24,12 @@ app.ports.insertBeforeTarget.subscribe(id => {
   parent.insertBefore(el, target);
   app.ports.done.send(id);
 });
+app.ports.appendToTarget.subscribe(id => {
+  const target = document.querySelector(`#${id} .target`);
+  const node = `<div class="ext">EXTENSION NODE</div>`;
+  target.insertAdjacentHTML("beforeend", node);
+  app.ports.done.send(id);
+});
 app.ports.removeTarget.subscribe(id => {
   const target = document.querySelector(`#${id} .target`);
   target.remove();
