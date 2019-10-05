@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-05 07:14:55.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-05 10:05:52.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -19,7 +19,7 @@
  
  	if (_VirtualDom_divertHrefToApp && vNode.__tag == 'a')
  	{
-@@ -1313,14 +1316,38 @@
+@@ -1313,14 +1316,47 @@
  
  	var vKids = vNode.__kids;
  	var childNodes = domNode.childNodes;
@@ -29,38 +29,47 @@
  		low++;
  		var vKid = tag === __2_NODE ? vKids[j] : vKids[j].b;
  		var nextLow = low + (vKid.__descendantsCount || 0);
++
++		// 1. if unknown nodes have been inserted
++		if(childNodes.length > vKids.length)
++		{
++			// skip them
++			while(!childNodes[k].created_by_elm) {
++				k++
++			}
++		}
++		// 2. if existing node has been removed
++		if(childNodes.length < vKids.length)
++		{
++			if(childNodes[k])
++			{
++				// replace tha node using the old vdom
++				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
++			}
++			else
++			{
++				// or append node using the old vdom
++				domNode.appendChild(_VirtualDom_render(vKids[j], eventNode));
++			}
++		}
++		// 3. if existing node has been replaced with unknown node
++		if(childNodes.length === vKids.length)
++		{
++			if(!childNodes[k].created_by_elm)
++			{
++				// replace tha node using the old vdom
++				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
++			}
++		}
++
  		if (low <= index && index <= nextLow)
  		{
 -			i = _VirtualDom_addDomNodesHelp(childNodes[j], vKid, patches, i, low, nextLow, eventNode);
-+			// 1. if unknown nodes have been inserted
-+			if(childNodes.length > vKids.length) {
-+				// skip them
-+				while(!childNodes[k].created_by_elm) {
-+					k++
-+				}
-+			}
-+			// 2. if existing node has been removed
-+			if(childNodes.length < vKids.length) {
-+				if(childNodes[k]) {
-+					// replace tha node using the old vdom
-+					_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
-+				} else {
-+					// or append node using the old vdom
-+					domNode.appendChild(_VirtualDom_render(vKids[j], eventNode));
-+				}
-+			}
-+			// 3. if existing node has been replaced with unknown node
-+			if(childNodes.length === vKids.length) {
-+				if(!childNodes[k].created_by_elm) {
-+					// replace tha node using the old vdom
-+					_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
-+				}
-+			}
 +			i = _VirtualDom_addDomNodesHelp(childNodes[k], vKid, patches, i, low, nextLow, eventNode);
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1367,20 +1394,32 @@
+@@ -1367,20 +1403,33 @@
  	switch (patch.$)
  	{
  		case __3_REDRAW:
@@ -75,10 +84,11 @@
  		case __3_TEXT:
 +			// console.log("3_TEXT")
 +			// if(!domNode.replaceData) {
++			// 	console.log(domNode.tagName, domNode.outerHTML);
 +			// 	// TODO: this should not be necessary
-+			// 	const textNode = document.createTextNode(patch.s);
-+			// 	domNode.parentNode.insertBefore(textNode, domNode);
-+			// 	domNode.remove();
++			// 	const textNode = document.createTextNode(patch.__data);
++			// 	domNode.parentNode.replaceChild(textNode, domNode);
++			// 	// domNode.remove();
 +			// 	return textNode;
 +			// }
  			domNode.replaceData(0, domNode.length, patch.__data);
@@ -93,7 +103,7 @@
  			if (domNode.elm_event_node_ref)
  			{
  				domNode.elm_event_node_ref.__tagger = patch.__data;
-@@ -1392,14 +1431,36 @@
+@@ -1392,14 +1441,36 @@
  			return domNode;
  
  		case __3_REMOVE_LAST:
@@ -132,7 +142,7 @@
  			var data = patch.__data;
  			var kids = data.__kids;
  			var i = data.__length;
-@@ -1411,6 +1472,7 @@
+@@ -1411,6 +1482,7 @@
  			return domNode;
  
  		case __3_REMOVE:
@@ -140,7 +150,7 @@
  			var data = patch.__data;
  			if (!data)
  			{
-@@ -1426,9 +1488,11 @@
+@@ -1426,9 +1498,11 @@
  			return domNode;
  
  		case __3_REORDER:
