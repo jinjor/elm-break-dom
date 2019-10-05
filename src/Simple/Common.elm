@@ -9,10 +9,16 @@ import Html.Events exposing (onClick)
 import Url
 
 
+port event : String -> Cmd msg
+
+
 port insertIntoBody : ( String, Int, Int ) -> Cmd msg
 
 
 port insertBeforeTarget : String -> Cmd msg
+
+
+port appendToTarget : String -> Cmd msg
 
 
 port removeTarget : String -> Cmd msg
@@ -30,8 +36,10 @@ port done : (String -> msg) -> Sub msg
 type Msg
     = NoOp
     | UrlRequest UrlRequest
+    | Event String
     | InsertIntoBody Int Int String
     | InsertBeforeTarget String
+    | AppendToTarget String
     | RemoveTarget String
     | WrapTarget String
     | UpdateAttribute String
@@ -83,11 +91,17 @@ update msg model =
                     Nav.load url
             )
 
+        Event s ->
+            ( model, event s )
+
         InsertIntoBody top bottom id ->
             ( model, insertIntoBody ( id, top, bottom ) )
 
         InsertBeforeTarget id ->
             ( model, insertBeforeTarget id )
+
+        AppendToTarget id ->
+            ( model, appendToTarget id )
 
         RemoveTarget id ->
             ( model, removeTarget id )
@@ -150,6 +164,25 @@ view model =
         , insert19 model
         , insert20 model
         , insert21 model
+        , insert22 model
+        , insert23 model
+        , insert24 model
+        , insert25 model
+        , insert26 model
+        , insert27 model
+        , insert28 model
+        , append1 model
+        , append2 model
+        , append3 model
+        , append4 model
+        , append5 model
+        , append6 model
+        , append7 model
+        , append8 model
+        , append9 model
+        , append10 model
+        , append11 model
+        , append12 model
         , remove1 model
         , remove2 model
         , remove3 model
@@ -175,6 +208,12 @@ view model =
         , updateAttribute1 model
         , updateAttribute2 model
         , updateAttribute3 model
+        , event1 model
+        , event2 model
+        , event3 model
+        , event4 model
+        , event5 model
+        , event6 model
         ]
 
 
@@ -505,6 +544,205 @@ insert21 model =
             )
 
 
+insert22 : Model -> Html Msg
+insert22 model =
+    wrap InsertBeforeTarget "insert22" <|
+        Html.map identity <|
+            div [] [ div [ class "target" ] [ text (beforeOrAfter "insert22" model) ] ]
+
+
+insert23 : Model -> Html Msg
+insert23 model =
+    wrap InsertBeforeTarget "insert23" <|
+        Html.map identity <|
+            div [] [ div [ class "target", class (beforeOrAfter "insert23" model) ] [] ]
+
+
+insert24 : Model -> Html Msg
+insert24 model =
+    wrap InsertBeforeTarget "insert24" <|
+        div []
+            [ Html.map identity <|
+                div [ class "target", class (beforeOrAfter "insert24" model) ] []
+            ]
+
+
+insert25 : Model -> Html Msg
+insert25 model =
+    wrap InsertBeforeTarget "insert25" <|
+        div []
+            [ Html.map identity <|
+                div [ class "target" ] []
+            , text (beforeOrAfter "insert25" model)
+            ]
+
+
+insert26 : Model -> Html Msg
+insert26 model =
+    wrap InsertBeforeTarget "insert26" <|
+        div []
+            [ text (beforeOrAfter "insert26" model)
+            , Html.map identity <|
+                div [ class "target" ] []
+            ]
+
+
+insert27 : Model -> Html Msg
+insert27 model =
+    wrap InsertBeforeTarget "insert27" <|
+        div []
+            [ Html.map identity (text "")
+            , div [ class "target", class (beforeOrAfter "insert27" model) ] []
+            ]
+
+
+insert28 : Model -> Html Msg
+insert28 model =
+    wrap InsertBeforeTarget "insert28" <|
+        div []
+            [ div [ class "target", class (beforeOrAfter "insert28" model) ] []
+            , Html.map identity (text "")
+            ]
+
+
+
+-- APPEND TO ".target"
+
+
+append1 : Model -> Html Msg
+append1 model =
+    wrap AppendToTarget "append1" <|
+        div [ class "target", class (beforeOrAfter "append1" model) ]
+            []
+
+
+append2 : Model -> Html Msg
+append2 model =
+    wrap AppendToTarget "append2" <|
+        div [ class "target" ]
+            [ text (beforeOrAfter "append2" model) ]
+
+
+append3 : Model -> Html Msg
+append3 model =
+    wrap AppendToTarget "append3" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append3" model == "before" then
+                []
+
+             else
+                [ text "" ]
+            )
+
+
+append4 : Model -> Html Msg
+append4 model =
+    wrap AppendToTarget "append4" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append4" model == "before" then
+                []
+
+             else
+                [ div [ class "e1" ] [ text "" ] ]
+            )
+
+
+append5 : Model -> Html Msg
+append5 model =
+    wrap AppendToTarget "append5" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append5" model == "before" then
+                []
+
+             else
+                [ a [ class "e1" ] [ text "" ] ]
+            )
+
+
+append6 : Model -> Html Msg
+append6 model =
+    wrap AppendToTarget "append6" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append6" model == "before" then
+                [ text "" ]
+
+             else
+                []
+            )
+
+
+append7 : Model -> Html Msg
+append7 model =
+    wrap AppendToTarget "append7" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append7" model == "before" then
+                [ div [ class "e1" ] [ text "" ] ]
+
+             else
+                []
+            )
+
+
+append8 : Model -> Html Msg
+append8 model =
+    wrap AppendToTarget "append8" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append8" model == "before" then
+                [ a [ class "e1" ] [ text "" ] ]
+
+             else
+                []
+            )
+
+
+append9 : Model -> Html Msg
+append9 model =
+    wrap AppendToTarget "append9" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append9" model == "before" then
+                [ text "", text "" ]
+
+             else
+                []
+            )
+
+
+append10 : Model -> Html Msg
+append10 model =
+    wrap AppendToTarget "append10" <|
+        div [ class "target" ]
+            (if beforeOrAfter "append10" model == "before" then
+                [ div [ class "e1" ] [], div [ class "e2" ] [] ]
+
+             else
+                []
+            )
+
+
+append11 : Model -> Html Msg
+append11 model =
+    wrap AppendToTarget "append11" <|
+        div []
+            (if beforeOrAfter "append11" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                [ text "" ]
+            )
+
+
+append12 : Model -> Html Msg
+append12 model =
+    wrap AppendToTarget "append12" <|
+        div []
+            (if beforeOrAfter "append12" model == "before" then
+                [ div [ class "target" ] [] ]
+
+             else
+                []
+            )
+
+
 
 -- REMOVE ".target"
 
@@ -754,3 +992,87 @@ updateAttribute3 model =
             , class (beforeOrAfter "update-attribute3" model)
             ]
             [ text (beforeOrAfter "update-attribute2" model) ]
+
+
+
+-- EVENTS
+
+
+event1 : Model -> Html Msg
+event1 model =
+    wrap InsertBeforeTarget "event1" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , onClick (Event "a")
+                ]
+                [ text (beforeOrAfter "event1" model) ]
+            ]
+
+
+event2 : Model -> Html Msg
+event2 model =
+    wrap InsertBeforeTarget "event2" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , Html.Attributes.map Event (onClick "a")
+                ]
+                [ text (beforeOrAfter "event2" model) ]
+            ]
+
+
+event3 : Model -> Html Msg
+event3 model =
+    wrap InsertBeforeTarget "event3" <|
+        div []
+            [ Html.map Event <|
+                a
+                    [ class "target"
+                    , class "button"
+                    , onClick "a"
+                    ]
+                    [ text (beforeOrAfter "event3" model) ]
+            ]
+
+
+event4 : Model -> Html Msg
+event4 model =
+    wrap InsertBeforeTarget "event4" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , onClick (Event (beforeOrAfter "event4" model))
+                ]
+                []
+            ]
+
+
+event5 : Model -> Html Msg
+event5 model =
+    wrap InsertBeforeTarget "event5" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , Html.Attributes.map Event (onClick (beforeOrAfter "event5" model))
+                ]
+                []
+            ]
+
+
+event6 : Model -> Html Msg
+event6 model =
+    wrap InsertBeforeTarget "event6" <|
+        div []
+            [ Html.map Event <|
+                a
+                    [ class "target"
+                    , class "button"
+                    , onClick (beforeOrAfter "event6" model)
+                    ]
+                    []
+            ]
