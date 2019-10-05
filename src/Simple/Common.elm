@@ -173,14 +173,12 @@ beforeOrAfter id model =
 -- INSERT INTO <body>
 
 
-{-| -}
 insertIntoBody1 : Model -> Html Msg
 insertIntoBody1 _ =
     wrap (always (InsertIntoBody True)) "insert-into-body1" <|
         text ""
 
 
-{-| -}
 insertIntoBody2 : Model -> Html Msg
 insertIntoBody2 _ =
     wrap (always (InsertIntoBody False)) "insert-into-body2" <|
@@ -191,8 +189,6 @@ insertIntoBody2 _ =
 -- INSERT <div>EXTENSION NODE</div> BEFORE ".target"
 
 
-{-| Cannot read property 'replaceData' of undefined
--}
 insert1 : Model -> Html Msg
 insert1 model =
     wrap InsertBeforeTarget "insert1" <|
@@ -220,8 +216,6 @@ insert2 model =
         div [] [ div [ class "target" ] [ text (beforeOrAfter "insert2" model) ] ]
 
 
-{-| domNode.replaceData is not a function
--}
 insert3 : Model -> Html Msg
 insert3 model =
     wrap InsertBeforeTarget "insert3" <|
@@ -249,8 +243,6 @@ insert4 model =
         div [] [ div [ class "target", class (beforeOrAfter "insert4" model) ] [] ]
 
 
-{-| No error
--}
 insert5 : Model -> Html Msg
 insert5 model =
     wrap InsertBeforeTarget "insert5" <|
@@ -455,40 +447,30 @@ insert21 model =
 -- REMOVE ".target"
 
 
-{-| Cannot read property 'childNodes' of undefined
--}
 remove1 : Model -> Html Msg
 remove1 model =
     wrap RemoveTarget "remove1" <|
         div [] [ div [ class "target" ] [ text (beforeOrAfter "remove1" model) ] ]
 
 
-{-| Cannot read property 'childNodes' of undefined
--}
 remove2 : Model -> Html Msg
 remove2 model =
     wrap RemoveTarget "remove2" <|
         div [] [ div [ class "target" ] [ div [] [ text (beforeOrAfter "remove2" model) ] ] ]
 
 
-{-| Cannot read property 'replaceData' of undefined
--}
 remove3 : Model -> Html Msg
 remove3 model =
     wrap RemoveTarget "remove3" <|
         div [] [ div [ class "target" ] [], text (beforeOrAfter "remove3" model) ]
 
 
-{-| Cannot set property 'className' of undefined
--}
 remove4 : Model -> Html Msg
 remove4 model =
     wrap RemoveTarget "remove4" <|
         div [] [ div [ class "target", class (beforeOrAfter "remove4" model) ] [] ]
 
 
-{-| No error
--}
 remove5 : Model -> Html Msg
 remove5 model =
     wrap RemoveTarget "remove5" <|
@@ -499,35 +481,30 @@ remove5 model =
 -- WRAP ".target" into <font>
 
 
-{-| -}
 wrap1 : Model -> Html Msg
 wrap1 model =
     wrap WrapTarget "wrap1" <|
         div [] [ div [ class "target" ] [ text (beforeOrAfter "wrap1" model) ] ]
 
 
-{-| -}
 wrap2 : Model -> Html Msg
 wrap2 model =
     wrap WrapTarget "wrap2" <|
         div [] [ div [ class "target", class (beforeOrAfter "wrap2" model) ] [] ]
 
 
-{-| -}
 wrap3 : Model -> Html Msg
 wrap3 model =
     wrap WrapTarget "wrap3" <|
         div [] [ div [ class "target" ] [], text (beforeOrAfter "wrap3" model) ]
 
 
-{-| -}
 wrap4 : Model -> Html Msg
 wrap4 model =
     wrap WrapTarget "wrap4" <|
         div [] [ text (beforeOrAfter "wrap4" model), div [ class "target" ] [] ]
 
 
-{-| -}
 wrap5 : Model -> Html Msg
 wrap5 model =
     wrap WrapTarget "wrap5" <|
@@ -553,14 +530,12 @@ wrap6 model =
         div [] [ node "font" [ class "target", class (beforeOrAfter "wrap6" model) ] [] ]
 
 
-{-| -}
 wrap7 : Model -> Html Msg
 wrap7 model =
     wrap WrapTarget "wrap7" <|
         div [] [ node "font" [ class "target" ] [], text (beforeOrAfter "wrap7" model) ]
 
 
-{-| -}
 wrap8 : Model -> Html Msg
 wrap8 model =
     wrap WrapTarget "wrap8" <|
@@ -571,8 +546,6 @@ wrap8 model =
 -- REPLACE title of ".target" WITH "break"
 
 
-{-| This should be safe.
--}
 updateAttribute1 : Model -> Html Msg
 updateAttribute1 model =
     wrap UpdateAttribute "update-attribute1" <|
@@ -583,8 +556,6 @@ updateAttribute1 model =
             [ text (beforeOrAfter "update-attribute1" model) ]
 
 
-{-| This should be safe.
--}
 updateAttribute2 : Model -> Html Msg
 updateAttribute2 model =
     wrap UpdateAttribute "update-attribute2" <|
@@ -596,7 +567,6 @@ updateAttribute2 model =
             [ text (beforeOrAfter "update-attribute2" model) ]
 
 
-{-| -}
 updateAttribute3 : Model -> Html Msg
 updateAttribute3 model =
     wrap UpdateAttribute "update-attribute3" <|
