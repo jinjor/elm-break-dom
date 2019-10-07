@@ -652,6 +652,43 @@ describe("Simple", function() {
               assert.deepEqual(eventResult, ["after"]);
             });
           });
+          describe("Keyed nodes", function() {
+            it("insert before target and update it's attribute", async function() {
+              await page.click("#keyed1 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#keyed1 .e0", 0);
+              await assertCount(page, "#keyed1 .e1", 1);
+            });
+            it("insert before target and update it's key", async function() {
+              await page.click("#keyed2 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#keyed2 .e0", 0);
+              await assertCount(page, "#keyed2 .e1", 1);
+            });
+            it("insert before target and update it's key, attribute and child", async function() {
+              await page.click("#keyed3 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#keyed3 .e0", 0);
+              await assertCount(page, "#keyed3 .e1", 1);
+            });
+            it("insert before target (keyed node's parent) and update it's attribute", async function() {
+              await page.click("#keyed4 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#keyed4 .e0", 0);
+              await assertCount(page, "#keyed4 .e1", 1);
+            });
+            it("wrap target (keyed node's parent) and update it's attribute", async function() {
+              await page.click("#keyed5 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#keyed5 .e0", 0);
+              await assertCount(page, "#keyed5 .e1", 1);
+            });
+          });
         });
       }
     });

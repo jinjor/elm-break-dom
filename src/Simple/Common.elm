@@ -122,7 +122,7 @@ update msg model =
                             Just (n + 1)
 
                         Nothing ->
-                            Just 0
+                            Just 1
                 )
                 model
             , Cmd.none
@@ -228,6 +228,11 @@ view model =
         , event16 model
         , event17 model
         , event18 model
+        , keyed1 model
+        , keyed2 model
+        , keyed3 model
+        , keyed4 model
+        , keyed5 model
         ]
 
 
@@ -1365,4 +1370,72 @@ event18 model =
                     , onClick (beforeOrAfter "event18" model)
                     ]
                     []
+            ]
+
+
+keyed1 : Model -> Html Msg
+keyed1 model =
+    wrap InsertBeforeTarget "keyed1" <|
+        Html.Keyed.node "div"
+            []
+            [ ( "0"
+              , div
+                    [ class "target"
+                    , class ("e" ++ count "keyed1" model)
+                    ]
+                    []
+              )
+            ]
+
+
+keyed2 : Model -> Html Msg
+keyed2 model =
+    wrap InsertBeforeTarget "keyed2" <|
+        Html.Keyed.node "div"
+            [ class ("e" ++ count "keyed2" model) ]
+            [ ( count "keyed2" model
+              , div
+                    [ class "target"
+                    ]
+                    []
+              )
+            ]
+
+
+keyed3 : Model -> Html Msg
+keyed3 model =
+    wrap InsertBeforeTarget "keyed3" <|
+        Html.Keyed.node "div"
+            []
+            [ ( count "keyed3" model
+              , div
+                    [ class "target"
+                    , class ("e" ++ count "keyed3" model)
+                    ]
+                    [ text ("e" ++ count "keyed3" model) ]
+              )
+            ]
+
+
+keyed4 : Model -> Html Msg
+keyed4 model =
+    wrap InsertBeforeTarget "keyed4" <|
+        div []
+            [ Html.Keyed.node "div"
+                [ class "target"
+                , class ("e" ++ count "keyed4" model)
+                ]
+                []
+            ]
+
+
+keyed5 : Model -> Html Msg
+keyed5 model =
+    wrap WrapTarget "keyed5" <|
+        div []
+            [ Html.Keyed.node "div"
+                [ class "target"
+                , class ("e" ++ count "keyed5" model)
+                ]
+                []
             ]
