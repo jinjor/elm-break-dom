@@ -6,6 +6,8 @@ import Dict exposing (Dict)
 import Html exposing (Html, a, button, div, li, node, text, ul)
 import Html.Attributes exposing (class, id, style, title)
 import Html.Events exposing (onClick)
+import Html.Keyed
+import Html.Lazy exposing (lazy)
 import Url
 
 
@@ -214,7 +216,19 @@ view model =
         , event4 model
         , event5 model
         , event6 model
+        , event7 model
+        , event8 model
+        , event9 model
+        , event10 model
+        , event11 model
+        , event12 model
+        , event13 model
+        , event14 model
         ]
+
+
+
+-- UTILS
 
 
 wrap : (String -> Msg) -> String -> Html Msg -> Html Msg
@@ -232,6 +246,18 @@ beforeOrAfter id model =
 
     else
         "before"
+
+
+count : String -> Model -> String
+count id model =
+    Dict.get id model
+        |> Maybe.withDefault 0
+        |> String.fromInt
+
+
+viewText : String -> Html msg
+viewText s =
+    text s
 
 
 
@@ -1075,4 +1101,208 @@ event6 model =
                     , onClick (beforeOrAfter "event6" model)
                     ]
                     []
+            ]
+
+
+event7 : Model -> Html Msg
+event7 model =
+    wrap InsertBeforeTarget "event7" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , Html.Attributes.map (\s -> Event s) <|
+                    onClick (beforeOrAfter "event7" model)
+                ]
+                []
+            ]
+
+
+event8 : Model -> Html Msg
+event8 model =
+    wrap InsertBeforeTarget "event8" <|
+        div []
+            [ Html.map (\s -> Event s) <|
+                a
+                    [ class "target"
+                    , class "button"
+                    , onClick (beforeOrAfter "event8" model)
+                    ]
+                    []
+            ]
+
+
+event9 : Model -> Html Msg
+event9 model =
+    wrap InsertBeforeTarget "event9" <|
+        div [ class (beforeOrAfter "event9" model) ]
+            [ a
+                [ class "button"
+                , class "prev"
+                , onClick (Event "prev")
+                ]
+                []
+            , a
+                [ class "target"
+                , class "button"
+                , onClick (Event "target")
+                ]
+                []
+            , a
+                [ class "button"
+                , class "next"
+                , onClick (Event "next")
+                ]
+                []
+            ]
+
+
+event10 : Model -> Html Msg
+event10 model =
+    wrap InsertBeforeTarget "event10" <|
+        div []
+            [ a
+                [ class "button"
+                , class "prev"
+                , onClick (Event "prev")
+                ]
+                [ text (count "event10" model) ]
+            , a
+                [ class "target"
+                , class "button"
+                , onClick (Event "target")
+                ]
+                [ text (count "event10" model) ]
+            , a
+                [ class "button"
+                , class "next"
+                , onClick (Event "next")
+                ]
+                [ text (count "event10" model) ]
+            ]
+
+
+event11 : Model -> Html Msg
+event11 model =
+    wrap InsertBeforeTarget "event11" <|
+        Html.Keyed.node "div"
+            [ class (beforeOrAfter "event11" model) ]
+            [ ( "0"
+              , a
+                    [ class "button"
+                    , class "prev"
+                    , onClick (Event "prev")
+                    ]
+                    []
+              )
+            , ( "1"
+              , a
+                    [ class "target"
+                    , class "button"
+                    , onClick (Event "target")
+                    ]
+                    []
+              )
+            , ( "2"
+              , a
+                    [ class "button"
+                    , class "next"
+                    , onClick (Event "next")
+                    ]
+                    []
+              )
+            ]
+
+
+event12 : Model -> Html Msg
+event12 model =
+    wrap InsertBeforeTarget "event12" <|
+        Html.Keyed.node "div"
+            []
+            [ ( "0"
+              , a
+                    [ class "button"
+                    , class "prev"
+                    , onClick (Event "prev")
+                    ]
+                    [ text (count "event12" model) ]
+              )
+            , ( "1"
+              , a
+                    [ class "target"
+                    , class "button"
+                    , onClick (Event "target")
+                    ]
+                    [ text (count "event12" model) ]
+              )
+            , ( "2"
+              , a
+                    [ class "button"
+                    , class "next"
+                    , onClick (Event "next")
+                    ]
+                    [ text (count "event12" model) ]
+              )
+            ]
+
+
+event13 : Model -> Html Msg
+event13 model =
+    wrap InsertBeforeTarget "event13" <|
+        div [ class (beforeOrAfter "event13" model) ]
+            [ lazy
+                (\_ ->
+                    a
+                        [ class "button"
+                        , class "prev"
+                        , onClick (Event "prev")
+                        ]
+                        []
+                )
+                ()
+            , lazy
+                (\_ ->
+                    a
+                        [ class "target"
+                        , class "button"
+                        , onClick (Event "target")
+                        ]
+                        []
+                )
+                ()
+            , lazy
+                (\_ ->
+                    a
+                        [ class "button"
+                        , class "next"
+                        , onClick (Event "next")
+                        ]
+                        [ lazy viewText "" ]
+                )
+                ()
+            ]
+
+
+event14 : Model -> Html Msg
+event14 model =
+    wrap InsertBeforeTarget "event14" <|
+        div []
+            [ a
+                [ class "button"
+                , class "prev"
+                , onClick (Event "prev")
+                ]
+                [ lazy viewText (count "event14" model) ]
+            , a
+                [ class "target"
+                , class "button"
+                , onClick (Event "target")
+                ]
+                [ lazy viewText (count "event14" model) ]
+            , a
+                [ class "button"
+                , class "next"
+                , onClick (Event "next")
+                ]
+                [ lazy viewText (count "event14" model) ]
             ]
