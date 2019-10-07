@@ -511,65 +511,65 @@ describe("Simple", function() {
             it("insert before target, update target's child, event from target", async function() {
               await page.click("#event1 button");
               await page.waitFor(50);
-              await page.click("#event1 .button");
-              await page.waitFor(50);
               assert(!error, error);
+              await page.click("#event1 .button");
+              await page.waitFor(200);
               assert.deepEqual(eventResult, ["a"]);
             });
             it("insert before target, update target's child, event from target (with Html.Attributes.map)", async function() {
               await page.click("#event2 button");
               await page.waitFor(50);
-              await page.click("#event2 .button");
-              await page.waitFor(50);
               assert(!error, error);
+              await page.click("#event2 .button");
+              await page.waitFor(200);
               assert.deepEqual(eventResult, ["a"]);
             });
             it("insert before target, update target's child, event from target (with Html.map)", async function() {
               await page.click("#event3 button");
               await page.waitFor(50);
-              await page.click("#event3 .button");
-              await page.waitFor(50);
               assert(!error, error);
+              await page.click("#event3 .button");
+              await page.waitFor(200);
               assert.deepEqual(eventResult, ["a"]);
             });
             it("insert before target, update target's event handler, event from target", async function() {
               await page.click("#event4 button");
               await page.waitFor(50);
-              await page.click("#event4 .button");
-              await page.waitFor(50);
               assert(!error, error);
+              await page.click("#event4 .button");
+              await page.waitFor(200);
               assert.deepEqual(eventResult, ["after"]);
             });
             it("insert before target, update target's event handler, event from target (with Html.Attributes.map)", async function() {
               await page.click("#event5 button");
               await page.waitFor(50);
-              await page.click("#event5 .button");
-              await page.waitFor(50);
               assert(!error, error);
+              await page.click("#event5 .button");
+              await page.waitFor(200);
               assert.deepEqual(eventResult, ["after"]);
             });
             it("insert before target, update target's event handler, event from target (with Html.map)", async function() {
               await page.click("#event6 button");
               await page.waitFor(50);
-              await page.click("#event6 .button");
-              await page.waitFor(50);
               assert(!error, error);
+              await page.click("#event6 .button");
+              await page.waitFor(200);
               assert.deepEqual(eventResult, ["after"]);
             });
             it("insert before target, update target's event handler, event from target (with Html.Attributes.map, lambda)", async function() {
               await page.click("#event7 button");
               await page.waitFor(50);
-              await page.click("#event7 .button");
-              await page.waitFor(50);
               assert(!error, error);
+              await page.click("#event7 .button");
+              await page.waitFor(200);
               assert.deepEqual(eventResult, ["after"]);
             });
             it("insert before target, update target's event handler, event from target (with Html.map, lambda)", async function() {
               await page.click("#event8 button");
               await page.waitFor(50);
-              await page.click("#event8 .button");
-              await page.waitFor(50);
               assert(!error, error);
+              await page.click("#event8 .button");
+              await page.waitFor(200);
               assert.deepEqual(eventResult, ["after"]);
             });
             async function test3Buttons(selector) {
@@ -586,38 +586,70 @@ describe("Simple", function() {
             it("insert before target, update target's parent, event around target", async function() {
               await page.click("#event9 button");
               await page.waitFor(50);
-              await test3Buttons("#event9");
               assert(!error, error);
+              await test3Buttons("#event9");
             });
             it("insert before target, update target and siblings, event around target", async function() {
               await page.click("#event10 button");
               await page.waitFor(50);
-              await test3Buttons("#event10");
               assert(!error, error);
+              await test3Buttons("#event10");
             });
             it("insert before target, update target's parent, event around target (keyed nodes)", async function() {
               await page.click("#event11 button");
               await page.waitFor(50);
-              await test3Buttons("#event11");
               assert(!error, error);
+              await test3Buttons("#event11");
             });
             it("insert before target, update target and siblings, event around target (keyed nodes)", async function() {
               await page.click("#event12 button");
               await page.waitFor(50);
-              await test3Buttons("#event12");
               assert(!error, error);
+              await test3Buttons("#event12");
             });
             it("insert before target, update target's parent, event around target (lazy lambda)", async function() {
               await page.click("#event13 button");
               await page.waitFor(50);
-              await test3Buttons("#event13");
               assert(!error, error);
+              await test3Buttons("#event13");
             });
             it("insert before target, update target and siblings, event around target (lazy children)", async function() {
               await page.click("#event14 button");
               await page.waitFor(50);
-              await test3Buttons("#event14");
               assert(!error, error);
+              await test3Buttons("#event14");
+            });
+            it("wrap target, update target's event handler, event from target (with Html.Attributes.map)", async function() {
+              await page.click("#event15 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await page.click("#event15 .button");
+              await page.waitFor(200);
+              assert.deepEqual(eventResult, ["after"]);
+            });
+            it("wrap target, update target's event handler, event from target (with Html.Attributes.map)", async function() {
+              await page.click("#event16 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await page.click("#event16 .button");
+              await page.waitFor(200);
+              assert.deepEqual(eventResult, ["after"]);
+            });
+            it("wrap target, update target's event handler, event from target (with Html.Attributes.map, lambda)", async function() {
+              await page.click("#event17 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await page.click("#event17 .button");
+              await page.waitFor(200);
+              assert.deepEqual(eventResult, ["after"]);
+            });
+            it("wrap target, update target's event handler, event from target (with Html.Attributes.map, lambda)", async function() {
+              await page.click("#event18 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await page.click("#event18 .button");
+              await page.waitFor(200);
+              assert.deepEqual(eventResult, ["after"]);
             });
           });
         });

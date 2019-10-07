@@ -224,6 +224,10 @@ view model =
         , event12 model
         , event13 model
         , event14 model
+        , event15 model
+        , event16 model
+        , event17 model
+        , event18 model
         ]
 
 
@@ -1305,4 +1309,60 @@ event14 model =
                 , onClick (Event "next")
                 ]
                 [ lazy viewText (count "event14" model) ]
+            ]
+
+
+event15 : Model -> Html Msg
+event15 model =
+    wrap WrapTarget "event15" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , Html.Attributes.map Event <|
+                    onClick (beforeOrAfter "event15" model)
+                ]
+                []
+            ]
+
+
+event16 : Model -> Html Msg
+event16 model =
+    wrap WrapTarget "event16" <|
+        div []
+            [ Html.map Event <|
+                a
+                    [ class "target"
+                    , class "button"
+                    , onClick (beforeOrAfter "event16" model)
+                    ]
+                    []
+            ]
+
+
+event17 : Model -> Html Msg
+event17 model =
+    wrap WrapTarget "event17" <|
+        div []
+            [ a
+                [ class "target"
+                , class "button"
+                , Html.Attributes.map (\s -> Event s) <|
+                    onClick (beforeOrAfter "event17" model)
+                ]
+                []
+            ]
+
+
+event18 : Model -> Html Msg
+event18 model =
+    wrap WrapTarget "event18" <|
+        div []
+            [ Html.map (\s -> Event s) <|
+                a
+                    [ class "target"
+                    , class "button"
+                    , onClick (beforeOrAfter "event18" model)
+                    ]
+                    []
             ]
