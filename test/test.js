@@ -59,7 +59,7 @@ describe("Simple", function() {
     describe(version, function() {
       const html =
         version === "Original" ? "simple.html" : "simple-patched.html";
-      for (let main of ["application", "element"]) {
+      for (let main of ["Application", "Document", "Element"]) {
         describe(main, function() {
           before(async function() {
             await page.goto(`http://localhost:${port}/${html}?main=${main}`);
@@ -507,7 +507,7 @@ describe("Simple", function() {
               assert(!error, error);
             });
           });
-          describe("Events", function() {
+          describe.only("Events", function() {
             async function assertEventResult(expected) {
               await page.waitFor(150);
               for (let i = 0; i < 6; i++) {
