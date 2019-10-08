@@ -507,10 +507,9 @@ describe("Simple", function() {
               assert(!error, error);
             });
           });
-          describe.only("Events", function() {
+          describe("Events", function() {
             async function assertEventResult(expected) {
-              await page.waitFor(150);
-              for (let i = 0; i < 6; i++) {
+              for (let i = 0; i < 4; i++) {
                 if (eventResult.length >= expected.length) {
                   break;
                 }

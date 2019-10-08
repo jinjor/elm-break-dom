@@ -3,7 +3,7 @@ port module Simple.Common exposing (Model, Msg, init, main, noop, onUrlRequest, 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
 import Dict exposing (Dict)
-import Html exposing (Html, a, button, div, li, node, text, ul)
+import Html exposing (Html, a, button, div, li, node, span, text, ul)
 import Html.Attributes exposing (class, id, style, title)
 import Html.Events exposing (onClick)
 import Html.Keyed
@@ -1037,7 +1037,7 @@ event1 : Model -> Html Msg
 event1 model =
     wrap InsertBeforeTarget "event1" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , onClick (Event "a")
@@ -1050,7 +1050,7 @@ event2 : Model -> Html Msg
 event2 model =
     wrap InsertBeforeTarget "event2" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , Html.Attributes.map Event (onClick "a")
@@ -1064,7 +1064,7 @@ event3 model =
     wrap InsertBeforeTarget "event3" <|
         div []
             [ Html.map Event <|
-                a
+                span
                     [ class "target"
                     , class "button"
                     , onClick "a"
@@ -1077,7 +1077,7 @@ event4 : Model -> Html Msg
 event4 model =
     wrap InsertBeforeTarget "event4" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , onClick (Event (beforeOrAfter "event4" model))
@@ -1090,7 +1090,7 @@ event5 : Model -> Html Msg
 event5 model =
     wrap InsertBeforeTarget "event5" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , Html.Attributes.map Event (onClick (beforeOrAfter "event5" model))
@@ -1104,7 +1104,7 @@ event6 model =
     wrap InsertBeforeTarget "event6" <|
         div []
             [ Html.map Event <|
-                a
+                span
                     [ class "target"
                     , class "button"
                     , onClick (beforeOrAfter "event6" model)
@@ -1117,7 +1117,7 @@ event7 : Model -> Html Msg
 event7 model =
     wrap InsertBeforeTarget "event7" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , Html.Attributes.map (\s -> Event s) <|
@@ -1132,7 +1132,7 @@ event8 model =
     wrap InsertBeforeTarget "event8" <|
         div []
             [ Html.map (\s -> Event s) <|
-                a
+                span
                     [ class "target"
                     , class "button"
                     , onClick (beforeOrAfter "event8" model)
@@ -1145,19 +1145,19 @@ event9 : Model -> Html Msg
 event9 model =
     wrap InsertBeforeTarget "event9" <|
         div [ class (beforeOrAfter "event9" model) ]
-            [ a
+            [ span
                 [ class "button"
                 , class "prev"
                 , onClick (Event "prev")
                 ]
                 []
-            , a
+            , span
                 [ class "target"
                 , class "button"
                 , onClick (Event "target")
                 ]
                 []
-            , a
+            , span
                 [ class "button"
                 , class "next"
                 , onClick (Event "next")
@@ -1170,19 +1170,19 @@ event10 : Model -> Html Msg
 event10 model =
     wrap InsertBeforeTarget "event10" <|
         div []
-            [ a
+            [ span
                 [ class "button"
                 , class "prev"
                 , onClick (Event "prev")
                 ]
                 [ text (count "event10" model) ]
-            , a
+            , span
                 [ class "target"
                 , class "button"
                 , onClick (Event "target")
                 ]
                 [ text (count "event10" model) ]
-            , a
+            , span
                 [ class "button"
                 , class "next"
                 , onClick (Event "next")
@@ -1197,7 +1197,7 @@ event11 model =
         Html.Keyed.node "div"
             [ class (beforeOrAfter "event11" model) ]
             [ ( "0"
-              , a
+              , span
                     [ class "button"
                     , class "prev"
                     , onClick (Event "prev")
@@ -1205,7 +1205,7 @@ event11 model =
                     []
               )
             , ( "1"
-              , a
+              , span
                     [ class "target"
                     , class "button"
                     , onClick (Event "target")
@@ -1213,7 +1213,7 @@ event11 model =
                     []
               )
             , ( "2"
-              , a
+              , span
                     [ class "button"
                     , class "next"
                     , onClick (Event "next")
@@ -1229,7 +1229,7 @@ event12 model =
         Html.Keyed.node "div"
             []
             [ ( "0"
-              , a
+              , span
                     [ class "button"
                     , class "prev"
                     , onClick (Event "prev")
@@ -1237,7 +1237,7 @@ event12 model =
                     [ text (count "event12" model) ]
               )
             , ( "1"
-              , a
+              , span
                     [ class "target"
                     , class "button"
                     , onClick (Event "target")
@@ -1245,7 +1245,7 @@ event12 model =
                     [ text (count "event12" model) ]
               )
             , ( "2"
-              , a
+              , span
                     [ class "button"
                     , class "next"
                     , onClick (Event "next")
@@ -1261,7 +1261,7 @@ event13 model =
         div [ class (beforeOrAfter "event13" model) ]
             [ lazy
                 (\_ ->
-                    a
+                    span
                         [ class "button"
                         , class "prev"
                         , onClick (Event "prev")
@@ -1271,7 +1271,7 @@ event13 model =
                 ()
             , lazy
                 (\_ ->
-                    a
+                    span
                         [ class "target"
                         , class "button"
                         , onClick (Event "target")
@@ -1281,7 +1281,7 @@ event13 model =
                 ()
             , lazy
                 (\_ ->
-                    a
+                    span
                         [ class "button"
                         , class "next"
                         , onClick (Event "next")
@@ -1296,19 +1296,19 @@ event14 : Model -> Html Msg
 event14 model =
     wrap InsertBeforeTarget "event14" <|
         div []
-            [ a
+            [ span
                 [ class "button"
                 , class "prev"
                 , onClick (Event "prev")
                 ]
                 [ lazy viewText (count "event14" model) ]
-            , a
+            , span
                 [ class "target"
                 , class "button"
                 , onClick (Event "target")
                 ]
                 [ lazy viewText (count "event14" model) ]
-            , a
+            , span
                 [ class "button"
                 , class "next"
                 , onClick (Event "next")
@@ -1321,7 +1321,7 @@ event15 : Model -> Html Msg
 event15 model =
     wrap WrapTarget "event15" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , Html.Attributes.map Event <|
@@ -1336,7 +1336,7 @@ event16 model =
     wrap WrapTarget "event16" <|
         div []
             [ Html.map Event <|
-                a
+                span
                     [ class "target"
                     , class "button"
                     , onClick (beforeOrAfter "event16" model)
@@ -1349,7 +1349,7 @@ event17 : Model -> Html Msg
 event17 model =
     wrap WrapTarget "event17" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , Html.Attributes.map (\s -> Event s) <|
@@ -1364,7 +1364,7 @@ event18 model =
     wrap WrapTarget "event18" <|
         div []
             [ Html.map (\s -> Event s) <|
-                a
+                span
                     [ class "target"
                     , class "button"
                     , onClick (beforeOrAfter "event18" model)

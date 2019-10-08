@@ -22,13 +22,8 @@ This patch makes the [simple test](../test/test.js) all green (see the result [h
 
 TODO includes:
 
-- More asertions
 - Insert / Remove many extension nodes
-- Insert / Remove nodes after interruption
-- Sorting nodes
-- Events
-- `Html.map`
-- `Html.Attributes.map`
+- Events from `<a>`
 - `Html.Keyed`
 - `Html.Lazy`
 - Tests with real extensions
