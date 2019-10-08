@@ -1,8 +1,7 @@
 const params = new URLSearchParams(location.search);
-const elementMode = params.get("main") === "element";
+const main = params.get("main") || "Element";
 
-const main = elementMode ? Elm.Simple.Element : Elm.Simple.Application;
-const app = main.init({
+const app = Elm.Simple[main].init({
   node: document.getElementById("root")
 });
 app.ports.event.subscribe(s => {

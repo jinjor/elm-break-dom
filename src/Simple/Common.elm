@@ -3,9 +3,11 @@ port module Simple.Common exposing (Model, Msg, init, main, noop, onUrlRequest, 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
 import Dict exposing (Dict)
-import Html exposing (Html, a, button, div, li, node, text, ul)
+import Html exposing (Html, a, button, div, li, node, span, text, ul)
 import Html.Attributes exposing (class, id, style, title)
 import Html.Events exposing (onClick)
+import Html.Keyed
+import Html.Lazy exposing (lazy)
 import Url
 
 
@@ -120,7 +122,7 @@ update msg model =
                             Just (n + 1)
 
                         Nothing ->
-                            Just 0
+                            Just 1
                 )
                 model
             , Cmd.none
@@ -214,7 +216,39 @@ view model =
         , event4 model
         , event5 model
         , event6 model
+        , event7 model
+        , event8 model
+        , event9 model
+        , event10 model
+        , event11 model
+        , event12 model
+        , event13 model
+        , event14 model
+        , event15 model
+        , event16 model
+        , event17 model
+        , event18 model
+        , keyed1 model
+        , keyed2 model
+        , keyed3 model
+        , keyed4 model
+        , keyed5 model
+        , keyed6 model
+        , keyed7 model
+        , keyed8 model
+        , keyed9 model
+        , keyed10 model
+        , keyed11 model
+        , keyed12 model
+        , keyed13 model
+        , keyed14 model
+        , keyed15 model
+        , keyed16 model
         ]
+
+
+
+-- UTILS
 
 
 wrap : (String -> Msg) -> String -> Html Msg -> Html Msg
@@ -232,6 +266,18 @@ beforeOrAfter id model =
 
     else
         "before"
+
+
+count : String -> Model -> String
+count id model =
+    Dict.get id model
+        |> Maybe.withDefault 0
+        |> String.fromInt
+
+
+viewText : String -> Html msg
+viewText s =
+    text s
 
 
 
@@ -1002,7 +1048,7 @@ event1 : Model -> Html Msg
 event1 model =
     wrap InsertBeforeTarget "event1" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , onClick (Event "a")
@@ -1015,7 +1061,7 @@ event2 : Model -> Html Msg
 event2 model =
     wrap InsertBeforeTarget "event2" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , Html.Attributes.map Event (onClick "a")
@@ -1029,7 +1075,7 @@ event3 model =
     wrap InsertBeforeTarget "event3" <|
         div []
             [ Html.map Event <|
-                a
+                span
                     [ class "target"
                     , class "button"
                     , onClick "a"
@@ -1042,7 +1088,7 @@ event4 : Model -> Html Msg
 event4 model =
     wrap InsertBeforeTarget "event4" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , onClick (Event (beforeOrAfter "event4" model))
@@ -1055,7 +1101,7 @@ event5 : Model -> Html Msg
 event5 model =
     wrap InsertBeforeTarget "event5" <|
         div []
-            [ a
+            [ span
                 [ class "target"
                 , class "button"
                 , Html.Attributes.map Event (onClick (beforeOrAfter "event5" model))
@@ -1069,10 +1115,641 @@ event6 model =
     wrap InsertBeforeTarget "event6" <|
         div []
             [ Html.map Event <|
-                a
+                span
                     [ class "target"
                     , class "button"
                     , onClick (beforeOrAfter "event6" model)
                     ]
                     []
             ]
+
+
+event7 : Model -> Html Msg
+event7 model =
+    wrap InsertBeforeTarget "event7" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , Html.Attributes.map (\s -> Event s) <|
+                    onClick (beforeOrAfter "event7" model)
+                ]
+                []
+            ]
+
+
+event8 : Model -> Html Msg
+event8 model =
+    wrap InsertBeforeTarget "event8" <|
+        div []
+            [ Html.map (\s -> Event s) <|
+                span
+                    [ class "target"
+                    , class "button"
+                    , onClick (beforeOrAfter "event8" model)
+                    ]
+                    []
+            ]
+
+
+event9 : Model -> Html Msg
+event9 model =
+    wrap InsertBeforeTarget "event9" <|
+        div [ class (beforeOrAfter "event9" model) ]
+            [ span
+                [ class "button"
+                , class "prev"
+                , onClick (Event "prev")
+                ]
+                []
+            , span
+                [ class "target"
+                , class "button"
+                , onClick (Event "target")
+                ]
+                []
+            , span
+                [ class "button"
+                , class "next"
+                , onClick (Event "next")
+                ]
+                []
+            ]
+
+
+event10 : Model -> Html Msg
+event10 model =
+    wrap InsertBeforeTarget "event10" <|
+        div []
+            [ span
+                [ class "button"
+                , class "prev"
+                , onClick (Event "prev")
+                ]
+                [ text (count "event10" model) ]
+            , span
+                [ class "target"
+                , class "button"
+                , onClick (Event "target")
+                ]
+                [ text (count "event10" model) ]
+            , span
+                [ class "button"
+                , class "next"
+                , onClick (Event "next")
+                ]
+                [ text (count "event10" model) ]
+            ]
+
+
+event11 : Model -> Html Msg
+event11 model =
+    wrap InsertBeforeTarget "event11" <|
+        Html.Keyed.node "div"
+            [ class (beforeOrAfter "event11" model) ]
+            [ ( "0"
+              , span
+                    [ class "button"
+                    , class "prev"
+                    , onClick (Event "prev")
+                    ]
+                    []
+              )
+            , ( "1"
+              , span
+                    [ class "target"
+                    , class "button"
+                    , onClick (Event "target")
+                    ]
+                    []
+              )
+            , ( "2"
+              , span
+                    [ class "button"
+                    , class "next"
+                    , onClick (Event "next")
+                    ]
+                    []
+              )
+            ]
+
+
+event12 : Model -> Html Msg
+event12 model =
+    wrap InsertBeforeTarget "event12" <|
+        Html.Keyed.node "div"
+            []
+            [ ( "0"
+              , span
+                    [ class "button"
+                    , class "prev"
+                    , onClick (Event "prev")
+                    ]
+                    [ text (count "event12" model) ]
+              )
+            , ( "1"
+              , span
+                    [ class "target"
+                    , class "button"
+                    , onClick (Event "target")
+                    ]
+                    [ text (count "event12" model) ]
+              )
+            , ( "2"
+              , span
+                    [ class "button"
+                    , class "next"
+                    , onClick (Event "next")
+                    ]
+                    [ text (count "event12" model) ]
+              )
+            ]
+
+
+event13 : Model -> Html Msg
+event13 model =
+    wrap InsertBeforeTarget "event13" <|
+        div [ class (beforeOrAfter "event13" model) ]
+            [ lazy
+                (\_ ->
+                    span
+                        [ class "button"
+                        , class "prev"
+                        , onClick (Event "prev")
+                        ]
+                        []
+                )
+                ()
+            , lazy
+                (\_ ->
+                    span
+                        [ class "target"
+                        , class "button"
+                        , onClick (Event "target")
+                        ]
+                        []
+                )
+                ()
+            , lazy
+                (\_ ->
+                    span
+                        [ class "button"
+                        , class "next"
+                        , onClick (Event "next")
+                        ]
+                        [ lazy viewText "" ]
+                )
+                ()
+            ]
+
+
+event14 : Model -> Html Msg
+event14 model =
+    wrap InsertBeforeTarget "event14" <|
+        div []
+            [ span
+                [ class "button"
+                , class "prev"
+                , onClick (Event "prev")
+                ]
+                [ lazy viewText (count "event14" model) ]
+            , span
+                [ class "target"
+                , class "button"
+                , onClick (Event "target")
+                ]
+                [ lazy viewText (count "event14" model) ]
+            , span
+                [ class "button"
+                , class "next"
+                , onClick (Event "next")
+                ]
+                [ lazy viewText (count "event14" model) ]
+            ]
+
+
+event15 : Model -> Html Msg
+event15 model =
+    wrap WrapTarget "event15" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , Html.Attributes.map Event <|
+                    onClick (beforeOrAfter "event15" model)
+                ]
+                []
+            ]
+
+
+event16 : Model -> Html Msg
+event16 model =
+    wrap WrapTarget "event16" <|
+        div []
+            [ Html.map Event <|
+                span
+                    [ class "target"
+                    , class "button"
+                    , onClick (beforeOrAfter "event16" model)
+                    ]
+                    []
+            ]
+
+
+event17 : Model -> Html Msg
+event17 model =
+    wrap WrapTarget "event17" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , Html.Attributes.map (\s -> Event s) <|
+                    onClick (beforeOrAfter "event17" model)
+                ]
+                []
+            ]
+
+
+event18 : Model -> Html Msg
+event18 model =
+    wrap WrapTarget "event18" <|
+        div []
+            [ Html.map (\s -> Event s) <|
+                span
+                    [ class "target"
+                    , class "button"
+                    , onClick (beforeOrAfter "event18" model)
+                    ]
+                    []
+            ]
+
+
+keyed1 : Model -> Html Msg
+keyed1 model =
+    wrap InsertBeforeTarget "keyed1" <|
+        Html.Keyed.node "div"
+            []
+            [ ( "0"
+              , div
+                    [ class "target"
+                    , class ("e" ++ count "keyed1" model)
+                    ]
+                    []
+              )
+            ]
+
+
+keyed2 : Model -> Html Msg
+keyed2 model =
+    wrap InsertBeforeTarget "keyed2" <|
+        Html.Keyed.node "div"
+            [ class ("e" ++ count "keyed2" model) ]
+            [ ( count "keyed2" model
+              , div
+                    [ class "target"
+                    ]
+                    []
+              )
+            ]
+
+
+keyed3 : Model -> Html Msg
+keyed3 model =
+    wrap InsertBeforeTarget "keyed3" <|
+        Html.Keyed.node "div"
+            []
+            [ ( count "keyed3" model
+              , div
+                    [ class "target"
+                    , class ("e" ++ count "keyed3" model)
+                    ]
+                    [ text ("e" ++ count "keyed3" model) ]
+              )
+            ]
+
+
+keyed4 : Model -> Html Msg
+keyed4 model =
+    wrap InsertBeforeTarget "keyed4" <|
+        div []
+            [ Html.Keyed.node "div"
+                [ class "target"
+                , class ("e" ++ count "keyed4" model)
+                ]
+                []
+            ]
+
+
+keyed5 : Model -> Html Msg
+keyed5 model =
+    wrap WrapTarget "keyed5" <|
+        div []
+            [ Html.Keyed.node "div"
+                [ class "target"
+                , class ("e" ++ count "keyed5" model)
+                ]
+                []
+            ]
+
+
+keyed6 : Model -> Html Msg
+keyed6 model =
+    wrap UpdateAttribute "keyed6" <|
+        Html.Keyed.node "div"
+            []
+            [ ( "1"
+              , div
+                    [ class "target"
+                    , class ("e" ++ count "keyed6" model)
+                    ]
+                    [ text (count "keyed6" model) ]
+              )
+            ]
+
+
+keyed7 : Model -> Html Msg
+keyed7 model =
+    wrap UpdateAttribute "keyed7" <|
+        Html.Keyed.node "div"
+            [ class ("e" ++ count "keyed7" model) ]
+            [ ( "1"
+              , div
+                    [ class "target"
+                    ]
+                    []
+              )
+            ]
+
+
+keyed8 : Model -> Html Msg
+keyed8 model =
+    wrap UpdateAttribute "keyed8" <|
+        Html.Keyed.node "div"
+            [ class ("e" ++ count "keyed8" model) ]
+            [ ( count "keyed8" model
+              , div
+                    [ class "target"
+                    ]
+                    [ text (count "keyed8" model) ]
+              )
+            ]
+
+
+keyed9 : Model -> Html Msg
+keyed9 model =
+    wrap UpdateAttribute "keyed9" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed9" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                []
+            )
+
+
+keyed10 : Model -> Html Msg
+keyed10 model =
+    wrap UpdateAttribute "keyed10" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed10" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                , ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                , ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed11 : Model -> Html Msg
+keyed11 model =
+    wrap UpdateAttribute "keyed11" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed11" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "e1"
+                        ]
+                        []
+                  )
+                , ( "2"
+                  , div
+                        [ class "target"
+                        , class "e2"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "2"
+                  , div
+                        [ class "target"
+                        , class "e2"
+                        ]
+                        []
+                  )
+                , ( "1"
+                  , div
+                        [ class "e1"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed12 : Model -> Html Msg
+keyed12 model =
+    wrap InsertBeforeTarget "keyed12" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed12" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                , ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                , ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed13 : Model -> Html Msg
+keyed13 model =
+    wrap InsertBeforeTarget "keyed13" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed13" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "e1"
+                        ]
+                        []
+                  )
+                , ( "2"
+                  , div
+                        [ class "target"
+                        , class "e2"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "2"
+                  , div
+                        [ class "target"
+                        , class "e2"
+                        ]
+                        []
+                  )
+                , ( "1"
+                  , div
+                        [ class "e1"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed14 : Model -> Html Msg
+keyed14 model =
+    wrap InsertBeforeTarget "keyed14" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed14" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                , ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed15 : Model -> Html Msg
+keyed15 model =
+    wrap InsertBeforeTarget "keyed15" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed15" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                , ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed16 : Model -> Html Msg
+keyed16 model =
+    wrap InsertBeforeTarget "keyed16" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed16" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                []
+            )
