@@ -233,6 +233,17 @@ view model =
         , keyed3 model
         , keyed4 model
         , keyed5 model
+        , keyed6 model
+        , keyed7 model
+        , keyed8 model
+        , keyed9 model
+        , keyed10 model
+        , keyed11 model
+        , keyed12 model
+        , keyed13 model
+        , keyed14 model
+        , keyed15 model
+        , keyed16 model
         ]
 
 
@@ -1439,3 +1450,306 @@ keyed5 model =
                 ]
                 []
             ]
+
+
+keyed6 : Model -> Html Msg
+keyed6 model =
+    wrap UpdateAttribute "keyed6" <|
+        Html.Keyed.node "div"
+            []
+            [ ( "1"
+              , div
+                    [ class "target"
+                    , class ("e" ++ count "keyed6" model)
+                    ]
+                    [ text (count "keyed6" model) ]
+              )
+            ]
+
+
+keyed7 : Model -> Html Msg
+keyed7 model =
+    wrap UpdateAttribute "keyed7" <|
+        Html.Keyed.node "div"
+            [ class ("e" ++ count "keyed7" model) ]
+            [ ( "1"
+              , div
+                    [ class "target"
+                    ]
+                    []
+              )
+            ]
+
+
+keyed8 : Model -> Html Msg
+keyed8 model =
+    wrap UpdateAttribute "keyed8" <|
+        Html.Keyed.node "div"
+            [ class ("e" ++ count "keyed8" model) ]
+            [ ( count "keyed8" model
+              , div
+                    [ class "target"
+                    ]
+                    [ text (count "keyed8" model) ]
+              )
+            ]
+
+
+keyed9 : Model -> Html Msg
+keyed9 model =
+    wrap UpdateAttribute "keyed9" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed9" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                []
+            )
+
+
+keyed10 : Model -> Html Msg
+keyed10 model =
+    wrap UpdateAttribute "keyed10" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed10" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                , ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                , ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed11 : Model -> Html Msg
+keyed11 model =
+    wrap UpdateAttribute "keyed11" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed11" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "e1"
+                        ]
+                        []
+                  )
+                , ( "2"
+                  , div
+                        [ class "target"
+                        , class "e2"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "2"
+                  , div
+                        [ class "target"
+                        , class "e2"
+                        ]
+                        []
+                  )
+                , ( "1"
+                  , div
+                        [ class "e1"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed12 : Model -> Html Msg
+keyed12 model =
+    wrap InsertBeforeTarget "keyed12" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed12" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                , ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                , ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed13 : Model -> Html Msg
+keyed13 model =
+    wrap InsertBeforeTarget "keyed13" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed13" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "e1"
+                        ]
+                        []
+                  )
+                , ( "2"
+                  , div
+                        [ class "target"
+                        , class "e2"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "2"
+                  , div
+                        [ class "target"
+                        , class "e2"
+                        ]
+                        []
+                  )
+                , ( "1"
+                  , div
+                        [ class "e1"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed14 : Model -> Html Msg
+keyed14 model =
+    wrap InsertBeforeTarget "keyed14" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed14" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                , ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed15 : Model -> Html Msg
+keyed15 model =
+    wrap InsertBeforeTarget "keyed15" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed15" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                [ ( "2"
+                  , div
+                        [ class "e2"
+                        ]
+                        []
+                  )
+                , ( "1"
+                  , div
+                        [ class "target"
+                        , class "e1"
+                        ]
+                        []
+                  )
+                ]
+            )
+
+
+keyed16 : Model -> Html Msg
+keyed16 model =
+    wrap InsertBeforeTarget "keyed16" <|
+        Html.Keyed.node "div"
+            []
+            (if beforeOrAfter "keyed16" model == "before" then
+                [ ( "1"
+                  , div
+                        [ class "target"
+                        ]
+                        []
+                  )
+                ]
+
+             else
+                []
+            )

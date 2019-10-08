@@ -647,40 +647,124 @@ describe("Simple", function() {
             });
           });
           describe("Keyed nodes", function() {
-            it("insert before target and update it's attribute", async function() {
+            it("insert before target and update its attribute", async function() {
               await page.click("#keyed1 button");
               await page.waitFor(50);
               assert(!error, error);
               await assertCount(page, "#keyed1 .e0", 0);
               await assertCount(page, "#keyed1 .e1", 1);
             });
-            it("insert before target and update it's key", async function() {
+            it("insert before target and update its key", async function() {
               await page.click("#keyed2 button");
               await page.waitFor(50);
               assert(!error, error);
               await assertCount(page, "#keyed2 .e0", 0);
               await assertCount(page, "#keyed2 .e1", 1);
             });
-            it("insert before target and update it's key, attribute and child", async function() {
+            it("insert before target and update its key, attribute and child", async function() {
               await page.click("#keyed3 button");
               await page.waitFor(50);
               assert(!error, error);
               await assertCount(page, "#keyed3 .e0", 0);
               await assertCount(page, "#keyed3 .e1", 1);
             });
-            it("insert before target (keyed node's parent) and update it's attribute", async function() {
+            it("insert before target (keyed node's parent) and update its attribute", async function() {
               await page.click("#keyed4 button");
               await page.waitFor(50);
               assert(!error, error);
               await assertCount(page, "#keyed4 .e0", 0);
               await assertCount(page, "#keyed4 .e1", 1);
             });
-            it("wrap target (keyed node's parent) and update it's attribute", async function() {
+            it("wrap target (keyed node's parent) and update its attribute", async function() {
               await page.click("#keyed5 button");
               await page.waitFor(50);
               assert(!error, error);
               await assertCount(page, "#keyed5 .e0", 0);
               await assertCount(page, "#keyed5 .e1", 1);
+            });
+            it("update target's attribute and update its attribute and child", async function() {
+              await page.click("#keyed6 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#keyed6 .e0", 0);
+              await assertCount(page, "#keyed6 .e1", 1);
+              await assertCount(page, `#keyed6 .target[title="break"]`, 1);
+            });
+            it("update target's attribute and update its parent's attribute", async function() {
+              await page.click("#keyed7 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#keyed7 .e0", 0);
+              await assertCount(page, "#keyed7 .e1", 1);
+              await assertCount(page, `#keyed7 .target[title="break"]`, 1);
+            });
+            it("update target's attribute and update its key and child", async function() {
+              await page.click("#keyed8 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#keyed8 .e0", 0);
+              await assertCount(page, "#keyed8 .e1", 1);
+              await assertCount(page, `#keyed8 .target`, 1);
+            });
+            it("update target's attribute and remove it", async function() {
+              await page.click("#keyed9 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed9 .target`, 0);
+            });
+            it("update target's attribute and sort (target = first node)", async function() {
+              await page.click("#keyed10 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed10 .target.e1[title="break"]`, 1);
+              await assertCount(page, `#keyed10 .e2`, 1);
+              await assertCount(page, `#keyed10 .e2[title="break"]`, 0);
+            });
+            it("update target's attribute and sort (target = second node)", async function() {
+              await page.click("#keyed11 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed11 .target.e2[title="break"]`, 1);
+              await assertCount(page, `#keyed11 .e1`, 1);
+              await assertCount(page, `#keyed11 .e1[title="break"]`, 0);
+            });
+            it("insert before target and sort (target = first node)", async function() {
+              await page.click("#keyed12 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed12 .target.e1`, 1);
+              await assertCount(page, `#keyed12 .e2`, 1);
+              await assertCount(page, `#keyed12 .target.e2`, 0);
+            });
+            it("insert before target and sort (target = second node)", async function() {
+              await page.click("#keyed13 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed13 .target.e2`, 1);
+              await assertCount(page, `#keyed13 .e1`, 1);
+              await assertCount(page, `#keyed13 .target.e1`, 0);
+            });
+            it("insert before target and append node", async function() {
+              await page.click("#keyed14 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed14 .target.e1`, 1);
+              await assertCount(page, `#keyed14 .e2`, 1);
+              await assertCount(page, `#keyed14 .target.e2`, 0);
+            });
+            it("insert before target and prepend node", async function() {
+              await page.click("#keyed15 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed15 .target.e1`, 1);
+              await assertCount(page, `#keyed15 .e2`, 1);
+              await assertCount(page, `#keyed15 .target.e2`, 0);
+            });
+            it("insert before target and remove target", async function() {
+              await page.click("#keyed16 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed16 .target`, 0);
             });
           });
         });
