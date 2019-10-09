@@ -103,8 +103,5 @@ Note: This will be no use once [this patch](./patch/README.md) is merged.
 
 ## TODO
 
-- How about `Browser.document`?
-- Tests to cover `Html.Keyed` and `Html.Lazy`
-- Tests with `--optimize`
-- Better patch
+- [Better patch](./patch)
 - More extensions
