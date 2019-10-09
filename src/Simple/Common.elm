@@ -244,6 +244,14 @@ view model =
         , keyed14 model
         , keyed15 model
         , keyed16 model
+        , keyed17 model
+        , keyed18 model
+        , keyed19 model
+        , keyed20 model
+        , keyed21 model
+        , keyed22 model
+        , keyed23 model
+        , keyed24 model
         ]
 
 
@@ -1752,4 +1760,88 @@ keyed16 model =
 
              else
                 []
+            )
+
+
+keyed17 : Model -> Html Msg
+keyed17 model =
+    wrap AppendToTarget "keyed17" <|
+        Html.Keyed.node "div"
+            [ class "target" ]
+            [ ( "1", text (count "keyed17" model) ) ]
+
+
+keyed18 : Model -> Html Msg
+keyed18 model =
+    wrap AppendToTarget "keyed18" <|
+        Html.Keyed.node "div"
+            [ class "target" ]
+            [ ( count "keyed18" model, text (count "keyed18" model) ) ]
+
+
+keyed19 : Model -> Html Msg
+keyed19 model =
+    wrap AppendToTarget "keyed19" <|
+        Html.Keyed.node "div"
+            [ class "target" ]
+            (if beforeOrAfter "keyed19" model == "before" then
+                [ ( "1", text "" ) ]
+
+             else
+                []
+            )
+
+
+keyed20 : Model -> Html Msg
+keyed20 model =
+    wrap AppendToTarget "keyed20" <|
+        Html.Keyed.node "div"
+            [ class "target" ]
+            (if beforeOrAfter "keyed20" model == "before" then
+                []
+
+             else
+                [ ( "1", text "" ) ]
+            )
+
+
+keyed21 : Model -> Html Msg
+keyed21 model =
+    wrap AppendToTarget "keyed21" <|
+        Html.Keyed.node "div"
+            [ class "target" ]
+            [ ( "1", div [ class ("e" ++ count "keyed21" model) ] [ text (count "keyed21" model) ] ) ]
+
+
+keyed22 : Model -> Html Msg
+keyed22 model =
+    wrap AppendToTarget "keyed22" <|
+        Html.Keyed.node "div"
+            [ class "target" ]
+            [ ( count "keyed22" model, div [ class ("e" ++ count "keyed22" model) ] [ text (count "keyed22" model) ] ) ]
+
+
+keyed23 : Model -> Html Msg
+keyed23 model =
+    wrap AppendToTarget "keyed23" <|
+        Html.Keyed.node "div"
+            [ class "target" ]
+            (if beforeOrAfter "keyed23" model == "keyed23" then
+                [ ( "1", div [ class "e1" ] [ text "" ] ) ]
+
+             else
+                []
+            )
+
+
+keyed24 : Model -> Html Msg
+keyed24 model =
+    wrap AppendToTarget "keyed24" <|
+        Html.Keyed.node "div"
+            [ class "target" ]
+            (if beforeOrAfter "keyed24" model == "keyed24" then
+                []
+
+             else
+                [ ( "1", div [ class "e1" ] [ text "" ] ) ]
             )

@@ -766,6 +766,60 @@ describe("Simple", function() {
               assert(!error, error);
               await assertCount(page, `#keyed16 .target`, 0);
             });
+            it("append to target and update child text", async function() {
+              await page.click("#keyed17 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed17 .target`, 1);
+            });
+            it("append to target and update key and child text", async function() {
+              await page.click("#keyed18 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed18 .target`, 1);
+            });
+            it("append to target and remove child text", async function() {
+              await page.click("#keyed19 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed19 .target`, 1);
+            });
+            it("append to target and append text", async function() {
+              await page.click("#keyed20 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed20 .target`, 1);
+            });
+            it("append to target and update child <div>", async function() {
+              await page.click("#keyed21 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed21 .target`, 1);
+              await assertCount(page, `#keyed21 .e0`, 0);
+              await assertCount(page, `#keyed21 .e1`, 1);
+            });
+            it("append to target and update key and child <div>", async function() {
+              await page.click("#keyed22 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed22 .target`, 1);
+              await assertCount(page, `#keyed22 .e0`, 0);
+              await assertCount(page, `#keyed22 .e1`, 1);
+            });
+            it("append to target and remove child <div>", async function() {
+              await page.click("#keyed23 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed23 .target`, 1);
+              await assertCount(page, `#keyed23 .e1`, 0);
+            });
+            it("append to target and append <div>", async function() {
+              await page.click("#keyed24 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, `#keyed24 .target`, 1);
+              await assertCount(page, `#keyed24 .e1`, 1);
+            });
           });
         });
       }
