@@ -919,25 +919,25 @@ describe("Simple", function() {
               assert(!error, error);
               await assertCount(page, "#lazy16 .target", 1);
             });
-            it("insert before lazy target and update its lazy child (text)", async function() {
+            it("insert before lazy target and update its child (text)", async function() {
               await page.click("#lazy17 button");
               await page.waitFor(50);
               assert(!error, error);
               await assertCount(page, "#lazy17 .target", 1);
             });
-            it("remove lazy target and update its lazy child (text)", async function() {
+            it("remove lazy target and update its child (text)", async function() {
               await page.click("#lazy18 button");
               await page.waitFor(50);
               assert(!error, error);
               await assertCount(page, "#lazy18 .target", 1);
             });
-            it("wrap lazy target and update its lazy child (text)", async function() {
+            it("wrap lazy target and update its child (text)", async function() {
               await page.click("#lazy19 button");
               await page.waitFor(50);
               assert(!error, error);
               await assertCount(page, "#lazy19 .target", 1);
             });
-            it("append to lazy target and update its lazy child (text)", async function() {
+            it("append to lazy target and update its child (text)", async function() {
               await page.click("#lazy20 button");
               await page.waitFor(50);
               assert(!error, error);
