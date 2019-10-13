@@ -252,6 +252,26 @@ view model =
         , keyed22 model
         , keyed23 model
         , keyed24 model
+        , lazy1 model
+        , lazy2 model
+        , lazy3 model
+        , lazy4 model
+        , lazy5 model
+        , lazy6 model
+        , lazy7 model
+        , lazy8 model
+        , lazy9 model
+        , lazy10 model
+        , lazy11 model
+        , lazy12 model
+        , lazy13 model
+        , lazy14 model
+        , lazy15 model
+        , lazy16 model
+        , lazy17 model
+        , lazy18 model
+        , lazy19 model
+        , lazy20 model
         ]
 
 
@@ -1392,6 +1412,10 @@ event18 model =
             ]
 
 
+
+-- KEYED
+
+
 keyed1 : Model -> Html Msg
 keyed1 model =
     wrap InsertBeforeTarget "keyed1" <|
@@ -1845,3 +1869,178 @@ keyed24 model =
              else
                 [ ( "1", div [ class "e1" ] [ text "" ] ) ]
             )
+
+
+
+-- LAZY
+
+
+viewText1 : String -> Html msg
+viewText1 s =
+    text s
+
+
+viewDiv1 : String -> Html msg
+viewDiv1 s =
+    div [] [ text s ]
+
+
+viewTarget1 : String -> Html msg
+viewTarget1 s =
+    div [ class "target" ] [ text s ]
+
+
+lazy1 : Model -> Html Msg
+lazy1 model =
+    wrap InsertBeforeTarget "lazy1" <|
+        div []
+            [ div [ class "target" ] [ lazy viewText1 (beforeOrAfter "lazy1" model) ]
+            ]
+
+
+lazy2 : Model -> Html Msg
+lazy2 model =
+    wrap RemoveTarget "lazy2" <|
+        div []
+            [ div [ class "target" ] [ lazy viewText1 (beforeOrAfter "lazy2" model) ]
+            ]
+
+
+lazy3 : Model -> Html Msg
+lazy3 model =
+    wrap WrapTarget "lazy3" <|
+        div []
+            [ div [ class "target" ] [ lazy viewText1 (beforeOrAfter "lazy3" model) ]
+            ]
+
+
+lazy4 : Model -> Html Msg
+lazy4 model =
+    wrap AppendToTarget "lazy4" <|
+        div [ class "target" ]
+            [ lazy viewText1 (beforeOrAfter "lazy4" model)
+            ]
+
+
+lazy5 : Model -> Html Msg
+lazy5 model =
+    wrap InsertBeforeTarget "lazy5" <|
+        div []
+            [ div [ class "target" ] [ lazy viewDiv1 (beforeOrAfter "lazy5" model) ]
+            ]
+
+
+lazy6 : Model -> Html Msg
+lazy6 model =
+    wrap RemoveTarget "lazy6" <|
+        div []
+            [ div [ class "target" ] [ lazy viewDiv1 (beforeOrAfter "lazy6" model) ]
+            ]
+
+
+lazy7 : Model -> Html Msg
+lazy7 model =
+    wrap WrapTarget "lazy7" <|
+        div []
+            [ div [ class "target" ] [ lazy viewDiv1 (beforeOrAfter "lazy7" model) ]
+            ]
+
+
+lazy8 : Model -> Html Msg
+lazy8 model =
+    wrap AppendToTarget "lazy8" <|
+        div [ class "target" ]
+            [ lazy viewDiv1 (beforeOrAfter "lazy8" model)
+            ]
+
+
+lazy9 : Model -> Html Msg
+lazy9 model =
+    wrap InsertBeforeTarget "lazy9" <|
+        div []
+            [ div [ class "target" ] [ lazy text (beforeOrAfter "lazy9" model) ]
+            ]
+
+
+lazy10 : Model -> Html Msg
+lazy10 model =
+    wrap RemoveTarget "lazy10" <|
+        div []
+            [ div [ class "target" ] [ lazy text (beforeOrAfter "lazy10" model) ]
+            ]
+
+
+lazy11 : Model -> Html Msg
+lazy11 model =
+    wrap WrapTarget "lazy11" <|
+        div []
+            [ div [ class "target" ] [ lazy text (beforeOrAfter "lazy11" model) ]
+            ]
+
+
+lazy12 : Model -> Html Msg
+lazy12 model =
+    wrap AppendToTarget "lazy12" <|
+        div [ class "target" ]
+            [ lazy text (beforeOrAfter "lazy12" model)
+            ]
+
+
+lazy13 : Model -> Html Msg
+lazy13 model =
+    wrap InsertBeforeTarget "lazy13" <|
+        div []
+            [ div [ class "target" ] [ lazy (\s -> text s) (beforeOrAfter "lazy13" model) ]
+            ]
+
+
+lazy14 : Model -> Html Msg
+lazy14 model =
+    wrap RemoveTarget "lazy14" <|
+        div []
+            [ div [ class "target" ] [ lazy  (\s -> text s) (beforeOrAfter "lazy14" model) ]
+            ]
+
+
+lazy15 : Model -> Html Msg
+lazy15 model =
+    wrap WrapTarget "lazy15" <|
+        div []
+            [ div [ class "target" ] [ lazy  (\s -> text s) (beforeOrAfter "lazy15" model) ]
+            ]
+
+
+lazy16 : Model -> Html Msg
+lazy16 model =
+    wrap AppendToTarget "lazy16" <|
+        div [ class "target" ]
+            [ lazy  (\s -> text s) (beforeOrAfter "lazy16" model)
+            ]
+lazy17 : Model -> Html Msg
+lazy17 model =
+    wrap InsertBeforeTarget "lazy17" <|
+        div []
+            [ lazy viewTarget1 (beforeOrAfter "lazy17" model)
+            ]
+
+
+lazy18 : Model -> Html Msg
+lazy18 model =
+    wrap RemoveTarget "lazy18" <|
+        div []
+            [ lazy viewTarget1 (beforeOrAfter "lazy18" model)
+            ]
+
+
+lazy19 : Model -> Html Msg
+lazy19 model =
+    wrap WrapTarget "lazy19" <|
+        div []
+            [ lazy viewTarget1 (beforeOrAfter "lazy19" model)
+            ]
+
+
+lazy20 : Model -> Html Msg
+lazy20 model =
+    wrap AppendToTarget "lazy20" <|
+        lazy viewTarget1 (beforeOrAfter "lazy20" model)

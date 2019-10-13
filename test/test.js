@@ -821,6 +821,129 @@ describe("Simple", function() {
               await assertCount(page, `#keyed24 .e1`, 1);
             });
           });
+          describe("Lazy nodes", function() {
+            it("insert before target and update its lazy child (text)", async function() {
+              await page.click("#lazy1 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy1 .target", 1);
+            });
+            it("remove target and update its lazy child (text)", async function() {
+              await page.click("#lazy2 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy2 .target", 1);
+            });
+            it("wrap target and update its lazy child (text)", async function() {
+              await page.click("#lazy3 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy3 .target", 1);
+            });
+            it("append to target and update its lazy child (text)", async function() {
+              await page.click("#lazy4 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy4 .target", 1);
+            });
+            it("insert before target and update its lazy child (div)", async function() {
+              await page.click("#lazy5 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy5 .target", 1);
+            });
+            it("remove target and update its lazy child (div)", async function() {
+              await page.click("#lazy6 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy6 .target", 1);
+            });
+            it("wrap target and update its lazy child (div)", async function() {
+              await page.click("#lazy7 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy7 .target", 1);
+            });
+            it("append to target and update its lazy child (div)", async function() {
+              await page.click("#lazy8 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy8 .target", 1);
+            });
+            it("insert before target and update its lazy child (directly use text)", async function() {
+              await page.click("#lazy9 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy9 .target", 1);
+            });
+            it("remove target and update its lazy child (directly use text)", async function() {
+              await page.click("#lazy10 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy10 .target", 1);
+            });
+            it("wrap target and update its lazy child (directly use text)", async function() {
+              await page.click("#lazy11 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy11 .target", 1);
+            });
+            it("append to target and update its lazy child (directly use text)", async function() {
+              await page.click("#lazy12 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy12 .target", 1);
+            });
+
+            it("insert before target and update its lazy child (use lambda)", async function() {
+              await page.click("#lazy13 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy13 .target", 1);
+            });
+            it("remove target and update its lazy child (use lambda)", async function() {
+              await page.click("#lazy14 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy14 .target", 1);
+            });
+            it("wrap target and update its lazy child (use lambda)", async function() {
+              await page.click("#lazy15 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy15 .target", 1);
+            });
+            it("append to target and update its lazy child (use lambda)", async function() {
+              await page.click("#lazy16 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy16 .target", 1);
+            });
+            it("insert before lazy target and update its lazy child (text)", async function() {
+              await page.click("#lazy17 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy17 .target", 1);
+            });
+            it("remove lazy target and update its lazy child (text)", async function() {
+              await page.click("#lazy18 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy18 .target", 1);
+            });
+            it("wrap lazy target and update its lazy child (text)", async function() {
+              await page.click("#lazy19 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy19 .target", 1);
+            });
+            it("append to lazy target and update its lazy child (text)", async function() {
+              await page.click("#lazy20 button");
+              await page.waitFor(50);
+              assert(!error, error);
+              await assertCount(page, "#lazy20 .target", 1);
+            });
+          });
         });
       }
     });
