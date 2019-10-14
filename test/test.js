@@ -11,6 +11,10 @@ const headless = process.env.HEADLESS === "false" ? false : true;
 
 rimraf.sync("screenshots");
 fs.mkdirSync("screenshots");
+rimraf.sync(".nyc_output");
+fs.mkdirSync(".nyc_output");
+rimraf.sync("coverage");
+fs.mkdirSync("coverage");
 
 async function assertCount(page, selector, n) {
   assert.equal((await page.$$(selector)).length, n);
@@ -30,7 +34,6 @@ describe("Simple", function() {
     server = app.listen(port);
     browser = await puppeteer.launch({ headless });
     page = await browser.newPage();
-    await page.coverage.startJSCoverage();
     await page.exposeFunction("notifyEvent", s => {
       eventResult.push(s);
     });
@@ -90,16 +93,34 @@ describe("Simple", function() {
     describe(version, function() {
       const html =
         version === "Original" ? "simple.html" : "simple-patched.html";
+      if (version === "Patched") {
+        before(async function() {
+          console.log(chalk.cyan("[start coverage]"));
+          await page.coverage.startJSCoverage({
+            resetOnNavigation: false
+          });
+        });
+        after(async function() {
+          this.timeout(30 * 1000);
+          console.log(chalk.cyan("[stop coverage]"));
+          const jsCoverage = await page.coverage.stopJSCoverage();
+          pti.write(jsCoverage);
+        });
+      }
       for (let main of ["Application", "Document", "Element"]) {
         describe(main, function() {
           before(async function() {
             await page.goto(`http://localhost:${port}/${html}?main=${main}`);
-            await page.screenshot({
-              path: `screenshots/simple-${main}-before.png`
-            });
           });
           beforeEach(async function() {
+            const start = Date.now();
             await page.reload();
+            if (Date.now() - start > 1000) {
+              console.log(
+                `Reload slowing down most likely due to JS coverage.`
+              );
+            }
+            await page.waitFor(50);
             try {
               await page.waitForSelector("ul", { timeout: 400 });
             } catch (e) {
@@ -949,9 +970,6 @@ describe("Simple", function() {
     });
   }
   after(async function() {
-    this.timeout(10 * 1000);
-    const jsCoverage = await page.coverage.stopJSCoverage();
-    pti.write(jsCoverage);
     if (browser) {
       await browser.close();
     }
