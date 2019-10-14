@@ -8,6 +8,7 @@
     "test:simple": "mocha test/test.js",
     "test:simple-manual": "run-p server open:simple",
     "test:extensions": "run-p server open:extensions",
+    "report": "nyc report --reporter=html",
     "server": "http-server -c-1",
     "open:simple": "open-cli http://localhost:8080/simple.html",
     "open:extensions": "open-cli http://localhost:8080/",
@@ -22,8 +23,10 @@
     "http-server": "^0.11.1",
     "mocha": "^6.2.0",
     "npm-run-all": "^4.1.5",
+    "nyc": "^14.1.1",
     "open-cli": "^5.0.0",
     "puppeteer": "^1.20.0",
+    "puppeteer-to-istanbul": "^1.2.2",
     "rimraf": "^3.0.0"
   }
 }

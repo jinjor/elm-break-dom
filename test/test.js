@@ -4,6 +4,7 @@ const express = require("express");
 const fs = require("fs");
 const rimraf = require("rimraf");
 const chalk = require("chalk");
+const pti = require("puppeteer-to-istanbul");
 
 const port = 3000;
 const headless = process.env.HEADLESS === "false" ? false : true;
@@ -29,6 +30,7 @@ describe("Simple", function() {
     server = app.listen(port);
     browser = await puppeteer.launch({ headless });
     page = await browser.newPage();
+    await page.coverage.startJSCoverage();
     await page.exposeFunction("notifyEvent", s => {
       eventResult.push(s);
     });
@@ -949,6 +951,8 @@ describe("Simple", function() {
     });
   }
   after(async function() {
+    const jsCoverage = await page.coverage.stopJSCoverage();
+    pti.write(jsCoverage);
     if (browser) {
       await browser.close();
     }
