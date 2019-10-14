@@ -101,7 +101,7 @@ describe("Simple", function() {
           beforeEach(async function() {
             await page.reload();
             try {
-              await page.waitForSelector("ul", { timeout: 100 });
+              await page.waitForSelector("ul", { timeout: 400 });
             } catch (e) {
               await page.$eval("body", body => console.log(body.innerHTML));
               throw e;
