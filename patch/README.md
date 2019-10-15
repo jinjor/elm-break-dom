@@ -22,8 +22,8 @@ This patch makes the [simple test](../test/test.js) all green (see the result [h
 
 TODO includes:
 
+- More assertions for each test case
+- Coverage
 - Insert / Remove many extension nodes
 - Events from `<a>`
-- `Html.Keyed`
-- `Html.Lazy`
 - Tests with real extensions
