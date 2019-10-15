@@ -1850,7 +1850,7 @@ keyed23 model =
     wrap model AppendToTarget "keyed23" <|
         Html.Keyed.node "div"
             [ class "target" ]
-            (if beforeOrAfter "keyed23" model == "keyed23" then
+            (if beforeOrAfter "keyed23" model == "before" then
                 [ ( "1", div [ class "e1" ] [ text "" ] ) ]
 
              else
@@ -1863,7 +1863,7 @@ keyed24 model =
     wrap model AppendToTarget "keyed24" <|
         Html.Keyed.node "div"
             [ class "target" ]
-            (if beforeOrAfter "keyed24" model == "keyed24" then
+            (if beforeOrAfter "keyed24" model == "before" then
                 []
 
              else
