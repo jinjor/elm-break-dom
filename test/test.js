@@ -5,6 +5,7 @@ const fs = require("fs");
 const rimraf = require("rimraf");
 const chalk = require("chalk");
 const pti = require("puppeteer-to-istanbul");
+const { mergeCoverageByUrl } = require("./util.js");
 
 const port = 3000;
 const headless = process.env.HEADLESS === "false" ? false : true;
@@ -104,7 +105,7 @@ describe("Simple", function() {
           this.timeout(30 * 1000);
           console.log(chalk.cyan("[stop coverage]"));
           const jsCoverage = await page.coverage.stopJSCoverage();
-          pti.write(jsCoverage);
+          pti.write(mergeCoverageByUrl(jsCoverage));
         });
       }
       for (let main of ["Application", "Document", "Element"]) {
