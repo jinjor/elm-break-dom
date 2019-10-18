@@ -8,7 +8,7 @@
     "test:simple": "mocha test/test.js",
     "test:simple-manual": "run-p server open:simple",
     "test:extensions": "run-p server open:extensions",
-    "report": "nyc report --reporter=html",
+    "report": "nyc report --reporter=html --report-dir=public/coverage",
     "server": "http-server -c-1",
     "open:simple": "open-cli http://localhost:8080/simple.html",
     "open:extensions": "open-cli http://localhost:8080/",

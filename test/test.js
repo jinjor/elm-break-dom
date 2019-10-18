@@ -14,8 +14,8 @@ rimraf.sync("screenshots");
 fs.mkdirSync("screenshots");
 rimraf.sync(".nyc_output");
 fs.mkdirSync(".nyc_output");
-rimraf.sync("coverage");
-fs.mkdirSync("coverage");
+rimraf.sync("public/coverage");
+fs.mkdirSync("public/coverage");
 
 async function assertCount(page, selector, n) {
   assert.equal((await page.$$(selector)).length, n);
