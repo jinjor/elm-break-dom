@@ -136,6 +136,11 @@ describe("Simple", function() {
 
               await assertCount(page, "body > .top", 0);
               await assertCount(page, "body > .bottom", 0);
+
+              await page.click(
+                "#insert-into-body1 button.remove-inserted-node"
+              );
+              await waitForSuccessfulUpdate(page, 2);
             });
             it("at (top = 0, bottom = 1)", async function() {
               await page.click("#insert-into-body2 button.break");
@@ -143,6 +148,11 @@ describe("Simple", function() {
 
               await assertCount(page, "body > .top", 0);
               await assertCount(page, "body > .bottom", 1);
+
+              await page.click(
+                "#insert-into-body2 button.remove-inserted-node"
+              );
+              await waitForSuccessfulUpdate(page, 2);
             });
             it("at (top = 0, bottom = 2)", async function() {
               await page.click("#insert-into-body3 button.break");
@@ -150,6 +160,11 @@ describe("Simple", function() {
 
               await assertCount(page, "body > .top", 0);
               await assertCount(page, "body > .bottom", 2);
+
+              await page.click(
+                "#insert-into-body3 button.remove-inserted-node"
+              );
+              await waitForSuccessfulUpdate(page, 2);
             });
             it("at (top = 1, bottom = 0)", async function() {
               await page.click("#insert-into-body4 button.break");
@@ -157,6 +172,11 @@ describe("Simple", function() {
 
               await assertCount(page, "body > .top", 1);
               await assertCount(page, "body > .bottom", 0);
+
+              await page.click(
+                "#insert-into-body4 button.remove-inserted-node"
+              );
+              await waitForSuccessfulUpdate(page, 2);
             });
             it("at (top = 1, bottom = 1)", async function() {
               await page.click("#insert-into-body5 button.break");
@@ -164,6 +184,11 @@ describe("Simple", function() {
 
               await assertCount(page, "body > .top", 1);
               await assertCount(page, "body > .bottom", 1);
+
+              await page.click(
+                "#insert-into-body5 button.remove-inserted-node"
+              );
+              await waitForSuccessfulUpdate(page, 2);
             });
             it("at (top = 1, bottom = 2)", async function() {
               await page.click("#insert-into-body6 button.break");
@@ -171,6 +196,11 @@ describe("Simple", function() {
 
               await assertCount(page, "body > .top", 1);
               await assertCount(page, "body > .bottom", 2);
+
+              await page.click(
+                "#insert-into-body6 button.remove-inserted-node"
+              );
+              await waitForSuccessfulUpdate(page, 2);
             });
             it("at (top = 2, bottom = 0)", async function() {
               await page.click("#insert-into-body7 button.break");
@@ -178,6 +208,11 @@ describe("Simple", function() {
 
               await assertCount(page, "body > .top", 2);
               await assertCount(page, "body > .bottom", 0);
+
+              await page.click(
+                "#insert-into-body7 button.remove-inserted-node"
+              );
+              await waitForSuccessfulUpdate(page, 2);
             });
             it("at (top = 2, bottom = 1)", async function() {
               await page.click("#insert-into-body8 button.break");
@@ -185,6 +220,11 @@ describe("Simple", function() {
 
               await assertCount(page, "body > .top", 2);
               await assertCount(page, "body > .bottom", 1);
+
+              await page.click(
+                "#insert-into-body8 button.remove-inserted-node"
+              );
+              await waitForSuccessfulUpdate(page, 2);
             });
           });
           describe("Insert before target element", function() {
@@ -318,18 +358,30 @@ describe("Simple", function() {
               await assertCount(page, "#append1 .ext", 1);
               await assertCount(page, "#append1 .target.before", 0);
               await assertCount(page, "#append1 .target.after", 1);
+
+              await page.click("#append1 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and update target's child", async function() {
               await page.click("#append2 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#append2 .ext", 1);
+
+              await page.click("#append2 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and insert text into target", async function() {
               await page.click("#append3 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#append3 .ext", 1);
+
+              await page.click("#append3 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and insert <div> into target", async function() {
               await page.click("#append4 button.break");
@@ -337,6 +389,10 @@ describe("Simple", function() {
 
               await assertCount(page, "#append4 .ext", 1);
               await assertCount(page, "#append4 .e1", 1);
+
+              await page.click("#append4 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and insert <a> into target", async function() {
               await page.click("#append5 button.break");
@@ -344,12 +400,20 @@ describe("Simple", function() {
 
               await assertCount(page, "#append5 .ext", 1);
               await assertCount(page, "#append5 .e1", 1);
+
+              await page.click("#append5 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and remove text from target", async function() {
               await page.click("#append6 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#append6 .ext", 1);
+
+              await page.click("#append6 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and remove <div> from target", async function() {
               await page.click("#append7 button.break");
@@ -357,6 +421,10 @@ describe("Simple", function() {
 
               await assertCount(page, "#append7 .ext", 1);
               await assertCount(page, "#append7 .e1", 0);
+
+              await page.click("#append7 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and remove <a> from target", async function() {
               await page.click("#append8 button.break");
@@ -364,12 +432,20 @@ describe("Simple", function() {
 
               await assertCount(page, "#append8 .ext", 1);
               await assertCount(page, "#append8 .e1", 0);
+
+              await page.click("#append8 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and remove 2 texts from target", async function() {
               await page.click("#append9 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#append9 .ext", 1);
+
+              await page.click("#append9 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and remove 2 <div>s from target", async function() {
               await page.click("#append10 button.break");
@@ -378,6 +454,10 @@ describe("Simple", function() {
               await assertCount(page, "#append10 .ext", 1);
               await assertCount(page, "#append10 .e1", 0);
               await assertCount(page, "#append10 .e2", 0);
+
+              await page.click("#append10 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and replace target with text", async function() {
               await page.click("#append11 button.break");
@@ -385,6 +465,10 @@ describe("Simple", function() {
 
               await assertCount(page, "#append11 .target", 0);
               await assertCount(page, "#append11 .ext", 0);
+
+              await page.click("#append11 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("...and remove target", async function() {
               await page.click("#append12 button.break");
@@ -392,6 +476,10 @@ describe("Simple", function() {
 
               await assertCount(page, "#append12 .target", 0);
               await assertCount(page, "#append12 .ext", 0);
+
+              await page.click("#append12 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
           });
           describe("Remove target element", function() {
@@ -550,6 +638,10 @@ describe("Simple", function() {
 
               await page.click("#event1 .button");
               await assertEventResult(["a"]);
+
+              await page.click("#event1 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target's child, event from target (with Html.Attributes.map)", async function() {
               await page.click("#event2 button.break");
@@ -557,6 +649,10 @@ describe("Simple", function() {
 
               await page.click("#event2 .button");
               await assertEventResult(["a"]);
+
+              await page.click("#event2 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target's child, event from target (with Html.map)", async function() {
               await page.click("#event3 button.break");
@@ -564,6 +660,10 @@ describe("Simple", function() {
 
               await page.click("#event3 .button");
               await assertEventResult(["a"]);
+
+              await page.click("#event3 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target's event handler, event from target", async function() {
               await page.click("#event4 button.break");
@@ -571,6 +671,10 @@ describe("Simple", function() {
 
               await page.click("#event4 .button");
               await assertEventResult(["after"]);
+
+              await page.click("#event4 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target's event handler, event from target (with Html.Attributes.map)", async function() {
               await page.click("#event5 button.break");
@@ -578,6 +682,10 @@ describe("Simple", function() {
 
               await page.click("#event5 .button");
               await assertEventResult(["after"]);
+
+              await page.click("#event5 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target's event handler, event from target (with Html.map)", async function() {
               await page.click("#event6 button.break");
@@ -585,6 +693,10 @@ describe("Simple", function() {
 
               await page.click("#event6 .button");
               await assertEventResult(["after"]);
+
+              await page.click("#event6 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target's event handler, event from target (with Html.Attributes.map, lambda)", async function() {
               await page.click("#event7 button.break");
@@ -592,6 +704,10 @@ describe("Simple", function() {
 
               await page.click("#event7 .button");
               await assertEventResult(["after"]);
+
+              await page.click("#event7 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target's event handler, event from target (with Html.map, lambda)", async function() {
               await page.click("#event8 button.break");
@@ -599,6 +715,10 @@ describe("Simple", function() {
 
               await page.click("#event8 .button");
               await assertEventResult(["after"]);
+
+              await page.click("#event8 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             async function test3Buttons(selector) {
               await page.click(`${selector} .button.prev`);
@@ -613,36 +733,60 @@ describe("Simple", function() {
               await waitForSuccessfulUpdate(page, 1);
 
               await test3Buttons("#event9");
+
+              await page.click("#event9 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target and siblings, event around target", async function() {
               await page.click("#event10 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await test3Buttons("#event10");
+
+              await page.click("#event10 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target's parent, event around target (keyed nodes)", async function() {
               await page.click("#event11 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await test3Buttons("#event11");
+
+              await page.click("#event11 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target and siblings, event around target (keyed nodes)", async function() {
               await page.click("#event12 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await test3Buttons("#event12");
+
+              await page.click("#event12 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target's parent, event around target (lazy lambda)", async function() {
               await page.click("#event13 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await test3Buttons("#event13");
+
+              await page.click("#event13 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target, update target and siblings, event around target (lazy children)", async function() {
               await page.click("#event14 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await test3Buttons("#event14");
+
+              await page.click("#event14 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("wrap target, update target's event handler, event from target (with Html.Attributes.map)", async function() {
               await page.click("#event15 button.break");
@@ -680,6 +824,10 @@ describe("Simple", function() {
 
               await assertCount(page, "#keyed1 .e0", 0);
               await assertCount(page, "#keyed1 .e1", 1);
+
+              await page.click("#keyed1 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target and update its key", async function() {
               await page.click("#keyed2 button.break");
@@ -687,6 +835,10 @@ describe("Simple", function() {
 
               await assertCount(page, "#keyed2 .e0", 0);
               await assertCount(page, "#keyed2 .e1", 1);
+
+              await page.click("#keyed2 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target and update its key, attribute and child", async function() {
               await page.click("#keyed3 button.break");
@@ -694,6 +846,10 @@ describe("Simple", function() {
 
               await assertCount(page, "#keyed3 .e0", 0);
               await assertCount(page, "#keyed3 .e1", 1);
+
+              await page.click("#keyed3 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target (keyed node's parent) and update its attribute", async function() {
               await page.click("#keyed4 button.break");
@@ -701,6 +857,10 @@ describe("Simple", function() {
 
               await assertCount(page, "#keyed4 .e0", 0);
               await assertCount(page, "#keyed4 .e1", 1);
+
+              await page.click("#keyed4 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("wrap target (keyed node's parent) and update its attribute", async function() {
               await page.click("#keyed5 button.break");
@@ -762,6 +922,10 @@ describe("Simple", function() {
               await assertCount(page, `#keyed12 .target.e1`, 1);
               await assertCount(page, `#keyed12 .e2`, 1);
               await assertCount(page, `#keyed12 .target.e2`, 0);
+
+              await page.click("#keyed12 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target and sort (target = second node)", async function() {
               await page.click("#keyed13 button.break");
@@ -770,6 +934,10 @@ describe("Simple", function() {
               await assertCount(page, `#keyed13 .target.e2`, 1);
               await assertCount(page, `#keyed13 .e1`, 1);
               await assertCount(page, `#keyed13 .target.e1`, 0);
+
+              await page.click("#keyed13 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target and append node", async function() {
               await page.click("#keyed14 button.break");
@@ -778,6 +946,10 @@ describe("Simple", function() {
               await assertCount(page, `#keyed14 .target.e1`, 1);
               await assertCount(page, `#keyed14 .e2`, 1);
               await assertCount(page, `#keyed14 .target.e2`, 0);
+
+              await page.click("#keyed14 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target and prepend node", async function() {
               await page.click("#keyed15 button.break");
@@ -786,36 +958,60 @@ describe("Simple", function() {
               await assertCount(page, `#keyed15 .target.e1`, 1);
               await assertCount(page, `#keyed15 .e2`, 1);
               await assertCount(page, `#keyed15 .target.e2`, 0);
+
+              await page.click("#keyed15 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target and remove target", async function() {
               await page.click("#keyed16 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, `#keyed16 .target`, 0);
+
+              await page.click("#keyed16 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("append to target and update child text", async function() {
               await page.click("#keyed17 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, `#keyed17 .target`, 1);
+
+              await page.click("#keyed17 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("append to target and update key and child text", async function() {
               await page.click("#keyed18 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, `#keyed18 .target`, 1);
+
+              await page.click("#keyed18 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("append to target and remove child text", async function() {
               await page.click("#keyed19 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, `#keyed19 .target`, 1);
+
+              await page.click("#keyed19 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("append to target and append text", async function() {
               await page.click("#keyed20 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, `#keyed20 .target`, 1);
+
+              await page.click("#keyed20 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("append to target and update child <div>", async function() {
               await page.click("#keyed21 button.break");
@@ -824,6 +1020,10 @@ describe("Simple", function() {
               await assertCount(page, `#keyed21 .target`, 1);
               await assertCount(page, `#keyed21 .e0`, 0);
               await assertCount(page, `#keyed21 .e1`, 1);
+
+              await page.click("#keyed21 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("append to target and update key and child <div>", async function() {
               await page.click("#keyed22 button.break");
@@ -832,6 +1032,10 @@ describe("Simple", function() {
               await assertCount(page, `#keyed22 .target`, 1);
               await assertCount(page, `#keyed22 .e0`, 0);
               await assertCount(page, `#keyed22 .e1`, 1);
+
+              await page.click("#keyed22 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("append to target and remove child <div>", async function() {
               await page.click("#keyed23 button.break");
@@ -839,6 +1043,10 @@ describe("Simple", function() {
 
               await assertCount(page, `#keyed23 .target`, 1);
               await assertCount(page, `#keyed23 .e1`, 0);
+
+              await page.click("#keyed23 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("append to target and append <div>", async function() {
               await page.click("#keyed24 button.break");
@@ -846,6 +1054,10 @@ describe("Simple", function() {
 
               await assertCount(page, `#keyed24 .target`, 1);
               await assertCount(page, `#keyed24 .e1`, 1);
+
+              await page.click("#keyed24 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
           });
           describe("Lazy nodes", function() {
@@ -854,6 +1066,10 @@ describe("Simple", function() {
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#lazy1 .target", 1);
+
+              await page.click("#lazy1 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("remove target and update its lazy child (text)", async function() {
               await page.click("#lazy2 button.break");
@@ -872,12 +1088,20 @@ describe("Simple", function() {
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#lazy4 .target", 1);
+
+              await page.click("#lazy4 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target and update its lazy child (div)", async function() {
               await page.click("#lazy5 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#lazy5 .target", 1);
+
+              await page.click("#lazy5 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("remove target and update its lazy child (div)", async function() {
               await page.click("#lazy6 button.break");
@@ -896,12 +1120,20 @@ describe("Simple", function() {
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#lazy8 .target", 1);
+
+              await page.click("#lazy8 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before target and update its lazy child (directly use text)", async function() {
               await page.click("#lazy9 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#lazy9 .target", 1);
+
+              await page.click("#lazy9 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("remove target and update its lazy child (directly use text)", async function() {
               await page.click("#lazy10 button.break");
@@ -920,6 +1152,10 @@ describe("Simple", function() {
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#lazy12 .target", 1);
+
+              await page.click("#lazy12 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
 
             it("insert before target and update its lazy child (use lambda)", async function() {
@@ -927,6 +1163,10 @@ describe("Simple", function() {
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "#lazy13 .target", 1);
+
+              await page.click("#lazy13 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("remove target and update its lazy child (use lambda)", async function() {
               await page.click("#lazy14 button.break");
@@ -944,11 +1184,19 @@ describe("Simple", function() {
               await page.click("#lazy16 button.break");
               await waitForSuccessfulUpdate(page, 1);
               await assertCount(page, "#lazy16 .target", 1);
+
+              await page.click("#lazy16 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("insert before lazy target and update its child (text)", async function() {
               await page.click("#lazy17 button.break");
               await waitForSuccessfulUpdate(page, 1);
               await assertCount(page, "#lazy17 .target", 1);
+
+              await page.click("#lazy17 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
             it("remove lazy target and update its child (text)", async function() {
               await page.click("#lazy18 button.break");
@@ -964,6 +1212,10 @@ describe("Simple", function() {
               await page.click("#lazy20 button.break");
               await waitForSuccessfulUpdate(page, 1);
               await assertCount(page, "#lazy20 .target", 1);
+
+              await page.click("#lazy20 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
           });
         });
