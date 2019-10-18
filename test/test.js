@@ -23,7 +23,7 @@ async function assertCount(page, selector, n) {
 
 describe("Simple", function() {
   this.slow(2000);
-  this.timeout(3000);
+  this.timeout(20 * 1000);
   let server;
   let browser;
   let page;
