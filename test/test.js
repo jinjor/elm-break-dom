@@ -132,7 +132,7 @@ describe("Simple", function() {
             }
             await page.waitFor(50);
             try {
-              await page.waitForSelector("ul", { timeout: 1200 });
+              await page.waitForSelector("ul", { timeout: 1800 });
             } catch (e) {
               await page.$eval("body", body => console.log(body.innerHTML));
               throw e;
