@@ -4,10 +4,12 @@ import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
 import Dict exposing (Dict)
 import Html exposing (Html, a, button, div, li, node, span, text, ul)
-import Html.Attributes exposing (class, href, id, style, title)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (attribute, class, href, id, style, title)
+import Html.Events exposing (custom, on, onClick, preventDefaultOn, stopPropagationOn)
 import Html.Keyed
 import Html.Lazy exposing (lazy)
+import Json.Decode as D
+import VirtualDom exposing (attributeNS, nodeNS)
 
 
 port event : String -> Cmd msg
@@ -237,6 +239,8 @@ view model =
         , updateAttribute1 model
         , updateAttribute2 model
         , updateAttribute3 model
+        , updateAttribute4 model
+        , updateAttribute5 model
         , event1 model
         , event2 model
         , event3 model
@@ -319,6 +323,7 @@ view model =
         , route8 model
         , route9 model
         , route10 model
+        , edge1 model
         ]
 
 
@@ -358,9 +363,14 @@ beforeOrAfter id model =
 
 count : String -> Model -> String
 count id model =
+    countAsInt id model
+        |> String.fromInt
+
+
+countAsInt : String -> Model -> Int
+countAsInt id model =
     Dict.get id model
         |> Maybe.withDefault 0
-        |> String.fromInt
 
 
 viewText : String -> Html msg
@@ -1125,7 +1135,29 @@ updateAttribute3 model =
             , title (beforeOrAfter "update-attribute3" model)
             , class (beforeOrAfter "update-attribute3" model)
             ]
-            [ text (beforeOrAfter "update-attribute2" model) ]
+            [ text (beforeOrAfter "update-attribute3" model) ]
+
+
+updateAttribute4 : Model -> Html Msg
+updateAttribute4 model =
+    wrap model UpdateAttribute "update-attribute4" <|
+        div
+            [ class "target"
+            , attribute "title" "hello"
+            , class (beforeOrAfter "update-attribute4" model)
+            ]
+            [ text (beforeOrAfter "update-attribute4" model) ]
+
+
+updateAttribute5 : Model -> Html Msg
+updateAttribute5 model =
+    wrap model UpdateAttribute "update-attribute5" <|
+        div
+            [ class "target"
+            , attribute "title" (beforeOrAfter "update-attribute5" model)
+            , class (beforeOrAfter "update-attribute5" model)
+            ]
+            [ text (beforeOrAfter "update-attribute5" model) ]
 
 
 
@@ -2013,7 +2045,7 @@ keyed26 : Model -> Html Msg
 keyed26 model =
     wrap model AppendToTarget "keyed26" <|
         if beforeOrAfter "keyed26" model == "before" then
-            Html.Keyed.node "div" [ class "target", class "e1" ] []
+            Html.Keyed.node "div" [ class "target", class "e1" ] [ ( "a", text "" ), ( "b", div [] [] ) ]
 
         else
             div [ class "target", class "e2" ] []
@@ -2050,7 +2082,7 @@ keyed29 model =
     wrap model AppendToTarget "keyed29" <|
         div []
             [ if beforeOrAfter "keyed29" model == "before" then
-                Html.Keyed.node "div" [ class "target", class "e1" ] []
+                Html.Keyed.node "div" [ class "target", class "e1" ] [ ( "a", text "" ), ( "b", div [] [] ) ]
 
               else
                 div [ class "target", class "e2" ] []
@@ -2381,3 +2413,78 @@ route10 model =
             , class ("e" ++ count "route10" model)
             ]
             [ text "a" ]
+
+
+edge1 : Model -> Html Msg
+edge1 model =
+    wrap model AppendToTarget "edge1" <|
+        div
+            [ class "target"
+            ]
+            [ node "script" [] [ text (count "edge1" model) ]
+            , a [ href "javascript:void(0)" ] [ text (count "edge1" model) ]
+            , div [ attribute "onclick" "" ] []
+            , nodeNS "http://www.w3.org/2000/svg"
+                "path"
+                [ attributeNS "http://www.w3.org/1999/xlink" "xlink:href" (count "edge1" model)
+                ]
+                []
+            , nodeNS "http://www.w3.org/2000/svg"
+                "path"
+                (if beforeOrAfter "edge1" model == "before" then
+                    [ attributeNS "http://www.w3.org/1999/xlink" "xlink:href" (count "edge1" model) ]
+
+                 else
+                    []
+                )
+                []
+            , div
+                [ class "e1"
+                , on "click" (D.succeed (Event "1"))
+                ]
+                [ text "1" ]
+            , div
+                [ class "e2"
+                , preventDefaultOn "click"
+                    (D.succeed ( Event "2", countAsInt "edge1" model // 2 == 0 ))
+                ]
+                [ text "2" ]
+            , div
+                [ class "e3"
+                , stopPropagationOn "click"
+                    (D.succeed ( Event "3", countAsInt "edge1" model // 2 == 1 ))
+                ]
+                [ text "3" ]
+            , div
+                [ class "e4"
+                , custom "click"
+                    (D.succeed
+                        { stopPropagation = countAsInt "edge1" model // 2 == 0
+                        , preventDefault = countAsInt "edge1" model // 2 == 1
+                        , message = Event "4"
+                        }
+                    )
+                ]
+                [ text "4" ]
+            , div [ class "e5" , on "click" (D.fail "") ] [ text "5" ]
+            , div [ class "e6" , preventDefaultOn "click" (D.fail "") ] [ text "6" ]
+            , div [ class "e7" , stopPropagationOn "click" (D.fail "") ] [ text "7" ]
+            , div [ class "e8" , custom "click" (D.fail "") ] [ text "8" ]
+            , div [ attribute "class" (count "edge1" model) ] []
+            , div
+                [ if beforeOrAfter "edge1" model == "before" then
+                    attribute "class" (count "edge1" model)
+
+                  else
+                    class (count "edge1" model)
+                ]
+                []
+            , div
+                [ if beforeOrAfter "edge1" model == "before" then
+                    class (count "edge1" model)
+
+                  else
+                    attribute "class" (count "edge1" model)
+                ]
+                []
+            ]

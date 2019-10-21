@@ -89,6 +89,15 @@ describe("Simple", function() {
       })()
     ]);
   }
+  async function assertEventResult(expected) {
+    for (let i = 0; i < 4; i++) {
+      if (eventResult.length >= expected.length) {
+        break;
+      }
+      await page.waitFor(50);
+    }
+    assert.deepEqual(eventResult, expected);
+  }
 
   for (let version of ["Original", "Patched"]) {
     describe(version, function() {
@@ -621,17 +630,16 @@ describe("Simple", function() {
               await page.click("#update-attribute3 button.break");
               await waitForSuccessfulUpdate(page, 1);
             });
+            it("...and update target and it's child (use `attribute`)", async function() {
+              await page.click("#update-attribute4 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+            });
+            it("...and update target's attribute (use `attribute`)", async function() {
+              await page.click("#update-attribute5 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+            });
           });
           describe("Events", function() {
-            async function assertEventResult(expected) {
-              for (let i = 0; i < 4; i++) {
-                if (eventResult.length >= expected.length) {
-                  break;
-                }
-                await page.waitFor(50);
-              }
-              assert.deepEqual(eventResult, expected);
-            }
             it("insert before target, update target's child, event from target", async function() {
               await page.click("#event1 button.break");
               await waitForSuccessfulUpdate(page, 1);
@@ -1370,6 +1378,40 @@ describe("Simple", function() {
               });
               it("insert into body and update target", async function() {
                 await testRouting("#route10");
+              });
+            });
+            describe("Edge", function() {
+              it("cover more lines", async function() {
+                await page.click(`#edge1 button.break`);
+                await waitForSuccessfulUpdate(page, 1);
+
+                await page.click("#edge1 button.remove-inserted-node");
+                await waitForSuccessfulUpdate(page, 2);
+                await assertCount(page, ".ext", 0);
+
+                await page.click(`#edge1 .e1`);
+                await page.click(`#edge1 .e2`);
+                await page.click(`#edge1 .e3`);
+                await page.click(`#edge1 .e4`);
+                await page.click(`#edge1 .e5`);
+                await page.click(`#edge1 .e6`);
+                await page.click(`#edge1 .e7`);
+                await page.click(`#edge1 .e8`);
+                await assertEventResult(["1", "2", "3", "4"]);
+                await page.click(`#edge1 .e1`);
+                await page.click(`#edge1 .e2`);
+                await page.click(`#edge1 .e3`);
+                await page.click(`#edge1 .e4`);
+                await assertEventResult([
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "1",
+                  "2",
+                  "3",
+                  "4"
+                ]);
               });
             });
           }

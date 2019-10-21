@@ -19,12 +19,3 @@ Without this fix, patches are applyed to the wrong nodes and cause runtime error
 ## Current Status
 
 This patch makes the [simple test](../test/test.js) all green (see the [result](https://travis-ci.org/jinjor/elm-break-dom) and [coverage](https://elm-break-dom.netlify.com/coverage/simple-patched.js.html)).
-
-TODO includes:
-
-- More assertions for each test case
-- Insert / Remove many extension nodes
-- Update event handler
-- Use attributeNS
-- Events from `<a>`
-- Tests with real extensions
