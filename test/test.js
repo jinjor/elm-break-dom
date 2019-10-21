@@ -103,22 +103,28 @@ describe("Simple", function() {
     describe(version, function() {
       const html =
         version === "Original" ? "simple.html" : "simple-patched.html";
+      let coverages = [];
       if (version === "Patched") {
-        before(async function() {
-          console.log(chalk.cyan("[start coverage]"));
-          await page.coverage.startJSCoverage({
-            resetOnNavigation: false
-          });
-        });
         after(async function() {
-          this.timeout(30 * 1000);
-          console.log(chalk.cyan("[stop coverage]"));
-          const jsCoverage = await page.coverage.stopJSCoverage();
-          pti.write(mergeCoverageByUrl(jsCoverage));
+          pti.write(mergeCoverageByUrl(coverages));
         });
       }
       for (let main of ["Application", "Document", "Element"]) {
         describe(main, function() {
+          if (version === "Patched" && main === "Application") {
+            before(async function() {
+              console.log(chalk.cyan("[start coverage]"));
+              await page.coverage.startJSCoverage({
+                resetOnNavigation: false
+              });
+            });
+            after(async function() {
+              this.timeout(30 * 1000);
+              console.log(chalk.cyan("[stop coverage]"));
+              const jsCoverage = await page.coverage.stopJSCoverage();
+              coverages.push(jsCoverage);
+            });
+          }
           before(async function() {
             await page.goto(`http://localhost:${port}/${html}?main=${main}`);
           });
