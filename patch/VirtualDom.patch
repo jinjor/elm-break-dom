@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-21 15:32:49.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-21 20:41:19.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -19,7 +19,7 @@
  
  	if (_VirtualDom_divertHrefToApp && vNode.__tag == 'a')
  	{
-@@ -1313,14 +1316,47 @@
+@@ -1313,14 +1316,51 @@
  
  	var vKids = vNode.__kids;
  	var childNodes = domNode.childNodes;
@@ -49,6 +49,10 @@
 +			else
 +			{
 +				// or append node using the old vdom
++				console.log("nodeType:", "" + domNode.nodeType);
++				// console.log("tagName:", "" + domNode.tagName);
++				console.log("textContent:", "" + domNode.textContent);
++				// console.log("innerHTML:", "" + domNode.innerHTML);
 +				domNode.appendChild(_VirtualDom_render(vKids[j], eventNode));
 +			}
 +		}
@@ -69,7 +73,7 @@
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1393,9 +1429,29 @@
+@@ -1393,9 +1433,29 @@
  
  		case __3_REMOVE_LAST:
  			var data = patch.__data;

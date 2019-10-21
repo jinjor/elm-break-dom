@@ -1497,7 +1497,7 @@ describe("Simple", function() {
                 await assertCount(page, ".ext", 0);
               }
             }
-            describe("Boundary", function() {
+            describe.only("Boundary", function() {
               it("prepend .ext to body and prepend text", async function() {
                 await testBoundary("#boundary1", true);
               });

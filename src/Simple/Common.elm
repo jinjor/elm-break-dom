@@ -166,13 +166,13 @@ view model =
         [ div [] [], viewInner model ]
 
     else if beforeOrAfter "boundary3" model == "after" || beforeOrAfter "boundary9" model == "after" then
-        [ viewInner model, text "a" ]
+        [ viewInner model, text "b" ]
 
     else if beforeOrAfter "boundary4" model == "after" || beforeOrAfter "boundary10" model == "after" then
         [ viewInner model, div [] [] ]
 
     else if beforeOrAfter "boundary5" model == "after" || beforeOrAfter "boundary11" model == "after" then
-        [ text "a" ]
+        [ text "c" ]
 
     else if beforeOrAfter "boundary6" model == "after" || beforeOrAfter "boundary12" model == "after" then
         []
