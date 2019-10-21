@@ -12,11 +12,11 @@ app.ports.event.subscribe(s => {
 });
 app.ports.insertIntoBody.subscribe(([id, top, bottom]) => {
   for (let i = 0; i < top; i++) {
-    const node = `<div class="top">EXTENSION NODE</div>`;
+    const node = `<div class="ext top">EXTENSION NODE</div>`;
     document.body.insertAdjacentHTML("afterbegin", node);
   }
   for (let i = 0; i < bottom; i++) {
-    const node = `<div class="bottom">EXTENSION NODE</div>`;
+    const node = `<div class="ext bottom">EXTENSION NODE</div>`;
     document.body.insertAdjacentHTML("beforeend", node);
   }
   app.ports.done.send(id);
@@ -25,6 +25,7 @@ app.ports.insertBeforeTarget.subscribe(id => {
   const target = document.querySelector(`#${id} .target`);
   const parent = target.parentElement;
   const el = document.createElement("div");
+  el.classList.add("ext");
   el.append("EXTENSION NODE");
   parent.insertBefore(el, target);
   app.ports.done.send(id);
@@ -51,5 +52,11 @@ app.ports.wrapTarget.subscribe(id => {
 app.ports.updateAttribute.subscribe(id => {
   const parent = document.querySelector(`#${id} .target`);
   parent.setAttribute("title", "break"); // simulate Google Translate
+  app.ports.done.send(id);
+});
+app.ports.removeInsertedNode.subscribe(id => {
+  for (let el of document.querySelectorAll(`.ext`)) {
+    el.remove();
+  }
   app.ports.done.send(id);
 });

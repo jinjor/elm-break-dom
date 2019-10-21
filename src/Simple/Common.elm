@@ -32,6 +32,9 @@ port wrapTarget : String -> Cmd msg
 port updateAttribute : String -> Cmd msg
 
 
+port removeInsertedNode : String -> Cmd msg
+
+
 port done : (String -> msg) -> Sub msg
 
 
@@ -45,6 +48,7 @@ type Msg
     | RemoveTarget String
     | WrapTarget String
     | UpdateAttribute String
+    | RemoveInsertedNode String
     | Done String
 
 
@@ -113,6 +117,9 @@ update msg model =
 
         UpdateAttribute id ->
             ( model, updateAttribute id )
+
+        RemoveInsertedNode id ->
+            ( model, removeInsertedNode id )
 
         Done id ->
             ( Dict.update id
@@ -281,9 +288,22 @@ view model =
 
 wrap : Model -> (String -> Msg) -> String -> Html Msg -> Html Msg
 wrap model toMsg id_ content =
-    li [ id id_, style "padding" "20px" ]
+    li
+        [ id id_
+        , class ("count-" ++ count id_ model)
+        , style "padding" "20px"
+        ]
         [ content
-        , button [ onClick (toMsg id_), class ("count-" ++ count id_ model) ] [ text id_ ]
+        , button
+            [ onClick (toMsg id_)
+            , class "break"
+            ]
+            [ text id_ ]
+        , button
+            [ onClick (RemoveInsertedNode id_)
+            , class "remove-inserted-node"
+            ]
+            [ text id_ ]
         ]
 
 
@@ -1998,7 +2018,7 @@ lazy14 : Model -> Html Msg
 lazy14 model =
     wrap model RemoveTarget "lazy14" <|
         div []
-            [ div [ class "target" ] [ lazy  (\s -> text s) (beforeOrAfter "lazy14" model) ]
+            [ div [ class "target" ] [ lazy (\s -> text s) (beforeOrAfter "lazy14" model) ]
             ]
 
 
@@ -2006,7 +2026,7 @@ lazy15 : Model -> Html Msg
 lazy15 model =
     wrap model WrapTarget "lazy15" <|
         div []
-            [ div [ class "target" ] [ lazy  (\s -> text s) (beforeOrAfter "lazy15" model) ]
+            [ div [ class "target" ] [ lazy (\s -> text s) (beforeOrAfter "lazy15" model) ]
             ]
 
 
@@ -2014,8 +2034,10 @@ lazy16 : Model -> Html Msg
 lazy16 model =
     wrap model AppendToTarget "lazy16" <|
         div [ class "target" ]
-            [ lazy  (\s -> text s) (beforeOrAfter "lazy16" model)
+            [ lazy (\s -> text s) (beforeOrAfter "lazy16" model)
             ]
+
+
 lazy17 : Model -> Html Msg
 lazy17 model =
     wrap model InsertBeforeTarget "lazy17" <|
