@@ -1,10 +1,12 @@
-module.exports.mergeCoverageByUrl = function(coverage) {
+module.exports.mergeCoverageByUrl = function(coverages) {
   const merged = {};
-  for (const entry of coverage) {
-    if (!merged[entry.url]) {
-      merged[entry.url] = entry;
+  for (const coverage of coverages) {
+    for (const entry of coverage) {
+      if (!merged[entry.url]) {
+        merged[entry.url] = entry;
+      }
+      merged[entry.url].ranges.push(...entry.ranges);
     }
-    merged[entry.url].ranges.push(...entry.ranges);
   }
   Object.values(merged).forEach(entry => {
     entry.range = convertToDisjointRanges(entry.ranges);

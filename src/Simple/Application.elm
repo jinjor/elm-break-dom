@@ -1,6 +1,7 @@
 module Simple.Application exposing (main)
 
 import Browser
+import Dict
 import Simple.Common exposing (Model, Msg, init, noop, onUrlRequest, subscriptions, update, view)
 
 
@@ -12,8 +13,8 @@ main =
         , subscriptions = subscriptions
         , view =
             \model ->
-                { title = ""
-                , body = [ view model ]
+                { title = String.fromInt (Dict.size model)
+                , body = view model
                 }
         , onUrlRequest = onUrlRequest
         , onUrlChange = \_ -> noop

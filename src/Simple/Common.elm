@@ -1,14 +1,15 @@
-port module Simple.Common exposing (Model, Msg, init, main, noop, onUrlRequest, subscriptions, update, view)
+port module Simple.Common exposing (Model, Msg, init, noop, onUrlRequest, subscriptions, update, view, viewInner)
 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
 import Dict exposing (Dict)
 import Html exposing (Html, a, button, div, li, node, span, text, ul)
-import Html.Attributes exposing (class, id, style, title)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (attribute, class, href, id, style, title)
+import Html.Events exposing (custom, on, onClick, preventDefaultOn, stopPropagationOn)
 import Html.Keyed
 import Html.Lazy exposing (lazy)
-import Url
+import Json.Decode as D
+import VirtualDom exposing (attributeNS, nodeNS)
 
 
 port event : String -> Cmd msg
@@ -50,6 +51,7 @@ type Msg
     | UpdateAttribute String
     | RemoveInsertedNode String
     | Done String
+    | Nest Msg
 
 
 onUrlRequest : UrlRequest -> Msg
@@ -66,16 +68,6 @@ type alias Model =
     Dict String Int
 
 
-main : Program () Model Msg
-main =
-    Browser.element
-        { init = init
-        , update = update
-        , subscriptions = subscriptions
-        , view = view
-        }
-
-
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( Dict.empty, Cmd.none )
@@ -88,14 +80,35 @@ update msg model =
             ( model, Cmd.none )
 
         UrlRequest urlRequest ->
-            ( model
-            , case urlRequest of
+            case urlRequest of
                 Internal url ->
-                    Nav.load (Url.toString url)
+                    case String.split "/" url.path of
+                        "" :: "InsertIntoBody" :: id :: [] ->
+                            update (InsertIntoBody 1 1 id) model
+
+                        "" :: "InsertBeforeTarget" :: id :: [] ->
+                            update (InsertBeforeTarget id) model
+
+                        "" :: "AppendToTarget" :: id :: [] ->
+                            update (AppendToTarget id) model
+
+                        "" :: "RemoveTarget" :: id :: [] ->
+                            update (RemoveTarget id) model
+
+                        "" :: "WrapTarget" :: id :: [] ->
+                            update (WrapTarget id) model
+
+                        "" :: "UpdateAttribute" :: id :: [] ->
+                            update (UpdateAttribute id) model
+
+                        "" :: "RemoveInsertedNode" :: id :: [] ->
+                            update (RemoveInsertedNode id) model
+
+                        _ ->
+                            ( model, Cmd.none )
 
                 External url ->
-                    Nav.load url
-            )
+                    ( model, Nav.load url )
 
         Event s ->
             ( model, event s )
@@ -135,14 +148,41 @@ update msg model =
             , Cmd.none
             )
 
+        Nest msg_ ->
+            update msg_ model
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     done Done
 
 
-view : Model -> Html Msg
+view : Model -> List (Html Msg)
 view model =
+    if beforeOrAfter "boundary1" model == "after" || beforeOrAfter "boundary7" model == "after" then
+        [ text "a", viewInner model ]
+
+    else if beforeOrAfter "boundary2" model == "after" || beforeOrAfter "boundary8" model == "after" then
+        [ div [] [], viewInner model ]
+
+    else if beforeOrAfter "boundary3" model == "after" || beforeOrAfter "boundary9" model == "after" then
+        [ viewInner model, text "a" ]
+
+    else if beforeOrAfter "boundary4" model == "after" || beforeOrAfter "boundary10" model == "after" then
+        [ viewInner model, div [] [] ]
+
+    else if beforeOrAfter "boundary5" model == "after" || beforeOrAfter "boundary11" model == "after" then
+        [ text "a" ]
+
+    else if beforeOrAfter "boundary6" model == "after" || beforeOrAfter "boundary12" model == "after" then
+        []
+
+    else
+        [ viewInner model ]
+
+
+viewInner : Model -> Html Msg
+viewInner model =
     ul []
         [ insertIntoBody1 model
         , insertIntoBody2 model
@@ -217,6 +257,10 @@ view model =
         , updateAttribute1 model
         , updateAttribute2 model
         , updateAttribute3 model
+        , updateAttribute4 model
+        , updateAttribute5 model
+        , updateAttribute6 model
+        , updateAttribute7 model
         , event1 model
         , event2 model
         , event3 model
@@ -235,6 +279,16 @@ view model =
         , event16 model
         , event17 model
         , event18 model
+        , event19 model
+        , event20 model
+        , event21 model
+        , event22 model
+        , event23 model
+        , event24 model
+        , event25 model
+        , event26 model
+        , event27 model
+        , event28 model
         , keyed1 model
         , keyed2 model
         , keyed3 model
@@ -259,6 +313,12 @@ view model =
         , keyed22 model
         , keyed23 model
         , keyed24 model
+        , keyed25 model
+        , keyed26 model
+        , keyed27 model
+        , keyed28 model
+        , keyed29 model
+        , keyed30 model
         , lazy1 model
         , lazy2 model
         , lazy3 model
@@ -279,6 +339,29 @@ view model =
         , lazy18 model
         , lazy19 model
         , lazy20 model
+        , route1 model
+        , route2 model
+        , route3 model
+        , route4 model
+        , route5 model
+        , route6 model
+        , route7 model
+        , route8 model
+        , route9 model
+        , route10 model
+        , edge1 model
+        , boundary1 model
+        , boundary2 model
+        , boundary3 model
+        , boundary4 model
+        , boundary5 model
+        , boundary6 model
+        , boundary7 model
+        , boundary8 model
+        , boundary9 model
+        , boundary10 model
+        , boundary11 model
+        , boundary12 model
         ]
 
 
@@ -318,9 +401,14 @@ beforeOrAfter id model =
 
 count : String -> Model -> String
 count id model =
+    countAsInt id model
+        |> String.fromInt
+
+
+countAsInt : String -> Model -> Int
+countAsInt id model =
     Dict.get id model
         |> Maybe.withDefault 0
-        |> String.fromInt
 
 
 viewText : String -> Html msg
@@ -1085,7 +1173,59 @@ updateAttribute3 model =
             , title (beforeOrAfter "update-attribute3" model)
             , class (beforeOrAfter "update-attribute3" model)
             ]
-            [ text (beforeOrAfter "update-attribute2" model) ]
+            [ text (beforeOrAfter "update-attribute3" model) ]
+
+
+updateAttribute4 : Model -> Html Msg
+updateAttribute4 model =
+    wrap model UpdateAttribute "update-attribute4" <|
+        div
+            [ class "target"
+            , attribute "title" "hello"
+            , class (beforeOrAfter "update-attribute4" model)
+            ]
+            [ text (beforeOrAfter "update-attribute4" model) ]
+
+
+updateAttribute5 : Model -> Html Msg
+updateAttribute5 model =
+    wrap model UpdateAttribute "update-attribute5" <|
+        div
+            [ class "target"
+            , attribute "title" (beforeOrAfter "update-attribute5" model)
+            , class (beforeOrAfter "update-attribute5" model)
+            ]
+            [ text (beforeOrAfter "update-attribute5" model) ]
+
+
+updateAttribute6 : Model -> Html Msg
+updateAttribute6 model =
+    wrap model UpdateAttribute "update-attribute6" <|
+        div
+            [ class "target"
+            , if beforeOrAfter "update-attribute6" model == "before" then
+                title "hello"
+
+              else
+                class ""
+            , class (beforeOrAfter "update-attribute6" model)
+            ]
+            [ text (beforeOrAfter "update-attribute6" model) ]
+
+
+updateAttribute7 : Model -> Html Msg
+updateAttribute7 model =
+    wrap model UpdateAttribute "update-attribute7" <|
+        div
+            [ class "target"
+            , if beforeOrAfter "update-attribute7" model == "before" then
+                class ""
+
+              else
+                title "hello"
+            , class (beforeOrAfter "update-attribute7" model)
+            ]
+            [ text (beforeOrAfter "update-attribute7" model) ]
 
 
 
@@ -1429,6 +1569,177 @@ event18 model =
                     , onClick (beforeOrAfter "event18" model)
                     ]
                     []
+            ]
+
+
+event19 : Model -> Html Msg
+event19 model =
+    wrap model RemoveTarget "event19" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , onClick (Event (beforeOrAfter "event19" model))
+                ]
+                []
+            ]
+
+
+event20 : Model -> Html Msg
+event20 model =
+    wrap model InsertBeforeTarget "event20" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , if beforeOrAfter "event20" model == "before" then
+                    onClick (Event "a")
+
+                  else
+                    class ""
+                ]
+                []
+            ]
+
+
+event21 : Model -> Html Msg
+event21 model =
+    wrap model InsertBeforeTarget "event21" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , if beforeOrAfter "event21" model == "before" then
+                    onClick (Event "a")
+
+                  else
+                    onClick NoOp
+                ]
+                []
+            ]
+
+
+event22 : Model -> Html Msg
+event22 model =
+    wrap model InsertBeforeTarget "event22" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , if beforeOrAfter "event22" model == "before" then
+                    onClick NoOp
+
+                  else
+                    onClick (Event "a")
+                ]
+                []
+            ]
+
+
+event23 : Model -> Html Msg
+event23 model =
+    wrap model InsertBeforeTarget "event23" <|
+        div []
+            [ Html.map Nest <|
+                span
+                    [ class "target"
+                    , class "button"
+                    , onClick (Event (beforeOrAfter "event23" model))
+                    ]
+                    []
+            ]
+
+
+event24 : Model -> Html Msg
+event24 model =
+    wrap model InsertBeforeTarget "event24" <|
+        div []
+            [ Html.map Nest <|
+                span
+                    [ class "target"
+                    , class "button"
+                    , if beforeOrAfter "event24" model == "before" then
+                        onClick (Event "a")
+
+                      else
+                        onClick (Nest (Event "b"))
+                    ]
+                    []
+            ]
+
+
+event25 : Model -> Html Msg
+event25 model =
+    wrap model InsertBeforeTarget "event25" <|
+        div []
+            [ Html.map Nest <|
+                span
+                    [ class "target"
+                    , class "button"
+                    , if beforeOrAfter "event25" model == "before" then
+                        onClick (Nest (Event "a"))
+
+                      else
+                        onClick (Event "b")
+                    ]
+                    []
+            ]
+
+
+event26 : Model -> Html Msg
+event26 model =
+    wrap model InsertBeforeTarget "event26" <|
+        div []
+            [ Html.map Nest <|
+                Html.map Nest <|
+                    span
+                        [ class "target"
+                        , class "button"
+                        , onClick (Event (count "event26" model))
+                        ]
+                        []
+            ]
+
+
+event27 : Model -> Html Msg
+event27 model =
+    wrap model InsertBeforeTarget "event27" <|
+        div []
+            [ (if beforeOrAfter "event27" model == "before" then
+                identity
+
+               else
+                Html.map Nest
+              )
+              <|
+                Html.map Nest <|
+                    span
+                        [ class "target"
+                        , class "button"
+                        , onClick (Event (count "event27" model))
+                        ]
+                        []
+            ]
+
+
+event28 : Model -> Html Msg
+event28 model =
+    wrap model InsertBeforeTarget "event28" <|
+        div []
+            [ (if beforeOrAfter "event28" model == "before" then
+                Html.map Nest
+
+               else
+                identity
+              )
+              <|
+                Html.map Nest <|
+                    span
+                        [ class "target"
+                        , class "button"
+                        , onClick (Event (count "event28" model))
+                        ]
+                        []
             ]
 
 
@@ -1891,6 +2202,80 @@ keyed24 model =
             )
 
 
+keyed25 : Model -> Html Msg
+keyed25 model =
+    wrap model AppendToTarget "keyed25" <|
+        Html.Keyed.node
+            (if beforeOrAfter "keyed25" model == "before" then
+                "div"
+
+             else
+                "p"
+            )
+            [ class "target", class ("e" ++ count "keyed25" model) ]
+            []
+
+
+keyed26 : Model -> Html Msg
+keyed26 model =
+    wrap model AppendToTarget "keyed26" <|
+        if beforeOrAfter "keyed26" model == "before" then
+            Html.Keyed.node "div" [ class "target", class "e1" ] [ ( "a", text "" ), ( "b", div [] [] ) ]
+
+        else
+            div [ class "target", class "e2" ] []
+
+
+keyed27 : Model -> Html Msg
+keyed27 model =
+    wrap model AppendToTarget "keyed27" <|
+        if beforeOrAfter "keyed27" model == "before" then
+            div [ class "target", class "e1" ] []
+
+        else
+            Html.Keyed.node "div" [ class "target", class "e2" ] []
+
+
+keyed28 : Model -> Html Msg
+keyed28 model =
+    wrap model InsertBeforeTarget "keyed28" <|
+        div []
+            [ Html.Keyed.node
+                (if beforeOrAfter "keyed28" model == "before" then
+                    "div"
+
+                 else
+                    "p"
+                )
+                [ class "target", class ("e" ++ count "keyed28" model) ]
+                []
+            ]
+
+
+keyed29 : Model -> Html Msg
+keyed29 model =
+    wrap model AppendToTarget "keyed29" <|
+        div []
+            [ if beforeOrAfter "keyed29" model == "before" then
+                Html.Keyed.node "div" [ class "target", class "e1" ] [ ( "a", text "" ), ( "b", div [] [] ) ]
+
+              else
+                div [ class "target", class "e2" ] []
+            ]
+
+
+keyed30 : Model -> Html Msg
+keyed30 model =
+    wrap model AppendToTarget "keyed30" <|
+        div []
+            [ if beforeOrAfter "keyed30" model == "before" then
+                div [ class "target", class "e1" ] []
+
+              else
+                Html.Keyed.node "div" [ class "target", class "e2" ] []
+            ]
+
+
 
 -- LAZY
 
@@ -2066,3 +2451,295 @@ lazy20 : Model -> Html Msg
 lazy20 model =
     wrap model AppendToTarget "lazy20" <|
         lazy viewTarget1 (beforeOrAfter "lazy20" model)
+
+
+
+-- ANCHORS
+
+
+route1 : Model -> Html Msg
+route1 model =
+    wrap model (\_ -> NoOp) "route1" <|
+        div []
+            [ a
+                [ class "target"
+                , class ("e" ++ count "route1" model)
+                , href "/InsertBeforeTarget/route1"
+                ]
+                [ text (count "route1" model) ]
+            ]
+
+
+route2 : Model -> Html Msg
+route2 model =
+    wrap model (\_ -> NoOp) "route2" <|
+        div []
+            [ div [ class ("e" ++ count "route2" model) ] []
+            , a
+                [ class "target"
+                , href "/InsertBeforeTarget/route2"
+                ]
+                [ text (count "route2" model) ]
+            ]
+
+
+route3 : Model -> Html Msg
+route3 model =
+    wrap model (\_ -> NoOp) "route3" <|
+        div []
+            [ a
+                [ class "target"
+                , href "/InsertBeforeTarget/route3"
+                ]
+                [ text (count "route3" model) ]
+            , div [ class ("e" ++ count "route3" model) ] []
+            ]
+
+
+route4 : Model -> Html Msg
+route4 model =
+    wrap model (\_ -> NoOp) "route4" <|
+        div [ class ("e" ++ count "route4" model) ]
+            [ a
+                [ class "target"
+                , href "/InsertBeforeTarget/route4"
+                ]
+                [ text "a" ]
+            ]
+
+
+route5 : Model -> Html Msg
+route5 model =
+    wrap model (\_ -> NoOp) "route5" <|
+        div []
+            [ a
+                [ class "target"
+                , class ("e" ++ count "route5" model)
+                , href "/RemoveTarget/route5"
+                ]
+                [ text (count "route5" model) ]
+            ]
+
+
+route6 : Model -> Html Msg
+route6 model =
+    wrap model (\_ -> NoOp) "route6" <|
+        div []
+            [ a
+                [ class "target"
+                , class ("e" ++ count "route6" model)
+                , href "/WrapTarget/route6"
+                ]
+                [ text (count "route6" model) ]
+            ]
+
+
+route7 : Model -> Html Msg
+route7 model =
+    wrap model (\_ -> NoOp) "route7" <|
+        a
+            [ class "target"
+            , href "/AppendToTarget/route7"
+            ]
+            [ div [ class ("e" ++ count "route7" model) ] [ text (count "route7" model) ] ]
+
+
+route8 : Model -> Html Msg
+route8 model =
+    wrap model (\_ -> NoOp) "route8" <|
+        a
+            [ class "target"
+            , href "/AppendToTarget/route8"
+            ]
+            (if beforeOrAfter "route8" model == "before" then
+                [ text "a" ]
+
+             else
+                [ text "a"
+                , div [ class ("e" ++ count "route8" model) ] []
+                ]
+            )
+
+
+route9 : Model -> Html Msg
+route9 model =
+    wrap model (\_ -> NoOp) "route9" <|
+        a
+            [ class "target"
+            , class ("e" ++ count "route9" model)
+            , href "/AppendToTarget/route9"
+            ]
+            (if beforeOrAfter "route9" model == "route9" then
+                [ text "a"
+                , div [] []
+                ]
+
+             else
+                [ text "a" ]
+            )
+
+
+route10 : Model -> Html Msg
+route10 model =
+    wrap model (\_ -> NoOp) "route10" <|
+        a
+            [ class "target"
+            , href "/InsertIntoBody/route10"
+            , class ("e" ++ count "route10" model)
+            ]
+            [ text "a" ]
+
+
+
+-- EDGE
+
+
+edge1 : Model -> Html Msg
+edge1 model =
+    wrap model AppendToTarget "edge1" <|
+        div
+            [ class "target"
+            ]
+            [ node "script" [] [ text (count "edge1" model) ]
+            , a [ href "javascript:void(0)" ] [ text (count "edge1" model) ]
+            , div [ attribute "onclick" "" ] []
+            , nodeNS "http://www.w3.org/2000/svg"
+                "path"
+                [ attributeNS "http://www.w3.org/1999/xlink" "xlink:href" (count "edge1" model)
+                ]
+                []
+            , nodeNS "http://www.w3.org/2000/svg"
+                "path"
+                (if beforeOrAfter "edge1" model == "before" then
+                    [ attributeNS "http://www.w3.org/1999/xlink" "xlink:href" (count "edge1" model) ]
+
+                 else
+                    []
+                )
+                []
+            , div
+                [ class "e1"
+                , on "click" (D.succeed (Event "1"))
+                ]
+                [ text "1" ]
+            , div
+                [ class "e2"
+                , preventDefaultOn "click"
+                    (D.succeed ( Event "2", countAsInt "edge1" model // 2 == 0 ))
+                ]
+                [ text "2" ]
+            , div
+                [ class "e3"
+                , stopPropagationOn "click"
+                    (D.succeed ( Event "3", countAsInt "edge1" model // 2 == 1 ))
+                ]
+                [ text "3" ]
+            , div
+                [ class "e4"
+                , custom "click"
+                    (D.succeed
+                        { stopPropagation = countAsInt "edge1" model // 2 == 0
+                        , preventDefault = countAsInt "edge1" model // 2 == 1
+                        , message = Event "4"
+                        }
+                    )
+                ]
+                [ text "4" ]
+            , div [ class "e5", on "click" (D.fail "") ] [ text "5" ]
+            , div [ class "e6", preventDefaultOn "click" (D.fail "") ] [ text "6" ]
+            , div [ class "e7", stopPropagationOn "click" (D.fail "") ] [ text "7" ]
+            , div [ class "e8", custom "click" (D.fail "") ] [ text "8" ]
+            , div [ attribute "class" (count "edge1" model) ] []
+            , div
+                [ if beforeOrAfter "edge1" model == "before" then
+                    attribute "class" (count "edge1" model)
+
+                  else
+                    class (count "edge1" model)
+                ]
+                []
+            , div
+                [ if beforeOrAfter "edge1" model == "before" then
+                    class (count "edge1" model)
+
+                  else
+                    attribute "class" (count "edge1" model)
+                ]
+                []
+            ]
+
+
+
+-- BOUNDARY
+
+
+boundary1 : Model -> Html Msg
+boundary1 model =
+    wrap model (InsertIntoBody 1 0) "boundary1" <|
+        text (count "boundary1" model)
+
+
+boundary2 : Model -> Html Msg
+boundary2 model =
+    wrap model (InsertIntoBody 1 0) "boundary2" <|
+        text (count "boundary2" model)
+
+
+boundary3 : Model -> Html Msg
+boundary3 model =
+    wrap model (InsertIntoBody 1 0) "boundary3" <|
+        text (count "boundary3" model)
+
+
+boundary4 : Model -> Html Msg
+boundary4 model =
+    wrap model (InsertIntoBody 1 0) "boundary4" <|
+        text (count "boundary4" model)
+
+
+boundary5 : Model -> Html Msg
+boundary5 model =
+    wrap model (InsertIntoBody 1 0) "boundary5" <|
+        text (count "boundary5" model)
+
+
+boundary6 : Model -> Html Msg
+boundary6 model =
+    wrap model (InsertIntoBody 1 0) "boundary6" <|
+        text (count "boundary6" model)
+
+
+boundary7 : Model -> Html Msg
+boundary7 model =
+    wrap model (InsertIntoBody 0 1) "boundary7" <|
+        text (count "boundary7" model)
+
+
+boundary8 : Model -> Html Msg
+boundary8 model =
+    wrap model (InsertIntoBody 0 1) "boundary8" <|
+        text (count "boundary8" model)
+
+
+boundary9 : Model -> Html Msg
+boundary9 model =
+    wrap model (InsertIntoBody 0 1) "boundary9" <|
+        text (count "boundary9" model)
+
+
+boundary10 : Model -> Html Msg
+boundary10 model =
+    wrap model (InsertIntoBody 0 1) "boundary10" <|
+        text (count "boundary10" model)
+
+
+boundary11 : Model -> Html Msg
+boundary11 model =
+    wrap model (InsertIntoBody 0 1) "boundary11" <|
+        text (count "boundary11" model)
+
+
+boundary12 : Model -> Html Msg
+boundary12 model =
+    wrap model (InsertIntoBody 0 1) "boundary12" <|
+        text (count "boundary12" model)

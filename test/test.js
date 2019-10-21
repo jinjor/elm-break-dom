@@ -89,27 +89,42 @@ describe("Simple", function() {
       })()
     ]);
   }
+  async function assertEventResult(expected) {
+    for (let i = 0; i < 4; i++) {
+      if (eventResult.length >= expected.length) {
+        break;
+      }
+      await page.waitFor(50);
+    }
+    assert.deepEqual(eventResult, expected);
+  }
 
   for (let version of ["Original", "Patched"]) {
     describe(version, function() {
       const html =
         version === "Original" ? "simple.html" : "simple-patched.html";
+      let coverages = [];
       if (version === "Patched") {
-        before(async function() {
-          console.log(chalk.cyan("[start coverage]"));
-          await page.coverage.startJSCoverage({
-            resetOnNavigation: false
-          });
-        });
         after(async function() {
-          this.timeout(30 * 1000);
-          console.log(chalk.cyan("[stop coverage]"));
-          const jsCoverage = await page.coverage.stopJSCoverage();
-          pti.write(mergeCoverageByUrl(jsCoverage));
+          pti.write(mergeCoverageByUrl(coverages));
         });
       }
       for (let main of ["Application", "Document", "Element"]) {
         describe(main, function() {
+          if (version === "Patched" && main === "Application") {
+            before(async function() {
+              console.log(chalk.cyan("[start coverage]"));
+              await page.coverage.startJSCoverage({
+                resetOnNavigation: false
+              });
+            });
+            after(async function() {
+              this.timeout(30 * 1000);
+              console.log(chalk.cyan("[stop coverage]"));
+              const jsCoverage = await page.coverage.stopJSCoverage();
+              coverages.push(jsCoverage);
+            });
+          }
           before(async function() {
             await page.goto(`http://localhost:${port}/${html}?main=${main}`);
           });
@@ -123,7 +138,7 @@ describe("Simple", function() {
             }
             await page.waitFor(50);
             try {
-              await page.waitForSelector("ul", { timeout: 1200 });
+              await page.waitForSelector("ul", { timeout: 1800 });
             } catch (e) {
               await page.$eval("body", body => console.log(body.innerHTML));
               throw e;
@@ -621,17 +636,24 @@ describe("Simple", function() {
               await page.click("#update-attribute3 button.break");
               await waitForSuccessfulUpdate(page, 1);
             });
+            it("...and update target and it's child (use `attribute`)", async function() {
+              await page.click("#update-attribute4 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+            });
+            it("...and update target's attribute (use `attribute`)", async function() {
+              await page.click("#update-attribute5 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+            });
+            it("...and update target's attribute (add attribute)", async function() {
+              await page.click("#update-attribute6 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+            });
+            it("...and update target's attribute (remove attribute)", async function() {
+              await page.click("#update-attribute7 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+            });
           });
           describe("Events", function() {
-            async function assertEventResult(expected) {
-              for (let i = 0; i < 4; i++) {
-                if (eventResult.length >= expected.length) {
-                  break;
-                }
-                await page.waitFor(50);
-              }
-              assert.deepEqual(eventResult, expected);
-            }
             it("insert before target, update target's child, event from target", async function() {
               await page.click("#event1 button.break");
               await waitForSuccessfulUpdate(page, 1);
@@ -815,6 +837,112 @@ describe("Simple", function() {
 
               await page.click("#event18 .button");
               await assertEventResult(["after"]);
+            });
+            it("remove target, update target's event handler, event from target", async function() {
+              await page.click("#event19 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event19 .button");
+              await assertEventResult(["after"]);
+            });
+            it("insert before target, update target's event handler, (no) event from target", async function() {
+              await page.click("#event20 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event20 .button");
+              await assertEventResult([]);
+
+              await page.click("#event20 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, NoOp from target", async function() {
+              await page.click("#event21 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event21 .button");
+              await assertEventResult([]);
+
+              await page.click("#event21 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, new event from target", async function() {
+              await page.click("#event22 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event22 .button");
+              await assertEventResult(["a"]);
+
+              await page.click("#event22 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target", async function() {
+              await page.click("#event23 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event23 .button");
+              await assertEventResult(["after"]);
+
+              await page.click("#event23 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target (add nest)", async function() {
+              await page.click("#event24 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event24 .button");
+              await assertEventResult(["b"]);
+
+              await page.click("#event24 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target (remove nest)", async function() {
+              await page.click("#event25 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event25 .button");
+              await assertEventResult(["b"]);
+
+              await page.click("#event25 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target (double)", async function() {
+              await page.click("#event26 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event26 .button");
+              await assertEventResult(["1"]);
+
+              await page.click("#event26 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target (double, add nest)", async function() {
+              await page.click("#event27 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event27 .button");
+              await assertEventResult(["1"]);
+
+              await page.click("#event27 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target (double, remove nest)", async function() {
+              await page.click("#event28 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event28 .button");
+              await assertEventResult(["1"]);
+
+              await page.click("#event28 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
             });
           });
           describe("Keyed nodes", function() {
@@ -1059,6 +1187,72 @@ describe("Simple", function() {
               await waitForSuccessfulUpdate(page, 2);
               await assertCount(page, ".ext", 0);
             });
+            it("append to target and update tag name", async function() {
+              await page.click("#keyed25 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed25 .target", 1);
+              await assertCount(page, "#keyed25 .e0", 0);
+              await assertCount(page, "#keyed25 .e1", 1);
+
+              await page.click("#keyed25 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("append to target and add key", async function() {
+              await page.click("#keyed26 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed26 .target", 1);
+              await assertCount(page, "#keyed26 .e1", 0);
+              await assertCount(page, "#keyed26 .e2", 1);
+
+              await page.click("#keyed26 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("append to target and remove key", async function() {
+              await page.click("#keyed27 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed27 .target", 1);
+              await assertCount(page, "#keyed27 .e1", 0);
+              await assertCount(page, "#keyed27 .e2", 1);
+
+              await page.click("#keyed27 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target and update tag name", async function() {
+              await page.click("#keyed28 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed28 .target", 1);
+              await assertCount(page, "#keyed28 .e0", 0);
+              await assertCount(page, "#keyed28 .e1", 1);
+
+              await page.click("#keyed28 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target and add key", async function() {
+              await page.click("#keyed29 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed29 .target", 1);
+              await assertCount(page, "#keyed29 .e1", 0);
+              await assertCount(page, "#keyed29 .e2", 1);
+
+              await page.click("#keyed29 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target and remove key", async function() {
+              await page.click("#keyed30 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed30 .target", 1);
+              await assertCount(page, "#keyed30 .e1", 0);
+              await assertCount(page, "#keyed30 .e2", 1);
+
+              await page.click("#keyed30 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
           });
           describe("Lazy nodes", function() {
             it("insert before target and update its lazy child (text)", async function() {
@@ -1218,6 +1412,130 @@ describe("Simple", function() {
               await assertCount(page, ".ext", 0);
             });
           });
+          if (main === "Application") {
+            describe("Routing", function() {
+              async function testRouting(selector) {
+                await page.click(`${selector} a.target`);
+                await waitForSuccessfulUpdate(page, 1);
+                await assertCount(page, `${selector} .e0`, 0);
+                await assertCount(page, `${selector} .e1`, 1);
+
+                await page.click(`${selector} a.target`);
+                await waitForSuccessfulUpdate(page, 2);
+                await assertCount(page, `${selector} .e1`, 0);
+                await assertCount(page, `${selector} .e2`, 1);
+
+                await page.click(`${selector} button.remove-inserted-node`);
+                await waitForSuccessfulUpdate(page, 3);
+                await assertCount(page, ".ext", 0);
+              }
+              it("insert before target and update its attribute", async function() {
+                await testRouting("#route1");
+              });
+              it("insert before target and update previous node", async function() {
+                await testRouting("#route2");
+              });
+              it("insert before target and update next node", async function() {
+                await testRouting("#route3");
+              });
+              it("insert before target and update its parent", async function() {
+                await testRouting("#route4");
+              });
+              it("remove target and update its child", async function() {
+                await testRouting("#route5");
+              });
+              it("wrap target and update its child", async function() {
+                await testRouting("#route6");
+              });
+              it("append to target and update its child", async function() {
+                await testRouting("#route7");
+              });
+              it("append to target and insert child", async function() {
+                await testRouting("#route8");
+              });
+              it("append to target and remove child", async function() {
+                await testRouting("#route9");
+              });
+              it("insert into body and update target", async function() {
+                await testRouting("#route10");
+              });
+            });
+          }
+          describe("Edge", function() {
+            it("cover more lines", async function() {
+              await page.click(`#edge1 button.break`);
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#edge1 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+
+              await page.click(`#edge1 .e1`);
+              await page.click(`#edge1 .e2`);
+              await page.click(`#edge1 .e3`);
+              await page.click(`#edge1 .e4`);
+              await page.click(`#edge1 .e5`);
+              await page.click(`#edge1 .e6`);
+              await page.click(`#edge1 .e7`);
+              await page.click(`#edge1 .e8`);
+              await assertEventResult(["1", "2", "3", "4"]);
+              await page.click(`#edge1 .e1`);
+              await page.click(`#edge1 .e2`);
+              await page.click(`#edge1 .e3`);
+              await page.click(`#edge1 .e4`);
+              await assertEventResult(["1", "2", "3", "4", "1", "2", "3", "4"]);
+            });
+          });
+          if (main === "Application" || main === "Document") {
+            async function testBoundary(selector, contentsExists) {
+              await page.click(`${selector} button.break`);
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, ".ext", 1);
+              if (contentsExists) {
+                await page.click(`${selector} button.remove-inserted-node`);
+                await waitForSuccessfulUpdate(page, 2);
+                await assertCount(page, ".ext", 0);
+              }
+            }
+            describe("Boundary", function() {
+              it("prepend .ext to body and prepend text", async function() {
+                await testBoundary("#boundary1", true);
+              });
+              it("prepend .ext to body and prepend element", async function() {
+                await testBoundary("#boundary2", true);
+              });
+              it("prepend .ext to body and append text", async function() {
+                await testBoundary("#boundary3", true);
+              });
+              it("prepend .ext to body and append element", async function() {
+                await testBoundary("#boundary4", true);
+              });
+              it("prepend .ext to body and replace contents with text", async function() {
+                await testBoundary("#boundary5", false);
+              });
+              it("prepend .ext to body and remove contents", async function() {
+                await testBoundary("#boundary6", false);
+              });
+              it("append .ext to body and prepend text", async function() {
+                await testBoundary("#boundary7", true);
+              });
+              it("append .ext to body and prepend element", async function() {
+                await testBoundary("#boundary8", true);
+              });
+              it("append .ext to body and append text", async function() {
+                await testBoundary("#boundary9", true);
+              });
+              it("append .ext to body and append element", async function() {
+                await testBoundary("#boundary10", true);
+              });
+              it("append .ext to body and replace contents with text", async function() {
+                await testBoundary("#boundary11", false);
+              });
+              it("append .ext to body and remove contents", async function() {
+                await testBoundary("#boundary12", false);
+              });
+            });
+          }
         });
       }
     });
