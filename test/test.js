@@ -1488,6 +1488,56 @@ describe("Simple", function() {
                 ]);
               });
             });
+            if (main === "Application" || main === "Document") {
+              async function testBoundary(selector, contentsExists) {
+                await page.click(`${selector} button.break`);
+                await waitForSuccessfulUpdate(page, 1);
+                await assertCount(page, ".ext", 1);
+                if (contentsExists) {
+                  await page.click(`${selector} button.remove-inserted-node`);
+                  await waitForSuccessfulUpdate(page, 2);
+                  await assertCount(page, ".ext", 0);
+                }
+              }
+              describe("Boundary", function() {
+                it("prepend .ext to body and prepend text", async function() {
+                  await testBoundary("#boundary1", true);
+                });
+                it("prepend .ext to body and prepend element", async function() {
+                  await testBoundary("#boundary2", true);
+                });
+                it("prepend .ext to body and append text", async function() {
+                  await testBoundary("#boundary3", true);
+                });
+                it("prepend .ext to body and append element", async function() {
+                  await testBoundary("#boundary4", true);
+                });
+                it("prepend .ext to body and replace contents with text", async function() {
+                  await testBoundary("#boundary5", false);
+                });
+                it("prepend .ext to body and remove contents", async function() {
+                  await testBoundary("#boundary6", false);
+                });
+                it("append .ext to body and prepend text", async function() {
+                  await testBoundary("#boundary7", true);
+                });
+                it("append .ext to body and prepend element", async function() {
+                  await testBoundary("#boundary8", true);
+                });
+                it("append .ext to body and append text", async function() {
+                  await testBoundary("#boundary9", true);
+                });
+                it("append .ext to body and append element", async function() {
+                  await testBoundary("#boundary10", true);
+                });
+                it("append .ext to body and replace contents with text", async function() {
+                  await testBoundary("#boundary11", false);
+                });
+                it("append .ext to body and remove contents", async function() {
+                  await testBoundary("#boundary12", false);
+                });
+              });
+            }
           }
         });
       }

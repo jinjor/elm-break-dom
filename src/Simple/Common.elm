@@ -1,4 +1,4 @@
-port module Simple.Common exposing (Model, Msg, init, main, noop, onUrlRequest, subscriptions, update, view)
+port module Simple.Common exposing (Model, Msg, init, noop, onUrlRequest, subscriptions, update, view, viewInner)
 
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
@@ -66,16 +66,6 @@ noop =
 
 type alias Model =
     Dict String Int
-
-
-main : Program () Model Msg
-main =
-    Browser.element
-        { init = init
-        , update = update
-        , subscriptions = subscriptions
-        , view = view
-        }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -167,8 +157,32 @@ subscriptions _ =
     done Done
 
 
-view : Model -> Html Msg
+view : Model -> List (Html Msg)
 view model =
+    if beforeOrAfter "boundary1" model == "after" || beforeOrAfter "boundary7" model == "after" then
+        [ text "a", viewInner model ]
+
+    else if beforeOrAfter "boundary2" model == "after" || beforeOrAfter "boundary8" model == "after" then
+        [ div [] [], viewInner model ]
+
+    else if beforeOrAfter "boundary3" model == "after" || beforeOrAfter "boundary9" model == "after" then
+        [ viewInner model, text "a" ]
+
+    else if beforeOrAfter "boundary4" model == "after" || beforeOrAfter "boundary10" model == "after" then
+        [ viewInner model, div [] [] ]
+
+    else if beforeOrAfter "boundary5" model == "after" || beforeOrAfter "boundary11" model == "after" then
+        [ text "a" ]
+
+    else if beforeOrAfter "boundary6" model == "after" || beforeOrAfter "boundary12" model == "after" then
+        []
+
+    else
+        [ viewInner model ]
+
+
+viewInner : Model -> Html Msg
+viewInner model =
     ul []
         [ insertIntoBody1 model
         , insertIntoBody2 model
@@ -336,6 +350,18 @@ view model =
         , route9 model
         , route10 model
         , edge1 model
+        , boundary1 model
+        , boundary2 model
+        , boundary3 model
+        , boundary4 model
+        , boundary5 model
+        , boundary6 model
+        , boundary7 model
+        , boundary8 model
+        , boundary9 model
+        , boundary10 model
+        , boundary11 model
+        , boundary12 model
         ]
 
 
@@ -2564,6 +2590,10 @@ route10 model =
             [ text "a" ]
 
 
+
+-- EDGE
+
+
 edge1 : Model -> Html Msg
 edge1 model =
     wrap model AppendToTarget "edge1" <|
@@ -2637,3 +2667,79 @@ edge1 model =
                 ]
                 []
             ]
+
+
+
+-- BOUNDARY
+
+
+boundary1 : Model -> Html Msg
+boundary1 model =
+    wrap model (InsertIntoBody 1 0) "boundary1" <|
+        text (count "boundary1" model)
+
+
+boundary2 : Model -> Html Msg
+boundary2 model =
+    wrap model (InsertIntoBody 1 0) "boundary2" <|
+        text (count "boundary2" model)
+
+
+boundary3 : Model -> Html Msg
+boundary3 model =
+    wrap model (InsertIntoBody 1 0) "boundary3" <|
+        text (count "boundary3" model)
+
+
+boundary4 : Model -> Html Msg
+boundary4 model =
+    wrap model (InsertIntoBody 1 0) "boundary4" <|
+        text (count "boundary4" model)
+
+
+boundary5 : Model -> Html Msg
+boundary5 model =
+    wrap model (InsertIntoBody 1 0) "boundary5" <|
+        text (count "boundary5" model)
+
+
+boundary6 : Model -> Html Msg
+boundary6 model =
+    wrap model (InsertIntoBody 1 0) "boundary6" <|
+        text (count "boundary6" model)
+
+
+boundary7 : Model -> Html Msg
+boundary7 model =
+    wrap model (InsertIntoBody 0 1) "boundary7" <|
+        text (count "boundary7" model)
+
+
+boundary8 : Model -> Html Msg
+boundary8 model =
+    wrap model (InsertIntoBody 0 1) "boundary8" <|
+        text (count "boundary8" model)
+
+
+boundary9 : Model -> Html Msg
+boundary9 model =
+    wrap model (InsertIntoBody 0 1) "boundary9" <|
+        text (count "boundary9" model)
+
+
+boundary10 : Model -> Html Msg
+boundary10 model =
+    wrap model (InsertIntoBody 0 1) "boundary10" <|
+        text (count "boundary10" model)
+
+
+boundary11 : Model -> Html Msg
+boundary11 model =
+    wrap model (InsertIntoBody 0 1) "boundary11" <|
+        text (count "boundary11" model)
+
+
+boundary12 : Model -> Html Msg
+boundary12 model =
+    wrap model (InsertIntoBody 0 1) "boundary12" <|
+        text (count "boundary12" model)

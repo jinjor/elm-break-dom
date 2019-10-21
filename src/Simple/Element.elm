@@ -1,7 +1,7 @@
 module Simple.Element exposing (main)
 
 import Browser
-import Simple.Common exposing (Model, Msg, init, subscriptions, update, view)
+import Simple.Common exposing (Model, Msg, init, subscriptions, update, viewInner)
 
 
 main : Program () Model Msg
@@ -10,5 +10,5 @@ main =
         { init = init
         , update = update
         , subscriptions = subscriptions
-        , view = view
+        , view = viewInner
         }

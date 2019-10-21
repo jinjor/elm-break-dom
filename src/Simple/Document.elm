@@ -14,6 +14,6 @@ main =
         , view =
             \model ->
                 { title = String.fromInt (Dict.size model)
-                , body = [ view model ]
+                , body = view model
                 }
         }
