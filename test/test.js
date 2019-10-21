@@ -1218,6 +1218,55 @@ describe("Simple", function() {
               await assertCount(page, ".ext", 0);
             });
           });
+          if (main === "Application") {
+            describe.only("Routing", function() {
+              async function testRouting(selector) {
+                await page.click(`${selector} a.target`);
+                await waitForSuccessfulUpdate(page, 1);
+                await assertCount(page, `${selector} .e0`, 0);
+                await assertCount(page, `${selector} .e1`, 1);
+
+                await page.click(`${selector} a.target`);
+                await waitForSuccessfulUpdate(page, 2);
+                await assertCount(page, `${selector} .e1`, 0);
+                await assertCount(page, `${selector} .e2`, 1);
+
+                await page.click(`${selector} button.remove-inserted-node`);
+                await waitForSuccessfulUpdate(page, 3);
+                await assertCount(page, ".ext", 0);
+              }
+              it("insert before target and update its attribute", async function() {
+                await testRouting("#route1");
+              });
+              it("insert before target and update previous node", async function() {
+                await testRouting("#route2");
+              });
+              it("insert before target and update next node", async function() {
+                await testRouting("#route3");
+              });
+              it("insert before target and update its parent", async function() {
+                await testRouting("#route4");
+              });
+              it("remove target and update its child", async function() {
+                await testRouting("#route5");
+              });
+              it("wrap target and update its child", async function() {
+                await testRouting("#route6");
+              });
+              it("append to target and update its child", async function() {
+                await testRouting("#route7");
+              });
+              it("append to target and insert child", async function() {
+                await testRouting("#route8");
+              });
+              it("append to target and remove child", async function() {
+                await testRouting("#route9");
+              });
+              it("insert into body and update target", async function() {
+                await testRouting("#route10");
+              });
+            });
+          }
         });
       }
     });

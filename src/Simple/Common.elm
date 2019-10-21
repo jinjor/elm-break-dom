@@ -4,11 +4,10 @@ import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
 import Dict exposing (Dict)
 import Html exposing (Html, a, button, div, li, node, span, text, ul)
-import Html.Attributes exposing (class, id, style, title)
+import Html.Attributes exposing (class, href, id, style, title)
 import Html.Events exposing (onClick)
 import Html.Keyed
 import Html.Lazy exposing (lazy)
-import Url
 
 
 port event : String -> Cmd msg
@@ -88,14 +87,35 @@ update msg model =
             ( model, Cmd.none )
 
         UrlRequest urlRequest ->
-            ( model
-            , case urlRequest of
+            case urlRequest of
                 Internal url ->
-                    Nav.load (Url.toString url)
+                    case String.split "/" url.path of
+                        "" :: "InsertIntoBody" :: id :: [] ->
+                            update (InsertIntoBody 1 1 id) model
+
+                        "" :: "InsertBeforeTarget" :: id :: [] ->
+                            update (InsertBeforeTarget id) model
+
+                        "" :: "AppendToTarget" :: id :: [] ->
+                            update (AppendToTarget id) model
+
+                        "" :: "RemoveTarget" :: id :: [] ->
+                            update (RemoveTarget id) model
+
+                        "" :: "WrapTarget" :: id :: [] ->
+                            update (WrapTarget id) model
+
+                        "" :: "UpdateAttribute" :: id :: [] ->
+                            update (UpdateAttribute id) model
+
+                        "" :: "RemoveInsertedNode" :: id :: [] ->
+                            update (RemoveInsertedNode id) model
+
+                        _ ->
+                            ( model, Cmd.none )
 
                 External url ->
-                    Nav.load url
-            )
+                    ( model, Nav.load url )
 
         Event s ->
             ( model, event s )
@@ -279,6 +299,16 @@ view model =
         , lazy18 model
         , lazy19 model
         , lazy20 model
+        , route1 model
+        , route2 model
+        , route3 model
+        , route4 model
+        , route5 model
+        , route6 model
+        , route7 model
+        , route8 model
+        , route9 model
+        , route10 model
         ]
 
 
@@ -2066,3 +2096,140 @@ lazy20 : Model -> Html Msg
 lazy20 model =
     wrap model AppendToTarget "lazy20" <|
         lazy viewTarget1 (beforeOrAfter "lazy20" model)
+
+
+
+-- ANCHORS
+
+
+route1 : Model -> Html Msg
+route1 model =
+    wrap model (\_ -> NoOp) "route1" <|
+        div []
+            [ a
+                [ class "target"
+                , class ("e" ++ count "route1" model)
+                , href "/InsertBeforeTarget/route1"
+                ]
+                [ text (count "route1" model) ]
+            ]
+
+
+route2 : Model -> Html Msg
+route2 model =
+    wrap model (\_ -> NoOp) "route2" <|
+        div []
+            [ div [ class ("e" ++ count "route2" model) ] []
+            , a
+                [ class "target"
+                , href "/InsertBeforeTarget/route2"
+                ]
+                [ text (count "route2" model) ]
+            ]
+
+
+route3 : Model -> Html Msg
+route3 model =
+    wrap model (\_ -> NoOp) "route3" <|
+        div []
+            [ a
+                [ class "target"
+                , href "/InsertBeforeTarget/route3"
+                ]
+                [ text (count "route3" model) ]
+            , div [ class ("e" ++ count "route3" model) ] []
+            ]
+
+
+route4 : Model -> Html Msg
+route4 model =
+    wrap model (\_ -> NoOp) "route4" <|
+        div [ class ("e" ++ count "route4" model) ]
+            [ a
+                [ class "target"
+                , href "/InsertBeforeTarget/route4"
+                ]
+                [ text "a" ]
+            ]
+
+
+route5 : Model -> Html Msg
+route5 model =
+    wrap model (\_ -> NoOp) "route5" <|
+        div []
+            [ a
+                [ class "target"
+                , class ("e" ++ count "route5" model)
+                , href "/RemoveTarget/route5"
+                ]
+                [ text (count "route5" model) ]
+            ]
+
+
+route6 : Model -> Html Msg
+route6 model =
+    wrap model (\_ -> NoOp) "route6" <|
+        div []
+            [ a
+                [ class "target"
+                , class ("e" ++ count "route6" model)
+                , href "/WrapTarget/route6"
+                ]
+                [ text (count "route6" model) ]
+            ]
+
+
+route7 : Model -> Html Msg
+route7 model =
+    wrap model (\_ -> NoOp) "route7" <|
+        a
+            [ class "target"
+            , href "/AppendToTarget/route7"
+            ]
+            [ div [ class ("e" ++ count "route7" model) ] [ text (count "route7" model) ] ]
+
+
+route8 : Model -> Html Msg
+route8 model =
+    wrap model (\_ -> NoOp) "route8" <|
+        a
+            [ class "target"
+            , href "/AppendToTarget/route8"
+            ]
+            (if beforeOrAfter "route8" model == "before" then
+                [ text "a" ]
+
+             else
+                [ text "a"
+                , div [ class ("e" ++ count "route8" model) ] []
+                ]
+            )
+
+
+route9 : Model -> Html Msg
+route9 model =
+    wrap model (\_ -> NoOp) "route9" <|
+        a
+            [ class "target"
+            , class ("e" ++ count "route9" model)
+            , href "/AppendToTarget/route9"
+            ]
+            (if beforeOrAfter "route9" model == "route9" then
+                [ text "a"
+                , div [] []
+                ]
+
+             else
+                [ text "a" ]
+            )
+
+
+route10 : Model -> Html Msg
+route10 model =
+    wrap model (\_ -> NoOp) "route10" <|
+        a
+            [ class "target"
+            , href "/InsertIntoBody/route10"
+            , class ("e" ++ count "route10" model)
+            ]
+            [ text "a" ]
