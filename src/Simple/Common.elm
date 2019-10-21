@@ -51,6 +51,7 @@ type Msg
     | UpdateAttribute String
     | RemoveInsertedNode String
     | Done String
+    | Nest Msg
 
 
 onUrlRequest : UrlRequest -> Msg
@@ -157,6 +158,9 @@ update msg model =
             , Cmd.none
             )
 
+        Nest msg_ ->
+            update msg_ model
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
@@ -241,6 +245,8 @@ view model =
         , updateAttribute3 model
         , updateAttribute4 model
         , updateAttribute5 model
+        , updateAttribute6 model
+        , updateAttribute7 model
         , event1 model
         , event2 model
         , event3 model
@@ -263,6 +269,12 @@ view model =
         , event20 model
         , event21 model
         , event22 model
+        , event23 model
+        , event24 model
+        , event25 model
+        , event26 model
+        , event27 model
+        , event28 model
         , keyed1 model
         , keyed2 model
         , keyed3 model
@@ -1160,6 +1172,36 @@ updateAttribute5 model =
             [ text (beforeOrAfter "update-attribute5" model) ]
 
 
+updateAttribute6 : Model -> Html Msg
+updateAttribute6 model =
+    wrap model UpdateAttribute "update-attribute6" <|
+        div
+            [ class "target"
+            , if beforeOrAfter "update-attribute6" model == "before" then
+                title "hello"
+
+              else
+                class ""
+            , class (beforeOrAfter "update-attribute6" model)
+            ]
+            [ text (beforeOrAfter "update-attribute6" model) ]
+
+
+updateAttribute7 : Model -> Html Msg
+updateAttribute7 model =
+    wrap model UpdateAttribute "update-attribute7" <|
+        div
+            [ class "target"
+            , if beforeOrAfter "update-attribute7" model == "before" then
+                class ""
+
+              else
+                title "hello"
+            , class (beforeOrAfter "update-attribute7" model)
+            ]
+            [ text (beforeOrAfter "update-attribute7" model) ]
+
+
 
 -- EVENTS
 
@@ -1524,7 +1566,7 @@ event20 model =
             [ span
                 [ class "target"
                 , class "button"
-                , if beforeOrAfter "event20" model == "event20" then
+                , if beforeOrAfter "event20" model == "before" then
                     onClick (Event "a")
 
                   else
@@ -1541,7 +1583,7 @@ event21 model =
             [ span
                 [ class "target"
                 , class "button"
-                , if beforeOrAfter "event21" model == "event21" then
+                , if beforeOrAfter "event21" model == "before" then
                     onClick (Event "a")
 
                   else
@@ -1558,13 +1600,120 @@ event22 model =
             [ span
                 [ class "target"
                 , class "button"
-                , if beforeOrAfter "event22" model == "event22" then
+                , if beforeOrAfter "event22" model == "before" then
                     onClick NoOp
 
                   else
                     onClick (Event "a")
                 ]
                 []
+            ]
+
+
+event23 : Model -> Html Msg
+event23 model =
+    wrap model InsertBeforeTarget "event23" <|
+        div []
+            [ Html.map Nest <|
+                span
+                    [ class "target"
+                    , class "button"
+                    , onClick (Event (beforeOrAfter "event23" model))
+                    ]
+                    []
+            ]
+
+
+event24 : Model -> Html Msg
+event24 model =
+    wrap model InsertBeforeTarget "event24" <|
+        div []
+            [ Html.map Nest <|
+                span
+                    [ class "target"
+                    , class "button"
+                    , if beforeOrAfter "event24" model == "before" then
+                        onClick (Event "a")
+
+                      else
+                        onClick (Nest (Event "b"))
+                    ]
+                    []
+            ]
+
+
+event25 : Model -> Html Msg
+event25 model =
+    wrap model InsertBeforeTarget "event25" <|
+        div []
+            [ Html.map Nest <|
+                span
+                    [ class "target"
+                    , class "button"
+                    , if beforeOrAfter "event25" model == "before" then
+                        onClick (Nest (Event "a"))
+
+                      else
+                        onClick (Event "b")
+                    ]
+                    []
+            ]
+
+
+event26 : Model -> Html Msg
+event26 model =
+    wrap model InsertBeforeTarget "event26" <|
+        div []
+            [ Html.map Nest <|
+                Html.map Nest <|
+                    span
+                        [ class "target"
+                        , class "button"
+                        , onClick (Event (count "event26" model))
+                        ]
+                        []
+            ]
+
+
+event27 : Model -> Html Msg
+event27 model =
+    wrap model InsertBeforeTarget "event27" <|
+        div []
+            [ (if beforeOrAfter "event27" model == "before" then
+                identity
+
+               else
+                Html.map Nest
+              )
+              <|
+                Html.map Nest <|
+                    span
+                        [ class "target"
+                        , class "button"
+                        , onClick (Event (count "event27" model))
+                        ]
+                        []
+            ]
+
+
+event28 : Model -> Html Msg
+event28 model =
+    wrap model InsertBeforeTarget "event28" <|
+        div []
+            [ (if beforeOrAfter "event28" model == "before" then
+                Html.map Nest
+
+               else
+                identity
+              )
+              <|
+                Html.map Nest <|
+                    span
+                        [ class "target"
+                        , class "button"
+                        , onClick (Event (count "event28" model))
+                        ]
+                        []
             ]
 
 
@@ -2466,10 +2615,10 @@ edge1 model =
                     )
                 ]
                 [ text "4" ]
-            , div [ class "e5" , on "click" (D.fail "") ] [ text "5" ]
-            , div [ class "e6" , preventDefaultOn "click" (D.fail "") ] [ text "6" ]
-            , div [ class "e7" , stopPropagationOn "click" (D.fail "") ] [ text "7" ]
-            , div [ class "e8" , custom "click" (D.fail "") ] [ text "8" ]
+            , div [ class "e5", on "click" (D.fail "") ] [ text "5" ]
+            , div [ class "e6", preventDefaultOn "click" (D.fail "") ] [ text "6" ]
+            , div [ class "e7", stopPropagationOn "click" (D.fail "") ] [ text "7" ]
+            , div [ class "e8", custom "click" (D.fail "") ] [ text "8" ]
             , div [ attribute "class" (count "edge1" model) ] []
             , div
                 [ if beforeOrAfter "edge1" model == "before" then

@@ -638,6 +638,14 @@ describe("Simple", function() {
               await page.click("#update-attribute5 button.break");
               await waitForSuccessfulUpdate(page, 1);
             });
+            it("...and update target's attribute (add attribute)", async function() {
+              await page.click("#update-attribute6 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+            });
+            it("...and update target's attribute (remove attribute)", async function() {
+              await page.click("#update-attribute7 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+            });
           });
           describe("Events", function() {
             it("insert before target, update target's child, event from target", async function() {
@@ -861,6 +869,72 @@ describe("Simple", function() {
               await assertEventResult(["a"]);
 
               await page.click("#event22 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target", async function() {
+              await page.click("#event23 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event23 .button");
+              await assertEventResult(["after"]);
+
+              await page.click("#event23 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target (add nest)", async function() {
+              await page.click("#event24 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event24 .button");
+              await assertEventResult(["b"]);
+
+              await page.click("#event24 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target (remove nest)", async function() {
+              await page.click("#event25 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event25 .button");
+              await assertEventResult(["b"]);
+
+              await page.click("#event25 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target (double)", async function() {
+              await page.click("#event26 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event26 .button");
+              await assertEventResult(["1"]);
+
+              await page.click("#event26 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target (double, add nest)", async function() {
+              await page.click("#event27 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event27 .button");
+              await assertEventResult(["1"]);
+
+              await page.click("#event27 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, nested event from target (double, remove nest)", async function() {
+              await page.click("#event28 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event28 .button");
+              await assertEventResult(["1"]);
+
+              await page.click("#event28 button.remove-inserted-node");
               await waitForSuccessfulUpdate(page, 2);
               await assertCount(page, ".ext", 0);
             });
