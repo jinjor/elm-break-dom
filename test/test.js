@@ -816,6 +816,46 @@ describe("Simple", function() {
               await page.click("#event18 .button");
               await assertEventResult(["after"]);
             });
+            it("remove target, update target's event handler, event from target", async function() {
+              await page.click("#event19 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event19 .button");
+              await assertEventResult(["after"]);
+            });
+            it("insert before target, update target's event handler, (no) event from target", async function() {
+              await page.click("#event20 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event20 .button");
+              await assertEventResult([]);
+
+              await page.click("#event20 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, NoOp from target", async function() {
+              await page.click("#event21 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event21 .button");
+              await assertEventResult([]);
+
+              await page.click("#event21 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target, update target's event handler, new event from target", async function() {
+              await page.click("#event22 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+
+              await page.click("#event22 .button");
+              await assertEventResult(["a"]);
+
+              await page.click("#event22 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
           });
           describe("Keyed nodes", function() {
             it("insert before target and update its attribute", async function() {
@@ -1059,6 +1099,72 @@ describe("Simple", function() {
               await waitForSuccessfulUpdate(page, 2);
               await assertCount(page, ".ext", 0);
             });
+            it("append to target and update tag name", async function() {
+              await page.click("#keyed25 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed25 .target", 1);
+              await assertCount(page, "#keyed25 .e0", 0);
+              await assertCount(page, "#keyed25 .e1", 1);
+
+              await page.click("#keyed25 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("append to target and add key", async function() {
+              await page.click("#keyed26 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed26 .target", 1);
+              await assertCount(page, "#keyed26 .e1", 0);
+              await assertCount(page, "#keyed26 .e2", 1);
+
+              await page.click("#keyed26 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("append to target and remove key", async function() {
+              await page.click("#keyed27 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed27 .target", 1);
+              await assertCount(page, "#keyed27 .e1", 0);
+              await assertCount(page, "#keyed27 .e2", 1);
+
+              await page.click("#keyed27 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target and update tag name", async function() {
+              await page.click("#keyed28 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed28 .target", 1);
+              await assertCount(page, "#keyed28 .e0", 0);
+              await assertCount(page, "#keyed28 .e1", 1);
+
+              await page.click("#keyed28 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target and add key", async function() {
+              await page.click("#keyed29 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed29 .target", 1);
+              await assertCount(page, "#keyed29 .e1", 0);
+              await assertCount(page, "#keyed29 .e2", 1);
+
+              await page.click("#keyed29 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
+            it("insert before target and remove key", async function() {
+              await page.click("#keyed30 button.break");
+              await waitForSuccessfulUpdate(page, 1);
+              await assertCount(page, "#keyed30 .target", 1);
+              await assertCount(page, "#keyed30 .e1", 0);
+              await assertCount(page, "#keyed30 .e2", 1);
+
+              await page.click("#keyed30 button.remove-inserted-node");
+              await waitForSuccessfulUpdate(page, 2);
+              await assertCount(page, ".ext", 0);
+            });
           });
           describe("Lazy nodes", function() {
             it("insert before target and update its lazy child (text)", async function() {
@@ -1219,7 +1325,7 @@ describe("Simple", function() {
             });
           });
           if (main === "Application") {
-            describe.only("Routing", function() {
+            describe("Routing", function() {
               async function testRouting(selector) {
                 await page.click(`${selector} a.target`);
                 await waitForSuccessfulUpdate(page, 1);

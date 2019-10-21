@@ -255,6 +255,10 @@ view model =
         , event16 model
         , event17 model
         , event18 model
+        , event19 model
+        , event20 model
+        , event21 model
+        , event22 model
         , keyed1 model
         , keyed2 model
         , keyed3 model
@@ -279,6 +283,12 @@ view model =
         , keyed22 model
         , keyed23 model
         , keyed24 model
+        , keyed25 model
+        , keyed26 model
+        , keyed27 model
+        , keyed28 model
+        , keyed29 model
+        , keyed30 model
         , lazy1 model
         , lazy2 model
         , lazy3 model
@@ -1462,6 +1472,70 @@ event18 model =
             ]
 
 
+event19 : Model -> Html Msg
+event19 model =
+    wrap model RemoveTarget "event19" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , onClick (Event (beforeOrAfter "event19" model))
+                ]
+                []
+            ]
+
+
+event20 : Model -> Html Msg
+event20 model =
+    wrap model InsertBeforeTarget "event20" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , if beforeOrAfter "event20" model == "event20" then
+                    onClick (Event "a")
+
+                  else
+                    class ""
+                ]
+                []
+            ]
+
+
+event21 : Model -> Html Msg
+event21 model =
+    wrap model InsertBeforeTarget "event21" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , if beforeOrAfter "event21" model == "event21" then
+                    onClick (Event "a")
+
+                  else
+                    onClick NoOp
+                ]
+                []
+            ]
+
+
+event22 : Model -> Html Msg
+event22 model =
+    wrap model InsertBeforeTarget "event22" <|
+        div []
+            [ span
+                [ class "target"
+                , class "button"
+                , if beforeOrAfter "event22" model == "event22" then
+                    onClick NoOp
+
+                  else
+                    onClick (Event "a")
+                ]
+                []
+            ]
+
+
 
 -- KEYED
 
@@ -1919,6 +1993,80 @@ keyed24 model =
              else
                 [ ( "1", div [ class "e1" ] [ text "" ] ) ]
             )
+
+
+keyed25 : Model -> Html Msg
+keyed25 model =
+    wrap model AppendToTarget "keyed25" <|
+        Html.Keyed.node
+            (if beforeOrAfter "keyed25" model == "before" then
+                "div"
+
+             else
+                "p"
+            )
+            [ class "target", class ("e" ++ count "keyed25" model) ]
+            []
+
+
+keyed26 : Model -> Html Msg
+keyed26 model =
+    wrap model AppendToTarget "keyed26" <|
+        if beforeOrAfter "keyed26" model == "before" then
+            Html.Keyed.node "div" [ class "target", class "e1" ] []
+
+        else
+            div [ class "target", class "e2" ] []
+
+
+keyed27 : Model -> Html Msg
+keyed27 model =
+    wrap model AppendToTarget "keyed27" <|
+        if beforeOrAfter "keyed27" model == "before" then
+            div [ class "target", class "e1" ] []
+
+        else
+            Html.Keyed.node "div" [ class "target", class "e2" ] []
+
+
+keyed28 : Model -> Html Msg
+keyed28 model =
+    wrap model InsertBeforeTarget "keyed28" <|
+        div []
+            [ Html.Keyed.node
+                (if beforeOrAfter "keyed28" model == "before" then
+                    "div"
+
+                 else
+                    "p"
+                )
+                [ class "target", class ("e" ++ count "keyed28" model) ]
+                []
+            ]
+
+
+keyed29 : Model -> Html Msg
+keyed29 model =
+    wrap model AppendToTarget "keyed29" <|
+        div []
+            [ if beforeOrAfter "keyed29" model == "before" then
+                Html.Keyed.node "div" [ class "target", class "e1" ] []
+
+              else
+                div [ class "target", class "e2" ] []
+            ]
+
+
+keyed30 : Model -> Html Msg
+keyed30 model =
+    wrap model AppendToTarget "keyed30" <|
+        div []
+            [ if beforeOrAfter "keyed30" model == "before" then
+                div [ class "target", class "e1" ] []
+
+              else
+                Html.Keyed.node "div" [ class "target", class "e2" ] []
+            ]
 
 
 
