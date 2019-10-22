@@ -17,10 +17,6 @@ fs.mkdirSync(".nyc_output");
 rimraf.sync("public/coverage");
 fs.mkdirSync("public/coverage");
 
-async function assertCount(page, selector, n) {
-  assert.equal((await page.$$(selector)).length, n);
-}
-
 describe("Simple", function() {
   this.slow(2000);
   this.timeout(20 * 1000);
@@ -104,11 +100,16 @@ describe("Simple", function() {
   }
 
   for (let version of ["Original", "Patched", "Patched-without-extension"]) {
+    const html = version === "Original" ? "simple.html" : "simple-patched.html";
+    const hasExt = version !== "Patched-without-extension";
+    const ext = hasExt ? "enabled" : "disabled";
+    async function assertCount(page, selector, n) {
+      if (!hasExt && selector.includes(".ext") && n > 0) {
+        return;
+      }
+      assert.equal((await page.$$(selector)).length, n);
+    }
     describe(version, function() {
-      const html =
-        version === "Original" ? "simple.html" : "simple-patched.html";
-      const ext =
-        version === "Patched-without-extension" ? "disabled" : "enabled";
       let coverages = [];
       before(function() {
         warnings = [];
@@ -173,7 +174,7 @@ describe("Simple", function() {
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "body > .ext.top", 0);
-              // await assertCount(page, "body > .ext.bottom", 1);
+              await assertCount(page, "body > .ext.bottom", 1);
 
               await page.click(
                 "#insert-into-body2 button.remove-inserted-node"
@@ -185,7 +186,7 @@ describe("Simple", function() {
               await waitForSuccessfulUpdate(page, 1);
 
               await assertCount(page, "body > .ext.top", 0);
-              // await assertCount(page, "body > .ext.bottom", 2);
+              await assertCount(page, "body > .ext.bottom", 2);
 
               await page.click(
                 "#insert-into-body3 button.remove-inserted-node"
@@ -196,7 +197,7 @@ describe("Simple", function() {
               await page.click("#insert-into-body4 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "body > .ext.top", 1);
+              await assertCount(page, "body > .ext.top", 1);
               await assertCount(page, "body > .ext.bottom", 0);
 
               await page.click(
@@ -208,8 +209,8 @@ describe("Simple", function() {
               await page.click("#insert-into-body5 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "body > .ext.top", 1);
-              // await assertCount(page, "body > .ext.bottom", 1);
+              await assertCount(page, "body > .ext.top", 1);
+              await assertCount(page, "body > .ext.bottom", 1);
 
               await page.click(
                 "#insert-into-body5 button.remove-inserted-node"
@@ -220,8 +221,8 @@ describe("Simple", function() {
               await page.click("#insert-into-body6 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "body > .ext.top", 1);
-              // await assertCount(page, "body > .ext.bottom", 2);
+              await assertCount(page, "body > .ext.top", 1);
+              await assertCount(page, "body > .ext.bottom", 2);
 
               await page.click(
                 "#insert-into-body6 button.remove-inserted-node"
@@ -232,7 +233,7 @@ describe("Simple", function() {
               await page.click("#insert-into-body7 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "body > .ext.top", 2);
+              await assertCount(page, "body > .ext.top", 2);
               await assertCount(page, "body > .ext.bottom", 0);
 
               await page.click(
@@ -244,8 +245,8 @@ describe("Simple", function() {
               await page.click("#insert-into-body8 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "body > .ext.top", 2);
-              // await assertCount(page, "body > .ext.bottom", 1);
+              await assertCount(page, "body > .ext.top", 2);
+              await assertCount(page, "body > .ext.bottom", 1);
 
               await page.click(
                 "#insert-into-body8 button.remove-inserted-node"
@@ -381,7 +382,7 @@ describe("Simple", function() {
               await page.click("#append1 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "#append1 .ext", 1);
+              await assertCount(page, "#append1 .ext", 1);
               await assertCount(page, "#append1 .target.before", 0);
               await assertCount(page, "#append1 .target.after", 1);
 
@@ -393,7 +394,7 @@ describe("Simple", function() {
               await page.click("#append2 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "#append2 .ext", 1);
+              await assertCount(page, "#append2 .ext", 1);
 
               await page.click("#append2 button.remove-inserted-node");
               await waitForSuccessfulUpdate(page, 2);
@@ -403,7 +404,7 @@ describe("Simple", function() {
               await page.click("#append3 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "#append3 .ext", 1);
+              await assertCount(page, "#append3 .ext", 1);
 
               await page.click("#append3 button.remove-inserted-node");
               await waitForSuccessfulUpdate(page, 2);
@@ -413,7 +414,7 @@ describe("Simple", function() {
               await page.click("#append4 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "#append4 .ext", 1);
+              await assertCount(page, "#append4 .ext", 1);
               await assertCount(page, "#append4 .e1", 1);
 
               await page.click("#append4 button.remove-inserted-node");
@@ -424,7 +425,7 @@ describe("Simple", function() {
               await page.click("#append5 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "#append5 .ext", 1);
+              await assertCount(page, "#append5 .ext", 1);
               await assertCount(page, "#append5 .e1", 1);
 
               await page.click("#append5 button.remove-inserted-node");
@@ -435,7 +436,7 @@ describe("Simple", function() {
               await page.click("#append6 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "#append6 .ext", 1);
+              await assertCount(page, "#append6 .ext", 1);
 
               await page.click("#append6 button.remove-inserted-node");
               await waitForSuccessfulUpdate(page, 2);
@@ -445,7 +446,7 @@ describe("Simple", function() {
               await page.click("#append7 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "#append7 .ext", 1);
+              await assertCount(page, "#append7 .ext", 1);
               await assertCount(page, "#append7 .e1", 0);
 
               await page.click("#append7 button.remove-inserted-node");
@@ -456,7 +457,7 @@ describe("Simple", function() {
               await page.click("#append8 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "#append8 .ext", 1);
+              await assertCount(page, "#append8 .ext", 1);
               await assertCount(page, "#append8 .e1", 0);
 
               await page.click("#append8 button.remove-inserted-node");
@@ -467,7 +468,7 @@ describe("Simple", function() {
               await page.click("#append9 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "#append9 .ext", 1);
+              await assertCount(page, "#append9 .ext", 1);
 
               await page.click("#append9 button.remove-inserted-node");
               await waitForSuccessfulUpdate(page, 2);
@@ -477,7 +478,7 @@ describe("Simple", function() {
               await page.click("#append10 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, "#append10 .ext", 1);
+              await assertCount(page, "#append10 .ext", 1);
               await assertCount(page, "#append10 .e1", 0);
               await assertCount(page, "#append10 .e2", 0);
 
@@ -1014,7 +1015,7 @@ describe("Simple", function() {
 
               await assertCount(page, "#keyed6 .e0", 0);
               await assertCount(page, "#keyed6 .e1", 1);
-              // await assertCount(page, `#keyed6 .target[title="break"]`, 1);
+              await assertCount(page, `#keyed6 .target[title="break"]`, 1);
             });
             it("update target's attribute and update its parent's attribute", async function() {
               await page.click("#keyed7 button.break");
@@ -1022,7 +1023,7 @@ describe("Simple", function() {
 
               await assertCount(page, "#keyed7 .e0", 0);
               await assertCount(page, "#keyed7 .e1", 1);
-              // await assertCount(page, `#keyed7 .target[title="break"]`, 1);
+              await assertCount(page, `#keyed7 .target[title="break"]`, 1);
             });
             it("update target's attribute and update its key and child", async function() {
               await page.click("#keyed8 button.break");
@@ -1042,7 +1043,7 @@ describe("Simple", function() {
               await page.click("#keyed10 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, `#keyed10 .target.e1[title="break"]`, 1);
+              await assertCount(page, `#keyed10 .target.e1[title="break"]`, 1);
               await assertCount(page, `#keyed10 .e2`, 1);
               await assertCount(page, `#keyed10 .e2[title="break"]`, 0);
             });
@@ -1050,7 +1051,7 @@ describe("Simple", function() {
               await page.click("#keyed11 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              // await assertCount(page, `#keyed11 .target.e2[title="break"]`, 1);
+              await assertCount(page, `#keyed11 .target.e2[title="break"]`, 1);
               await assertCount(page, `#keyed11 .e1`, 1);
               await assertCount(page, `#keyed11 .e1[title="break"]`, 0);
             });
@@ -1501,7 +1502,7 @@ describe("Simple", function() {
             async function testBoundary(selector, contentsExists) {
               await page.click(`${selector} button.break`);
               await waitForSuccessfulUpdate(page, 1);
-              // await assertCount(page, ".ext", 1);
+              await assertCount(page, ".ext", 1);
               if (contentsExists) {
                 await page.click(`${selector} button.remove-inserted-node`);
                 await waitForSuccessfulUpdate(page, 2);
