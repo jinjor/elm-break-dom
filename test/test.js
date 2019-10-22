@@ -103,10 +103,7 @@ describe("Simple", function() {
     assert.deepEqual(eventResult, expected);
   }
 
-  for (let version of [
-    /*"Original", "Patched",*/
-    "Patched-without-extension"
-  ]) {
+  for (let version of ["Original", "Patched", "Patched-without-extension"]) {
     describe(version, function() {
       const html =
         version === "Original" ? "simple.html" : "simple-patched.html";
