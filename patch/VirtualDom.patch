@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-23 02:25:15.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-23 02:30:00.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -19,7 +19,7 @@
  
  	if (_VirtualDom_divertHrefToApp && vNode.__tag == 'a')
  	{
-@@ -1313,14 +1316,58 @@
+@@ -1313,14 +1316,57 @@
  
  	var vKids = vNode.__kids;
  	var childNodes = domNode.childNodes;
@@ -65,7 +65,6 @@
 +				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
 +			}
 +		}
-+
 +		// 4. this is needed for some edge cases
 +		if(vKids[j].$ === __2_NODE && (childNodes[k].tagName || "").toLowerCase() !== vKids[j].__tag)
 +		{
@@ -80,7 +79,7 @@
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1393,6 +1440,25 @@
+@@ -1393,6 +1439,25 @@
  
  		case __3_REMOVE_LAST:
  			var data = patch.__data;
@@ -106,7 +105,7 @@
  			for (var i = 0; i < data.__diff; i++)
  			{
  				domNode.removeChild(domNode.childNodes[data.__length]);
-@@ -1510,6 +1576,7 @@
+@@ -1510,6 +1575,7 @@
  
  function _VirtualDom_virtualize(node)
  {

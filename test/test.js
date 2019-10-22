@@ -1550,13 +1550,17 @@ describe("Simple", function() {
           }
         });
       }
-      if (version === "Patched-without-extension") {
-        describe("Performance and Compartibility", function() {
+      describe("Performance and Compartibility", function() {
+        if (version === "Patched-without-extension") {
           it("should not do extra operation when no extension exists", async function() {
             assert.deepEqual(warnings, []);
           });
-        });
-      }
+        } else {
+          it("should be correctly tested", async function() {
+            assert(warnings.length > 0);
+          });
+        }
+      });
     });
   }
   after(async function() {
