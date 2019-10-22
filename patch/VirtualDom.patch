@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-22 18:19:09.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-22 19:30:36.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -19,7 +19,7 @@
  
  	if (_VirtualDom_divertHrefToApp && vNode.__tag == 'a')
  	{
-@@ -1313,14 +1316,63 @@
+@@ -1313,14 +1316,56 @@
  
  	var vKids = vNode.__kids;
  	var childNodes = domNode.childNodes;
@@ -44,14 +44,13 @@
 +			while(!childNodes[k].created_by_elm) {
 +				k++
 +			}
++			if((childNodes[k].tagName || "").toLowerCase() !== vKids[j].__tag) {
++				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
++			}
 +		}
 +		// 2. if existing node has been removed
 +		if(childNodes.length < vKids.length)
 +		{
-+			// console.log(vKids.length, childNodes.length, domNode.tagName);
-+			for(let c of childNodes) {
-+				// console.log((c.outerHTML || "[text]").slice(0, 80));
-+			}
 +			if(childNodes[k])
 +			{
 +				// replace tha node using the old vdom
@@ -59,18 +58,12 @@
 +			}
 +			else
 +			{
-+				// or append node using the old vdom
-+				// console.log("nodeType:", "" + domNode.nodeType);
-+				// console.log("tagName:", "" + domNode.tagName);
-+				// console.log("textContent:", "" + domNode.textContent);
-+				// console.log("innerHTML:", "" + domNode.innerHTML);
 +				domNode.appendChild(_VirtualDom_render(vKids[j], eventNode));
 +			}
 +		}
 +		// 3. if existing node has been replaced with unknown node
 +		if(childNodes.length === vKids.length)
 +		{
-+			// console.log("childNodes[k]", childNodes[k].tagName, childNodes[k].created_by_elm);
 +			if(!childNodes[k].created_by_elm)
 +			{
 +				// replace tha node using the old vdom
@@ -85,7 +78,7 @@
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1393,9 +1445,29 @@
+@@ -1393,9 +1438,29 @@
  
  		case __3_REMOVE_LAST:
  			var data = patch.__data;
@@ -117,7 +110,7 @@
  			}
  			return domNode;
  
-@@ -1510,6 +1582,7 @@
+@@ -1510,6 +1575,7 @@
  
  function _VirtualDom_virtualize(node)
  {
