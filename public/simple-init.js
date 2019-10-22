@@ -2,19 +2,20 @@ const params = new URLSearchParams(location.search);
 const main = params.get("main") || "Element";
 const enableExtension = params.get("extension") !== "disabled";
 
+function debugBody(place) {
+  if (false) {
+    console.log(place);
+    for (let c of document.body.childNodes) {
+      console.log("  " + c.tagName, c.created_by_elm);
+    }
+  }
+}
+
 const app = Elm.Simple[main].init({
   node: document.getElementById("root")
 });
-// console.log("After init");
-// for (let c of document.body.childNodes) {
-//   console.log("  " + c.tagName, c.created_by_elm);
-// }
-setTimeout(() => {
-  // console.log("After init 2");
-  // for (let c of document.body.childNodes) {
-  //   console.log("  " + c.tagName, c.created_by_elm);
-  // }
-});
+debugBody("After init");
+setTimeout(() => debugBody("After init 2"));
 app.ports.event.subscribe(s => {
   if (window.notifyEvent) {
     window.notifyEvent(s);
@@ -23,10 +24,7 @@ app.ports.event.subscribe(s => {
 });
 app.ports.insertIntoBody.subscribe(([id, top, bottom]) => {
   if (enableExtension) {
-    // console.log("Before insert");
-    // for (let c of document.body.childNodes) {
-    //   console.log("  " + c.tagName, c.created_by_elm, c.nodeType);
-    // }
+    debugBody("Before insert");
     for (let i = 0; i < top; i++) {
       const node = `<div class="ext top">EXTENSION NODE</div>`;
       document.body.insertAdjacentHTML("afterbegin", node);
@@ -35,10 +33,7 @@ app.ports.insertIntoBody.subscribe(([id, top, bottom]) => {
       const node = `<div class="ext bottom">EXTENSION NODE</div>`;
       document.body.insertAdjacentHTML("beforeend", node);
     }
-    // console.log("After insert");
-    // for (let c of document.body.childNodes) {
-    //   console.log("  " + c.tagName, c.created_by_elm);
-    // }
+    debugBody("After insert");
   }
   app.ports.done.send(id);
 });
@@ -81,21 +76,15 @@ app.ports.wrapTarget.subscribe(id => {
 app.ports.updateAttribute.subscribe(id => {
   if (enableExtension) {
     const parent = document.querySelector(`#${id} .target`);
-    parent.setAttribute("title", "break"); // simulate Google Translate
+    parent.setAttribute("title", ".ext"); // simulate Google Translate
   }
   app.ports.done.send(id);
 });
 app.ports.removeInsertedNode.subscribe(id => {
-  // console.log("Before remove");
-  // for (let c of document.body.childNodes) {
-  //   console.log("  " + c.tagName, c.created_by_elm);
-  // }
+  debugBody("Before remove");
   for (let el of document.querySelectorAll(`.ext`)) {
     el.remove();
   }
-  // console.log("After remove");
-  // for (let c of document.body.childNodes) {
-  //   console.log("  " + c.tagName, c.created_by_elm);
-  // }
+  debugBody("After remove");
   app.ports.done.send(id);
 });

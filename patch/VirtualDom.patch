@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-22 23:22:21.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-22 23:55:18.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -19,18 +19,11 @@
  
  	if (_VirtualDom_divertHrefToApp && vNode.__tag == 'a')
  	{
-@@ -1313,14 +1316,64 @@
+@@ -1313,14 +1316,57 @@
  
  	var vKids = vNode.__kids;
  	var childNodes = domNode.childNodes;
 -	for (var j = 0; j < vKids.length; j++)
-+	if(domNode.tagName === "BODY") {
-+		// console.log("addDomeNodeHelp", vKids.length);
-+		// for (let c of document.body.childNodes) {
-+		// 	console.log("  " + c.tagName, c.created_by_elm);
-+		// }
-+	}
-+
 +	for (var j = 0, k = 0; j < Math.max(vKids.length, childNodes.length); j++, k++)
  	{
  		low++;
@@ -86,7 +79,7 @@
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1393,9 +1446,30 @@
+@@ -1393,9 +1439,30 @@
  
  		case __3_REMOVE_LAST:
  			var data = patch.__data;
@@ -119,7 +112,7 @@
  			}
  			return domNode;
  
-@@ -1510,6 +1584,7 @@
+@@ -1510,6 +1577,7 @@
  
  function _VirtualDom_virtualize(node)
  {

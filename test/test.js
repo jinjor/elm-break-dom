@@ -1015,7 +1015,7 @@ describe("Simple", function() {
 
               await assertCount(page, "#keyed6 .e0", 0);
               await assertCount(page, "#keyed6 .e1", 1);
-              await assertCount(page, `#keyed6 .target[title="break"]`, 1);
+              await assertCount(page, `#keyed6 .target[title=".ext"]`, 1);
             });
             it("update target's attribute and update its parent's attribute", async function() {
               await page.click("#keyed7 button.break");
@@ -1023,7 +1023,7 @@ describe("Simple", function() {
 
               await assertCount(page, "#keyed7 .e0", 0);
               await assertCount(page, "#keyed7 .e1", 1);
-              await assertCount(page, `#keyed7 .target[title="break"]`, 1);
+              await assertCount(page, `#keyed7 .target[title=".ext"]`, 1);
             });
             it("update target's attribute and update its key and child", async function() {
               await page.click("#keyed8 button.break");
@@ -1043,17 +1043,17 @@ describe("Simple", function() {
               await page.click("#keyed10 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              await assertCount(page, `#keyed10 .target.e1[title="break"]`, 1);
+              await assertCount(page, `#keyed10 .target.e1[title=".ext"]`, 1);
               await assertCount(page, `#keyed10 .e2`, 1);
-              await assertCount(page, `#keyed10 .e2[title="break"]`, 0);
+              await assertCount(page, `#keyed10 .e2[title=".ext"]`, 0);
             });
             it("update target's attribute and sort (target = second node)", async function() {
               await page.click("#keyed11 button.break");
               await waitForSuccessfulUpdate(page, 1);
 
-              await assertCount(page, `#keyed11 .target.e2[title="break"]`, 1);
+              await assertCount(page, `#keyed11 .target.e2[title=".ext"]`, 1);
               await assertCount(page, `#keyed11 .e1`, 1);
-              await assertCount(page, `#keyed11 .e1[title="break"]`, 0);
+              await assertCount(page, `#keyed11 .e1[title=".ext"]`, 0);
             });
             it("insert before target and sort (target = first node)", async function() {
               await page.click("#keyed12 button.break");
