@@ -1,6 +1,7 @@
 const params = new URLSearchParams(location.search);
 const main = params.get("main") || "Element";
 const enableExtension = params.get("extension") !== "disabled";
+const tag = "div";
 
 function debugBody(place) {
   if (false) {
@@ -26,11 +27,11 @@ app.ports.insertIntoBody.subscribe(([id, top, bottom]) => {
   if (enableExtension) {
     debugBody("Before insert");
     for (let i = 0; i < top; i++) {
-      const node = `<div class="ext top">EXTENSION NODE</div>`;
+      const node = `<${tag} class="ext top">EXTENSION NODE</${tag}>`;
       document.body.insertAdjacentHTML("afterbegin", node);
     }
     for (let i = 0; i < bottom; i++) {
-      const node = `<div class="ext bottom">EXTENSION NODE</div>`;
+      const node = `<${tag} class="ext bottom">EXTENSION NODE</${tag}>`;
       document.body.insertAdjacentHTML("beforeend", node);
     }
     debugBody("After insert");
@@ -41,7 +42,7 @@ app.ports.insertBeforeTarget.subscribe(id => {
   if (enableExtension) {
     const target = document.querySelector(`#${id} .target`);
     const parent = target.parentElement;
-    const el = document.createElement("div");
+    const el = document.createElement(tag);
     el.classList.add("ext");
     el.append("EXTENSION NODE");
     parent.insertBefore(el, target);
@@ -51,7 +52,7 @@ app.ports.insertBeforeTarget.subscribe(id => {
 app.ports.appendToTarget.subscribe(id => {
   if (enableExtension) {
     const target = document.querySelector(`#${id} .target`);
-    const node = `<div class="ext">EXTENSION NODE</div>`;
+    const node = `<${tag} class="ext">EXTENSION NODE</${tag}>`;
     target.insertAdjacentHTML("beforeend", node);
   }
   app.ports.done.send(id);

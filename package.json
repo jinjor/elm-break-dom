@@ -4,15 +4,18 @@
   "description": "",
   "scripts": {
     "build": "./build.sh",
-    "test": "run-s test:simple",
-    "test:simple": "mocha test/test.js",
-    "test:simple-manual": "run-p server open:simple",
+    "test": "run-s test:patched test:patched-without-extension",
+    "test:original": "env SRC_VERSION=Original mocha test/test.js",
+    "test:patched": "env SRC_VERSION=Patched mocha test/test.js",
+    "test:patched-without-extension": "env SRC_VERSION=Patched-without-extension mocha test/test.js",
+    "test:manual": "run-p server open:simple",
     "test:extensions": "run-p server open:extensions",
     "report": "nyc report --reporter=html --report-dir=public/coverage",
     "server": "http-server -c-1",
     "open:simple": "open-cli http://localhost:8080/simple.html",
     "open:extensions": "open-cli http://localhost:8080/",
-    "clean": "git clean -xdf"
+    "clean": "git clean -xdf",
+    "netlify": "run-s build test:patched report"
   },
   "author": "",
   "license": "MIT",
