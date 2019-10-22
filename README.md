@@ -3,65 +3,16 @@
 [![Build Status](https://travis-ci.org/jinjor/elm-break-dom.svg?branch=master)](https://travis-ci.org/jinjor/elm-break-dom)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/be3da983-1d1e-4c84-a596-ab4597c31027/deploy-status)](https://app.netlify.com/sites/elm-break-dom/deploys)
 
-Tests for Elm's Virtual DOM with Chrome extensions ([Issue](https://github.com/elm/html/issues/44)).
+Elm's Virtual DOM does not work well with Chrome extensions ([Issue](https://github.com/elm/html/issues/44)).
+This repository aims to resolve it by following process.
 
-- Aims to make this tests successful with the latest `elm/html`.
-- Visit [elm-break-dom.netlify.com](https://elm-break-dom.netlify.com/) with problematic extensions enabled/disabled.
-
-## Test locally
-
-### Install
-
-```shell
-npm install
-```
-
-### Build
-
-```shell
-npm run build
-```
-
-This will build two apps (`simple.js` and `extensions.js`).
-Each of those have both version of `Browser.application` and `Browser.element`.
-
-This will also build patched versions of them (`simple-patched.js` and `extensions-patched.js`).
-They are built with patched version of `elm/virtual-dom` using `patch/VirtualDom.patch` (See the [detail](./patch/README.md)).
-
-### Run simple tests (automatically with puppeteer)
-
-```shell
-npm test
-```
-
-This test breaks DOM in various patterns without real Chrome extensions.
-
-For each test case,
-
-- An element is inserted/removed via ports when a button is clicked.
-- Elm will update Virtual DOM.
-  See the [source](./src/Main.elm) to find where in the DOM is updated in each case.
-
-If you want manual testing, run `npm run test:manual`.
-(Note: You cannot test after an error is thrown. Reload to test another.)
-
-### Run extension tests (manually with your Chrome)
-
-```shell
-npm run test:extensions
-```
-
-This test coveres problematic cases of well-known extensions.
-
-Since this test uses the real extensions, it cannot be covered by puppeteer.
-You need to see the result on your Chrome.
-Turn on and off the your extensions to see how the results change.
-
-For the case of inserting elements into the top of `<body>`, you can try patched version too.
+- Gather information about how extensions break DOM (insert, wrap, etc.)
+- Make a patch for `elm/virtual-dom`
+- Try [online](https://elm-break-dom.netlify.com/) with problematic extensions enabled/disabled
 
 ## Known Extensions
 
-Describing where and when an element is inserted, thanks to the discussion in the [discourse thread](https://discourse.elm-lang.org/t/runtime-errors-caused-by-chrome-extensions/4381). More informarion is welcome.
+This table describes where and when an element is inserted, thanks to the discussion in the [discourse thread](https://discourse.elm-lang.org/t/runtime-errors-caused-by-chrome-extensions/4381). More informarion is still welcome.
 
 | Plugin (Users)                        | Where in `<body>`      | When                     | Workaround (keep enabled)                                                  | Workaround (disable)                                     |     |
 | :------------------------------------ | :--------------------- | :----------------------- | :------------------------------------------------------------------------- | :------------------------------------------------------- | :-- |
@@ -86,7 +37,55 @@ Note:
 - For "Where in `<body>`" Column, `top` and `bottom` breaks `Browser.application` and `middle` breaks both `Browser.application` and `Browser.element`. `middle` contains modifications to all descendant elements in the `<body>`.
 - Some of the extensions insert elements in `<head>` or _after_ `<body>`. They are excluded from this list because it has no harm.
 
-## Patch for `Browser.application`
+## Test patched VirtualDOM
+
+You can test the patched version of `elm/virtual-dom`. About the patch, see more details [here](./patch).
+
+### Install
+
+```shell
+npm install
+```
+
+### Build
+
+```shell
+npm run build
+```
+
+This will build:
+
+- patched version of `elm/virtual-dom`
+- `simple.js` from `src/` using the original version
+- `simple-patched.js` from `src/` using the patched version
+
+### Auto test
+
+```shell
+npm test
+```
+
+This test uses puppeteer and breaks DOM in various patterns without real Chrome extensions.
+
+For each test case,
+
+- An element is inserted/removed via ports when a button is clicked.
+- Elm will update Virtual DOM.
+  See the [source](./src/Main.elm) to find where in the DOM is updated in each case.
+
+### Manual test
+
+```shell
+npm run test:extensions
+```
+
+This test coveres problematic cases of well-known extensions.
+
+Since this test uses the real extensions, it cannot be covered by puppeteer.
+You need to see the result on your Chrome.
+Turn on and off the your extensions to see how the results change.
+
+## Appendix: Hacky patch for `Browser.application`
 
 Here is a simple patch (thanks to [a discourse comment](https://discourse.elm-lang.org/t/fullscreen-elm-app-in-0-19-childnode-issue-reopened/3174/2)) for `Browser.application`.
 
@@ -100,8 +99,3 @@ cat elm.js\
 
 Note: This is just a workaround, _NOT_ a fix. For `Browser.application`, the root should be always `<body>` element. This is [by design](https://github.com/elm/browser/blob/1.0.0/notes/navigation-in-elements.md).
 Note: This will be no use once [this patch](./patch/README.md) is merged.
-
-## TODO
-
-- [Better patch](./patch)
-- More extensions
