@@ -30,7 +30,7 @@ elm make --docs=documentation.json
 popd
 
 # reset $ELM_HOME cache for next `elm make`
-target_dir=$ELM_HOME/$elm_version/package/$author/$package/$version
+target_dir=$ELM_HOME/$elm_version/packages/$author/$package/$version
 rm -rf $target_dir
 mkdir -p $target_dir
 cp -r $package/* $target_dir

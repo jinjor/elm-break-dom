@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-21 15:32:49.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-22 23:55:18.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -19,7 +19,7 @@
  
  	if (_VirtualDom_divertHrefToApp && vNode.__tag == 'a')
  	{
-@@ -1313,14 +1316,47 @@
+@@ -1313,14 +1316,57 @@
  
  	var vKids = vNode.__kids;
  	var childNodes = domNode.childNodes;
@@ -34,7 +34,8 @@
 +		if(childNodes.length > vKids.length)
 +		{
 +			// skip them
-+			while(!childNodes[k].created_by_elm) {
++			while(!childNodes[k].created_by_elm)
++			{
 +				k++
 +			}
 +		}
@@ -44,11 +45,12 @@
 +			if(childNodes[k])
 +			{
 +				// replace tha node using the old vdom
++				console.log("WARN 1: restoring DOM")
 +				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
 +			}
 +			else
 +			{
-+				// or append node using the old vdom
++				console.log("WARN 2: restoring DOM")
 +				domNode.appendChild(_VirtualDom_render(vKids[j], eventNode));
 +			}
 +		}
@@ -58,8 +60,16 @@
 +			if(!childNodes[k].created_by_elm)
 +			{
 +				// replace tha node using the old vdom
++				console.log("WARN 3: restoring DOM")
 +				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
 +			}
++		}
++
++		// 4. this is needed for some edge cases
++		if(vKids[j].$ === __2_NODE && (childNodes[k].tagName || "").toLowerCase() !== vKids[j].__tag)
++		{
++			console.log("WARN 4: restoring DOM")
++			_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
 +		}
 +
  		if (low <= index && index <= nextLow)
@@ -69,7 +79,7 @@
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1393,9 +1429,29 @@
+@@ -1393,9 +1439,30 @@
  
  		case __3_REMOVE_LAST:
  			var data = patch.__data;
@@ -85,7 +95,8 @@
 +			}
 +			else
 +			{
-+				// there should have been some interruptions
++				// Something should have been broken
++				console.log("WARN 0: restoring DOM")
 +				var removed = 0;
 +				var index = domNode.childNodes.length - 1;
 +				while (removed < data.__diff)
@@ -101,3 +112,11 @@
  			}
  			return domNode;
  
+@@ -1510,6 +1577,7 @@
+ 
+ function _VirtualDom_virtualize(node)
+ {
++	node.created_by_elm = true;
+ 	// TEXT NODES
+ 
+ 	if (node.nodeType === 3)
