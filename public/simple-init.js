@@ -1,7 +1,7 @@
 const params = new URLSearchParams(location.search);
 const main = params.get("main") || "Element";
 const enableExtension = params.get("extension") !== "disabled";
-const tag = "p";
+const tag = "div";
 
 function debugBody(place) {
   if (false) {

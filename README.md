@@ -42,7 +42,7 @@ For each test case,
 - Elm will update Virtual DOM.
   See the [source](./src/Main.elm) to find where in the DOM is updated in each case.
 
-If you want manual testing, run `npm run test:simple-manual`.
+If you want manual testing, run `npm run test:manual`.
 (Note: You cannot test after an error is thrown. Reload to test another.)
 
 ### Run extension tests (manually with your Chrome)
