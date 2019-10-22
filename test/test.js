@@ -127,6 +127,7 @@ describe("Simple", function() {
           }
           before(async function() {
             await page.goto(`http://localhost:${port}/${html}?main=${main}`);
+            await page.waitFor(50);
           });
           beforeEach(async function() {
             const start = Date.now();
@@ -136,7 +137,6 @@ describe("Simple", function() {
                 `Reload slowing down most likely due to JS coverage.`
               );
             }
-            await page.waitFor(50);
             try {
               await page.waitForSelector("ul", { timeout: 1800 });
             } catch (e) {
