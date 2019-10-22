@@ -1555,9 +1555,13 @@ describe("Simple", function() {
           it("should not do extra operation when no extension exists", async function() {
             assert.deepEqual(warnings, []);
           });
-        } else {
+        } else if (version === "Patched") {
           it("should be correctly tested", async function() {
             assert(warnings.length > 0);
+          });
+        } else {
+          it("should be correctly tested", async function() {
+            assert.deepEqual(warnings, []);
           });
         }
       });
