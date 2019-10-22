@@ -4,6 +4,16 @@ const main = params.get("main") || "Element";
 const app = Elm.Simple[main].init({
   node: document.getElementById("root")
 });
+console.log("After init");
+for (let c of document.body.childNodes) {
+  console.log("  " + c.tagName, c.created_by_elm);
+}
+setTimeout(() => {
+  console.log("After init 2");
+  for (let c of document.body.childNodes) {
+    console.log("  " + c.tagName, c.created_by_elm);
+  }
+});
 app.ports.event.subscribe(s => {
   if (window.notifyEvent) {
     window.notifyEvent(s);
@@ -11,6 +21,11 @@ app.ports.event.subscribe(s => {
   app.ports.done.send("");
 });
 app.ports.insertIntoBody.subscribe(([id, top, bottom]) => {
+  console.log("Before insert");
+  for (let c of document.body.childNodes) {
+    console.log("  " + c.tagName, c.created_by_elm, c.nodeType);
+  }
+
   for (let i = 0; i < top; i++) {
     const node = `<div class="ext top">EXTENSION NODE</div>`;
     document.body.insertAdjacentHTML("afterbegin", node);
@@ -20,6 +35,11 @@ app.ports.insertIntoBody.subscribe(([id, top, bottom]) => {
     document.body.insertAdjacentHTML("beforeend", node);
   }
   app.ports.done.send(id);
+
+  console.log("After insert");
+  for (let c of document.body.childNodes) {
+    console.log("  " + c.tagName, c.created_by_elm);
+  }
 });
 app.ports.insertBeforeTarget.subscribe(id => {
   const target = document.querySelector(`#${id} .target`);
@@ -55,8 +75,16 @@ app.ports.updateAttribute.subscribe(id => {
   app.ports.done.send(id);
 });
 app.ports.removeInsertedNode.subscribe(id => {
+  console.log("Before remove");
+  for (let c of document.body.childNodes) {
+    console.log("  " + c.tagName, c.created_by_elm);
+  }
   for (let el of document.querySelectorAll(`.ext`)) {
     el.remove();
+  }
+  console.log("After remove");
+  for (let c of document.body.childNodes) {
+    console.log("  " + c.tagName, c.created_by_elm);
   }
   app.ports.done.send(id);
 });
