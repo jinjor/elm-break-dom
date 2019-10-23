@@ -22,5 +22,4 @@ This patch makes the [simple test](../test/test.js) all green (see the [result](
 
 ## TODO
 
-- update various attributes
 - confirm redraw does not occur many times
