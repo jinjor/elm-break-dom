@@ -1,6 +1,6 @@
 const params = new URLSearchParams(location.search);
 const main = params.get("main") || "Element";
-const enableExtension = params.get("extension") !== "disabled";
+let enableExtension = params.get("extension") !== "disabled";
 const tag = "div";
 
 function debugBody(place) {
@@ -74,10 +74,31 @@ app.ports.wrapTarget.subscribe(id => {
   }
   app.ports.done.send(id);
 });
-app.ports.updateAttribute.subscribe(id => {
+app.ports.updateAttribute.subscribe(([id, key]) => {
   if (enableExtension) {
-    const parent = document.querySelector(`#${id} .target`);
-    parent.setAttribute("title", ".ext"); // simulate Google Translate
+    const target = document.querySelector(`#${id} .target`);
+    target.setAttribute(key, ".ext"); // simulate Google Translate
+  }
+  app.ports.done.send(id);
+});
+app.ports.updateProperty.subscribe(([id, key]) => {
+  if (enableExtension) {
+    const target = document.querySelector(`#${id} .target`);
+    target[key] = ".ext";
+  }
+  app.ports.done.send(id);
+});
+app.ports.addClass.subscribe(id => {
+  if (enableExtension) {
+    const target = document.querySelector(`#${id} .target`);
+    target.classList.add("ext");
+  }
+  app.ports.done.send(id);
+});
+app.ports.updateStyle.subscribe(([id, key]) => {
+  if (enableExtension) {
+    const target = document.querySelector(`#${id} .target`);
+    target.style[key] = ".ext";
   }
   app.ports.done.send(id);
 });
@@ -88,4 +109,7 @@ app.ports.removeInsertedNode.subscribe(id => {
   }
   debugBody("After remove");
   app.ports.done.send(id);
+});
+app.ports.disableExtension.subscribe(id => {
+  enableExtension = false;
 });

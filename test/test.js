@@ -16,10 +16,6 @@ if (!["Original", "Patched", "Patched-without-extension"].includes(version)) {
 
 rimraf.sync("screenshots");
 fs.mkdirSync("screenshots");
-rimraf.sync(".nyc_output");
-fs.mkdirSync(".nyc_output");
-rimraf.sync("public/coverage");
-fs.mkdirSync("public/coverage");
 
 describe("Simple", function() {
   this.slow(2000);
@@ -50,7 +46,9 @@ describe("Simple", function() {
             warnings.push(v);
           }
           if (typeof v === "string") {
-            return !v.startsWith("Compiled in DEV mode");
+            return (
+              !v.startsWith("INFO") && !v.startsWith("Compiled in DEV mode")
+            );
           }
           return true;
         })
@@ -126,6 +124,10 @@ describe("Simple", function() {
       describe(main, function() {
         if (version === "Patched" && main === "Application") {
           before(async function() {
+            rimraf.sync(".nyc_output");
+            fs.mkdirSync(".nyc_output");
+            rimraf.sync("public/coverage");
+            fs.mkdirSync("public/coverage");
             console.log(chalk.cyan("[start coverage]"));
             await page.coverage.startJSCoverage({
               resetOnNavigation: false
@@ -621,29 +623,146 @@ describe("Simple", function() {
           it("...and update target and it's child 1", async function() {
             await page.click("#update-attribute1 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute1 .target[title=".ext"]`,
+              1
+            );
           });
           it("...and update target and it's child 2", async function() {
             await page.click("#update-attribute2 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute2 .target[title=".ext"]`,
+              1
+            );
           });
           it("...and update target's attribute", async function() {
             await page.click("#update-attribute3 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute3 .target[title=".ext"]`,
+              0
+            );
           });
           it("...and update target and it's child (use `attribute`)", async function() {
             await page.click("#update-attribute4 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute4 .target[title=".ext"]`,
+              1
+            );
           });
           it("...and update target's attribute (use `attribute`)", async function() {
             await page.click("#update-attribute5 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute5 .target[title=".ext"]`,
+              0
+            );
           });
           it("...and update target's attribute (add attribute)", async function() {
             await page.click("#update-attribute6 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute6 .target[title=".ext"]`,
+              0
+            );
           });
           it("...and update target's attribute (remove attribute)", async function() {
             await page.click("#update-attribute7 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute7 .target[title=".ext"]`,
+              0
+            );
+          });
+          it("...and update target and it's child (update class)", async function() {
+            await page.click("#update-attribute8 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertCount(page, `#update-attribute8 .e1`, 1);
+          });
+          it("...and update target and it's child (update data-xxx)", async function() {
+            await page.click("#update-attribute9 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertCount(page, `#update-attribute9 .e1`, 1);
+            await assertCount(
+              page,
+              `#update-attribute9 .target[data-xxx=".ext"]`,
+              1
+            );
+          });
+        });
+        describe("Update target property", function() {
+          it("...and update target and it's child 1", async function() {
+            await page.click("#update-property1 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target and it's child 2", async function() {
+            await page.click("#update-property2 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target's property", async function() {
+            await page.click("#update-property3 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target and it's child (use `property`)", async function() {
+            await page.click("#update-property4 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target's property (use `property`)", async function() {
+            await page.click("#update-property5 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target's property (add property)", async function() {
+            await page.click("#update-property6 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target's property (remove property)", async function() {
+            await page.click("#update-property7 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target and it's child (update class)", async function() {
+            await page.click("#update-property8 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertCount(page, `#update-property8 .e1`, 1);
+          });
+        });
+        describe("Add class", function() {
+          it("...and update target and it's child 1", async function() {
+            await page.click("#add-class1 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target and it's child 2", async function() {
+            await page.click("#add-class2 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+        });
+        describe("Update style", function() {
+          it("...and update class and it's child", async function() {
+            await page.click("#update-style1 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update another style and it's child", async function() {
+            await page.click("#update-style2 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and same style and it's child", async function() {
+            await page.click("#update-style3 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and add same style and it's child", async function() {
+            await page.click("#update-style4 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and remove same style and it's child", async function() {
+            await page.click("#update-style5 button.break");
             await waitForSuccessfulUpdate(page, 1);
           });
         });
@@ -1530,23 +1649,63 @@ describe("Simple", function() {
             });
           });
         }
+        describe("Performance and Compartibility", function() {
+          this.timeout(50 * 1000);
+          if (version === "Patched-without-extension") {
+            it("should not do extra operation when no extension exists", async function() {
+              assert.deepEqual(warnings, []);
+            });
+          } else if (version === "Patched") {
+            it("should be correctly tested", async function() {
+              assert(warnings.length > 0);
+            });
+            it("should not redraw too much", async function() {
+              const len1 = warnings.length;
+              const ids = await page.$$eval(".wrapper", items =>
+                items.map(i => i.id).filter(id => !id.startsWith("boundary"))
+              );
+              console.log("start breaking");
+              for (let id of ids) {
+                await page.click(`#${id} button.break`);
+              }
+              await page.click(`#disable-extension`);
+              await page.waitFor(400);
+              console.log("end breaking");
+              console.log("disabled extension");
+              const len2 = warnings.length;
+              console.log("start updating");
+              for (let id of ids) {
+                await page.click(`#${id} button.break`);
+              }
+              console.log("end updating");
+              await page.waitFor(400);
+              const len3 = warnings.length;
+              assert(len1 < len2);
+              assert.equal(len2, len3);
+
+              console.log("start removing .ext");
+              for (let id of ids) {
+                await page.click(`#${id} button.remove-inserted-node`);
+              }
+              console.log("end removing .ext");
+              const len4 = warnings.length;
+              await page.waitFor(400);
+              console.log("start updating");
+              for (let id of ids) {
+                await page.click(`#${id} button.break`);
+              }
+              console.log("end updating");
+              const len5 = warnings.length;
+              assert.equal(len4, len5);
+            });
+          } else {
+            it("should be correctly tested", async function() {
+              assert.deepEqual(warnings, []);
+            });
+          }
+        });
       });
     }
-    describe("Performance and Compartibility", function() {
-      if (version === "Patched-without-extension") {
-        it("should not do extra operation when no extension exists", async function() {
-          assert.deepEqual(warnings, []);
-        });
-      } else if (version === "Patched") {
-        it("should be correctly tested", async function() {
-          assert(warnings.length > 0);
-        });
-      } else {
-        it("should be correctly tested", async function() {
-          assert.deepEqual(warnings, []);
-        });
-      }
-    });
   });
 
   after(async function() {
