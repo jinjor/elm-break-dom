@@ -3,8 +3,8 @@ port module Simple.Common exposing (Model, Msg, init, noop, onUrlRequest, subscr
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
 import Dict exposing (Dict)
-import Html exposing (Html, a, button, div, li, node, span, text, ul)
-import Html.Attributes exposing (attribute, class, href, id, style, title)
+import Html exposing (Html, a, button, div, li, node, span, text, textarea, ul)
+import Html.Attributes exposing (attribute, class, href, id, style, title, value)
 import Html.Events exposing (custom, on, onClick, preventDefaultOn, stopPropagationOn)
 import Html.Keyed
 import Html.Lazy exposing (lazy)
@@ -300,6 +300,14 @@ viewInner model =
         , updateAttribute7 model
         , updateAttribute8 model
         , updateAttribute9 model
+        , updateProperty1 model
+        , updateProperty2 model
+        , updateProperty3 model
+        , updateProperty4 model
+        , updateProperty5 model
+        , updateProperty6 model
+        , updateProperty7 model
+        , updateProperty8 model
         , addClass1 model
         , addClass2 model
         , event1 model
@@ -1290,6 +1298,104 @@ updateAttribute9 model =
             , class ("e" ++ count "update-attribute9" model)
             ]
             [ text (count "update-attribute9" model) ]
+
+
+
+-- UPDATE property
+
+
+updateProperty1 : Model -> Html Msg
+updateProperty1 model =
+    wrap model (UpdateProperty "value") "update-property1" <|
+        textarea
+            [ class "target"
+            , class (beforeOrAfter "update-property1" model)
+            ]
+            [ text (beforeOrAfter "update-property1" model) ]
+
+
+updateProperty2 : Model -> Html Msg
+updateProperty2 model =
+    wrap model (UpdateProperty "value") "update-property2" <|
+        textarea
+            [ class "target"
+            , value "hello"
+            , class (beforeOrAfter "update-property2" model)
+            ]
+            [ text (beforeOrAfter "update-property2" model) ]
+
+
+updateProperty3 : Model -> Html Msg
+updateProperty3 model =
+    wrap model (UpdateProperty "value") "update-property3" <|
+        textarea
+            [ class "target"
+            , value (beforeOrAfter "update-property3" model)
+            , class (beforeOrAfter "update-property3" model)
+            ]
+            [ text (beforeOrAfter "update-property3" model) ]
+
+
+updateProperty4 : Model -> Html Msg
+updateProperty4 model =
+    wrap model (UpdateProperty "value") "update-property4" <|
+        textarea
+            [ class "target"
+            , attribute "value" "hello"
+            , class (beforeOrAfter "update-property4" model)
+            ]
+            [ text (beforeOrAfter "update-property4" model) ]
+
+
+updateProperty5 : Model -> Html Msg
+updateProperty5 model =
+    wrap model (UpdateProperty "value") "update-property5" <|
+        textarea
+            [ class "target"
+            , attribute "value" (beforeOrAfter "update-property5" model)
+            , class (beforeOrAfter "update-property5" model)
+            ]
+            [ text (beforeOrAfter "update-property5" model) ]
+
+
+updateProperty6 : Model -> Html Msg
+updateProperty6 model =
+    wrap model (UpdateProperty "value") "update-property6" <|
+        textarea
+            [ class "target"
+            , if beforeOrAfter "update-property6" model == "before" then
+                value "hello"
+
+              else
+                class ""
+            , class (beforeOrAfter "update-property6" model)
+            ]
+            [ text (beforeOrAfter "update-property6" model) ]
+
+
+updateProperty7 : Model -> Html Msg
+updateProperty7 model =
+    wrap model (UpdateProperty "value") "update-property7" <|
+        textarea
+            [ class "target"
+            , if beforeOrAfter "update-property7" model == "before" then
+                class ""
+
+              else
+                value "hello"
+            , class (beforeOrAfter "update-property7" model)
+            ]
+            [ text (beforeOrAfter "update-property7" model) ]
+
+
+updateProperty8 : Model -> Html Msg
+updateProperty8 model =
+    wrap model (UpdateProperty "className") "update-property8" <|
+        textarea
+            [ class "target"
+            , class ("e" ++ count "update-property8" model)
+            ]
+            [ text (count "update-property8" model) ]
 
 
 

@@ -697,6 +697,41 @@ describe("Simple", function() {
             );
           });
         });
+        describe.only("Update target property", function() {
+          it("...and update target and it's child 1", async function() {
+            await page.click("#update-property1 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target and it's child 2", async function() {
+            await page.click("#update-property2 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target's property", async function() {
+            await page.click("#update-property3 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target and it's child (use `property`)", async function() {
+            await page.click("#update-property4 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target's property (use `property`)", async function() {
+            await page.click("#update-property5 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target's property (add property)", async function() {
+            await page.click("#update-property6 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target's property (remove property)", async function() {
+            await page.click("#update-property7 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target and it's child (update class)", async function() {
+            await page.click("#update-property8 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertCount(page, `#update-property8 .e1`, 1);
+          });
+        });
         describe("Add class", function() {
           it("...and update target and it's child 1", async function() {
             await page.click("#add-class1 button.break");
