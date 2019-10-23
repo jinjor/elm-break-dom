@@ -417,7 +417,7 @@ viewInner model =
         , boundary11 model
         , boundary12 model
         , div []
-            [ button [ onClick DisableExtension ] [ text "disable extension" ]
+            [ button [ id "disable-extension", onClick DisableExtension ] [ text "disable extension" ]
             ]
         ]
 
@@ -431,6 +431,7 @@ wrap model toMsg id_ content =
     li
         [ id id_
         , class ("count-" ++ count id_ model)
+        , class "wrapper"
         , style "padding" "20px"
         ]
         [ content

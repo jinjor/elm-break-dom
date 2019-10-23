@@ -50,7 +50,9 @@ describe("Simple", function() {
             warnings.push(v);
           }
           if (typeof v === "string") {
-            return !v.startsWith("Compiled in DEV mode");
+            return (
+              !v.startsWith("INFO") && !v.startsWith("Compiled in DEV mode")
+            );
           }
           return true;
         })
@@ -697,7 +699,7 @@ describe("Simple", function() {
             );
           });
         });
-        describe.only("Update target property", function() {
+        describe("Update target property", function() {
           it("...and update target and it's child 1", async function() {
             await page.click("#update-property1 button.break");
             await waitForSuccessfulUpdate(page, 1);
@@ -1647,23 +1649,62 @@ describe("Simple", function() {
             });
           });
         }
+        describe("Performance and Compartibility", function() {
+          if (version === "Patched-without-extension") {
+            it("should not do extra operation when no extension exists", async function() {
+              assert.deepEqual(warnings, []);
+            });
+          } else if (version === "Patched") {
+            it("should be correctly tested", async function() {
+              assert(warnings.length > 0);
+            });
+            it("should not redraw too much", async function() {
+              const len1 = warnings.length;
+              const ids = await page.$$eval(".wrapper", items =>
+                items.map(i => i.id).filter(id => !id.startsWith("boundary"))
+              );
+              console.log("start breaking");
+              for (let id of ids) {
+                await page.click(`#${id} button.break`);
+              }
+              await page.click(`#disable-extension`);
+              await page.waitFor(400);
+              console.log("end breaking");
+              console.log("disabled extension");
+              const len2 = warnings.length;
+              console.log("start updating");
+              for (let id of ids) {
+                await page.click(`#${id} button.break`);
+              }
+              console.log("end updating");
+              await page.waitFor(400);
+              const len3 = warnings.length;
+              assert(len1 < len2);
+              assert.equal(len2, len3);
+
+              console.log("start removing .ext");
+              for (let id of ids) {
+                await page.click(`#${id} button.remove-inserted-node`);
+              }
+              console.log("end removing .ext");
+              const len4 = warnings.length;
+              await page.waitFor(400);
+              console.log("start updating");
+              for (let id of ids) {
+                await page.click(`#${id} button.break`);
+              }
+              console.log("end updating");
+              const len5 = warnings.length;
+              assert.equal(len4, len5);
+            });
+          } else {
+            it("should be correctly tested", async function() {
+              assert.deepEqual(warnings, []);
+            });
+          }
+        });
       });
     }
-    describe("Performance and Compartibility", function() {
-      if (version === "Patched-without-extension") {
-        it("should not do extra operation when no extension exists", async function() {
-          assert.deepEqual(warnings, []);
-        });
-      } else if (version === "Patched") {
-        it("should be correctly tested", async function() {
-          assert(warnings.length > 0);
-        });
-      } else {
-        it("should be correctly tested", async function() {
-          assert.deepEqual(warnings, []);
-        });
-      }
-    });
   });
 
   after(async function() {
