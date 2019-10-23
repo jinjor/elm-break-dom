@@ -310,6 +310,11 @@ viewInner model =
         , updateProperty8 model
         , addClass1 model
         , addClass2 model
+        , updateStyle1 model
+        , updateStyle2 model
+        , updateStyle3 model
+        , updateStyle4 model
+        , updateStyle5 model
         , event1 model
         , event2 model
         , event3 model
@@ -1423,6 +1428,68 @@ addClass2 model =
                 []
             )
             [ text (count "add-class2" model) ]
+
+
+
+-- UPDATE STYLE
+
+
+updateStyle1 : Model -> Html Msg
+updateStyle1 model =
+    wrap model (UpdateStyle "color") "update-style1" <|
+        div
+            [ class "target"
+            , class (count "update-style1" model)
+            ]
+            [ text (count "update-style1" model) ]
+
+
+updateStyle2 : Model -> Html Msg
+updateStyle2 model =
+    wrap model (UpdateStyle "color") "update-style2" <|
+        div
+            [ class "target"
+            , style "padding" (count "update-style2" model)
+            ]
+            [ text (count "update-style2" model) ]
+
+
+updateStyle3 : Model -> Html Msg
+updateStyle3 model =
+    wrap model (UpdateStyle "color") "update-style3" <|
+        div
+            [ class "target"
+            , style "color" (count "update-style3" model)
+            ]
+            [ text (count "update-style3" model) ]
+
+
+updateStyle4 : Model -> Html Msg
+updateStyle4 model =
+    wrap model (UpdateStyle "color") "update-style4" <|
+        div
+            [ class "target"
+            , if beforeOrAfter "update-style4" model == "before" then
+                class (count "update-style4" model)
+
+              else
+                style "color" (count "update-style4" model)
+            ]
+            [ text (count "update-style4" model) ]
+
+
+updateStyle5 : Model -> Html Msg
+updateStyle5 model =
+    wrap model (UpdateStyle "color") "update-style5" <|
+        div
+            [ class "target"
+            , if beforeOrAfter "update-style5" model == "before" then
+                style "color" (count "update-style5" model)
+
+              else
+                class (count "update-style5" model)
+            ]
+            [ text (count "update-style5" model) ]
 
 
 

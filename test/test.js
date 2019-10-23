@@ -742,6 +742,28 @@ describe("Simple", function() {
             await waitForSuccessfulUpdate(page, 1);
           });
         });
+        describe("Update style", function() {
+          it("...and update class and it's child", async function() {
+            await page.click("#update-style1 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update another style and it's child", async function() {
+            await page.click("#update-style2 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and same style and it's child", async function() {
+            await page.click("#update-style3 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and add same style and it's child", async function() {
+            await page.click("#update-style4 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and remove same style and it's child", async function() {
+            await page.click("#update-style5 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+        });
         describe("Events", function() {
           it("insert before target, update target's child, event from target", async function() {
             await page.click("#event1 button.break");
