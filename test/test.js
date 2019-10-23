@@ -1650,6 +1650,7 @@ describe("Simple", function() {
           });
         }
         describe("Performance and Compartibility", function() {
+          this.timeout(50 * 1000);
           if (version === "Patched-without-extension") {
             it("should not do extra operation when no extension exists", async function() {
               assert.deepEqual(warnings, []);
