@@ -30,10 +30,22 @@ port removeTarget : String -> Cmd msg
 port wrapTarget : String -> Cmd msg
 
 
-port updateAttribute : String -> Cmd msg
+port updateAttribute : ( String, String ) -> Cmd msg
+
+
+port updateProperty : ( String, String ) -> Cmd msg
+
+
+port addClass : String -> Cmd msg
+
+
+port updateStyle : ( String, String ) -> Cmd msg
 
 
 port removeInsertedNode : String -> Cmd msg
+
+
+port disableExtension : () -> Cmd msg
 
 
 port done : (String -> msg) -> Sub msg
@@ -48,10 +60,14 @@ type Msg
     | AppendToTarget String
     | RemoveTarget String
     | WrapTarget String
-    | UpdateAttribute String
+    | UpdateAttribute String String
+    | UpdateProperty String String
+    | AddClass String
+    | UpdateStyle String String
     | RemoveInsertedNode String
     | Done String
     | Nest Msg
+    | DisableExtension
 
 
 onUrlRequest : UrlRequest -> Msg
@@ -99,7 +115,16 @@ update msg model =
                             update (WrapTarget id) model
 
                         "" :: "UpdateAttribute" :: id :: [] ->
-                            update (UpdateAttribute id) model
+                            update (UpdateAttribute "title" id) model
+
+                        "" :: "UpdateProperty" :: id :: [] ->
+                            update (UpdateAttribute "value" id) model
+
+                        "" :: "AddClass" :: id :: [] ->
+                            update (AddClass id) model
+
+                        "" :: "UpdateStyle" :: id :: [] ->
+                            update (UpdateStyle "color" id) model
 
                         "" :: "RemoveInsertedNode" :: id :: [] ->
                             update (RemoveInsertedNode id) model
@@ -128,8 +153,17 @@ update msg model =
         WrapTarget id ->
             ( model, wrapTarget id )
 
-        UpdateAttribute id ->
-            ( model, updateAttribute id )
+        UpdateAttribute key id ->
+            ( model, updateAttribute ( id, key ) )
+
+        UpdateProperty key id ->
+            ( model, updateProperty ( id, key ) )
+
+        AddClass id ->
+            ( model, addClass id )
+
+        UpdateStyle key id ->
+            ( model, updateStyle ( id, key ) )
 
         RemoveInsertedNode id ->
             ( model, removeInsertedNode id )
@@ -150,6 +184,9 @@ update msg model =
 
         Nest msg_ ->
             update msg_ model
+
+        DisableExtension ->
+            ( model, disableExtension () )
 
 
 subscriptions : Model -> Sub Msg
@@ -261,6 +298,10 @@ viewInner model =
         , updateAttribute5 model
         , updateAttribute6 model
         , updateAttribute7 model
+        , updateAttribute8 model
+        , updateAttribute9 model
+        , addClass1 model
+        , addClass2 model
         , event1 model
         , event2 model
         , event3 model
@@ -362,6 +403,9 @@ viewInner model =
         , boundary10 model
         , boundary11 model
         , boundary12 model
+        , div []
+            [ button [ onClick DisableExtension ] [ text "disable extension" ]
+            ]
         ]
 
 
@@ -1141,12 +1185,12 @@ wrap17 model =
 
 
 
--- REPLACE title of ".target" WITH "break"
+-- REPLACE title of ".target" WITH ".ext"
 
 
 updateAttribute1 : Model -> Html Msg
 updateAttribute1 model =
-    wrap model UpdateAttribute "update-attribute1" <|
+    wrap model (UpdateAttribute "title") "update-attribute1" <|
         div
             [ class "target"
             , class (beforeOrAfter "update-attribute1" model)
@@ -1156,7 +1200,7 @@ updateAttribute1 model =
 
 updateAttribute2 : Model -> Html Msg
 updateAttribute2 model =
-    wrap model UpdateAttribute "update-attribute2" <|
+    wrap model (UpdateAttribute "title") "update-attribute2" <|
         div
             [ class "target"
             , title "hello"
@@ -1167,7 +1211,7 @@ updateAttribute2 model =
 
 updateAttribute3 : Model -> Html Msg
 updateAttribute3 model =
-    wrap model UpdateAttribute "update-attribute3" <|
+    wrap model (UpdateAttribute "title") "update-attribute3" <|
         div
             [ class "target"
             , title (beforeOrAfter "update-attribute3" model)
@@ -1178,7 +1222,7 @@ updateAttribute3 model =
 
 updateAttribute4 : Model -> Html Msg
 updateAttribute4 model =
-    wrap model UpdateAttribute "update-attribute4" <|
+    wrap model (UpdateAttribute "title") "update-attribute4" <|
         div
             [ class "target"
             , attribute "title" "hello"
@@ -1189,7 +1233,7 @@ updateAttribute4 model =
 
 updateAttribute5 : Model -> Html Msg
 updateAttribute5 model =
-    wrap model UpdateAttribute "update-attribute5" <|
+    wrap model (UpdateAttribute "title") "update-attribute5" <|
         div
             [ class "target"
             , attribute "title" (beforeOrAfter "update-attribute5" model)
@@ -1200,7 +1244,7 @@ updateAttribute5 model =
 
 updateAttribute6 : Model -> Html Msg
 updateAttribute6 model =
-    wrap model UpdateAttribute "update-attribute6" <|
+    wrap model (UpdateAttribute "title") "update-attribute6" <|
         div
             [ class "target"
             , if beforeOrAfter "update-attribute6" model == "before" then
@@ -1215,7 +1259,7 @@ updateAttribute6 model =
 
 updateAttribute7 : Model -> Html Msg
 updateAttribute7 model =
-    wrap model UpdateAttribute "update-attribute7" <|
+    wrap model (UpdateAttribute "title") "update-attribute7" <|
         div
             [ class "target"
             , if beforeOrAfter "update-attribute7" model == "before" then
@@ -1226,6 +1270,53 @@ updateAttribute7 model =
             , class (beforeOrAfter "update-attribute7" model)
             ]
             [ text (beforeOrAfter "update-attribute7" model) ]
+
+
+updateAttribute8 : Model -> Html Msg
+updateAttribute8 model =
+    wrap model (UpdateAttribute "class") "update-attribute8" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "update-attribute8" model)
+            ]
+            [ text (count "update-attribute8" model) ]
+
+
+updateAttribute9 : Model -> Html Msg
+updateAttribute9 model =
+    wrap model (UpdateAttribute "data-xxx") "update-attribute9" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "update-attribute9" model)
+            ]
+            [ text (count "update-attribute9" model) ]
+
+
+
+-- ADD class "ext"
+
+
+addClass1 : Model -> Html Msg
+addClass1 model =
+    wrap model AddClass "add-class1" <|
+        div
+            [ class "target"
+            , class (count "add-class1" model)
+            ]
+            [ text (count "add-class1" model) ]
+
+
+addClass2 : Model -> Html Msg
+addClass2 model =
+    wrap model AddClass "add-class2" <|
+        div
+            (if beforeOrAfter "add-class2" model == "before" then
+                [ class "target" ]
+
+             else
+                []
+            )
+            [ text (count "add-class2" model) ]
 
 
 
@@ -1817,7 +1908,7 @@ keyed5 model =
 
 keyed6 : Model -> Html Msg
 keyed6 model =
-    wrap model UpdateAttribute "keyed6" <|
+    wrap model (UpdateAttribute "title") "keyed6" <|
         Html.Keyed.node "div"
             []
             [ ( "1"
@@ -1832,7 +1923,7 @@ keyed6 model =
 
 keyed7 : Model -> Html Msg
 keyed7 model =
-    wrap model UpdateAttribute "keyed7" <|
+    wrap model (UpdateAttribute "title") "keyed7" <|
         Html.Keyed.node "div"
             [ class ("e" ++ count "keyed7" model) ]
             [ ( "1"
@@ -1846,7 +1937,7 @@ keyed7 model =
 
 keyed8 : Model -> Html Msg
 keyed8 model =
-    wrap model UpdateAttribute "keyed8" <|
+    wrap model (UpdateAttribute "title") "keyed8" <|
         Html.Keyed.node "div"
             [ class ("e" ++ count "keyed8" model) ]
             [ ( count "keyed8" model
@@ -1860,7 +1951,7 @@ keyed8 model =
 
 keyed9 : Model -> Html Msg
 keyed9 model =
-    wrap model UpdateAttribute "keyed9" <|
+    wrap model (UpdateAttribute "title") "keyed9" <|
         Html.Keyed.node "div"
             []
             (if beforeOrAfter "keyed9" model == "before" then
@@ -1879,7 +1970,7 @@ keyed9 model =
 
 keyed10 : Model -> Html Msg
 keyed10 model =
-    wrap model UpdateAttribute "keyed10" <|
+    wrap model (UpdateAttribute "title") "keyed10" <|
         Html.Keyed.node "div"
             []
             (if beforeOrAfter "keyed10" model == "before" then
@@ -1918,7 +2009,7 @@ keyed10 model =
 
 keyed11 : Model -> Html Msg
 keyed11 model =
-    wrap model UpdateAttribute "keyed11" <|
+    wrap model (UpdateAttribute "title") "keyed11" <|
         Html.Keyed.node "div"
             []
             (if beforeOrAfter "keyed11" model == "before" then

@@ -621,29 +621,89 @@ describe("Simple", function() {
           it("...and update target and it's child 1", async function() {
             await page.click("#update-attribute1 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute1 .target[title=".ext"]`,
+              1
+            );
           });
           it("...and update target and it's child 2", async function() {
             await page.click("#update-attribute2 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute2 .target[title=".ext"]`,
+              1
+            );
           });
           it("...and update target's attribute", async function() {
             await page.click("#update-attribute3 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute3 .target[title=".ext"]`,
+              0
+            );
           });
           it("...and update target and it's child (use `attribute`)", async function() {
             await page.click("#update-attribute4 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute4 .target[title=".ext"]`,
+              1
+            );
           });
           it("...and update target's attribute (use `attribute`)", async function() {
             await page.click("#update-attribute5 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute5 .target[title=".ext"]`,
+              0
+            );
           });
           it("...and update target's attribute (add attribute)", async function() {
             await page.click("#update-attribute6 button.break");
             await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute6 .target[title=".ext"]`,
+              0
+            );
           });
           it("...and update target's attribute (remove attribute)", async function() {
             await page.click("#update-attribute7 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertCount(
+              page,
+              `#update-attribute7 .target[title=".ext"]`,
+              0
+            );
+          });
+          it("...and update target and it's child (update class)", async function() {
+            await page.click("#update-attribute8 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertCount(page, `#update-attribute8 .e1`, 1);
+          });
+          it("...and update target and it's child (update data-xxx)", async function() {
+            await page.click("#update-attribute9 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertCount(page, `#update-attribute9 .e1`, 1);
+            await assertCount(
+              page,
+              `#update-attribute9 .target[data-xxx=".ext"]`,
+              1
+            );
+          });
+        });
+        describe("Add class", function() {
+          it("...and update target and it's child 1", async function() {
+            await page.click("#add-class1 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("...and update target and it's child 2", async function() {
+            await page.click("#add-class2 button.break");
             await waitForSuccessfulUpdate(page, 1);
           });
         });
