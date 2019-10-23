@@ -16,10 +16,6 @@ if (!["Original", "Patched", "Patched-without-extension"].includes(version)) {
 
 rimraf.sync("screenshots");
 fs.mkdirSync("screenshots");
-rimraf.sync(".nyc_output");
-fs.mkdirSync(".nyc_output");
-rimraf.sync("public/coverage");
-fs.mkdirSync("public/coverage");
 
 describe("Simple", function() {
   this.slow(2000);
@@ -128,6 +124,10 @@ describe("Simple", function() {
       describe(main, function() {
         if (version === "Patched" && main === "Application") {
           before(async function() {
+            rimraf.sync(".nyc_output");
+            fs.mkdirSync(".nyc_output");
+            rimraf.sync("public/coverage");
+            fs.mkdirSync("public/coverage");
             console.log(chalk.cyan("[start coverage]"));
             await page.coverage.startJSCoverage({
               resetOnNavigation: false
