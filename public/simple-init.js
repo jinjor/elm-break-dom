@@ -69,7 +69,7 @@ app.ports.wrapTarget.subscribe(id => {
     const target = document.querySelector(`#${id} .target`);
     const parent = target.parentElement;
     const wrapper = document.createElement("font"); // simulate Google Translate
-    parent.appendChild(wrapper);
+    parent.insertBefore(wrapper, target);
     wrapper.appendChild(target);
   }
   app.ports.done.send(id);
