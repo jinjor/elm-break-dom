@@ -3,7 +3,7 @@ port module Simple.Common exposing (Model, Msg, init, noop, onUrlRequest, subscr
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
 import Dict exposing (Dict)
-import Html exposing (Html, a, button, div, li, node, span, text, textarea, ul)
+import Html exposing (Html, a, button, div, li, node, p, span, text, textarea, ul)
 import Html.Attributes exposing (attribute, class, href, id, style, title, value)
 import Html.Events exposing (custom, on, onClick, preventDefaultOn, stopPropagationOn)
 import Html.Keyed
@@ -45,6 +45,12 @@ port updateStyle : ( String, String ) -> Cmd msg
 port removeInsertedNode : String -> Cmd msg
 
 
+port insertBeforeAndWrapTarget : String -> Cmd msg
+
+
+port swap : ( String, Int, Int ) -> Cmd msg
+
+
 port disableExtension : () -> Cmd msg
 
 
@@ -65,6 +71,8 @@ type Msg
     | AddClass String
     | UpdateStyle String String
     | RemoveInsertedNode String
+    | InsertWrap String
+    | Swap Int Int String
     | Done String
     | Nest Msg
     | DisableExtension
@@ -167,6 +175,12 @@ update msg model =
 
         RemoveInsertedNode id ->
             ( model, removeInsertedNode id )
+
+        InsertWrap id ->
+            ( model, insertBeforeAndWrapTarget id )
+
+        Swap index1 index2 id ->
+            ( model, swap ( id, index1, index2 ) )
 
         Done id ->
             ( Dict.update id
@@ -416,6 +430,44 @@ viewInner model =
         , boundary10 model
         , boundary11 model
         , boundary12 model
+        , insertWrap1 model
+        , insertWrap2 model
+        , insertWrap3 model
+        , insertWrap4 model
+        , insertWrap5 model
+        , insertWrap6 model
+        , insertWrap7 model
+        , insertWrap8 model
+        , insertWrap9 model
+        , insertWrap10 model
+        , insertWrap11 model
+        , swap1 model
+        , swap2 model
+        , swap3 model
+        , swap4 model
+        , swap5 model
+        , swap6 model
+        , swap7 model
+        , swap8 model
+        , swap9 model
+        , swap10 model
+        , swap11 model
+        , swap12 model
+        , swap13 model
+        , swap14 model
+        , swap15 model
+        , swap16 model
+        , swap17 model
+        , swap18 model
+        , swap19 model
+        , swap20 model
+        , swap21 model
+        , swap22 model
+        , swap23 model
+        , swap24 model
+        , swap25 model
+        , swap26 model
+        , swap27 model
         , div []
             [ button [ id "disable-extension", onClick DisableExtension ] [ text "disable extension" ]
             ]
@@ -3008,3 +3060,586 @@ boundary12 : Model -> Html Msg
 boundary12 model =
     wrap model (InsertIntoBody 0 1) "boundary12" <|
         text (count "boundary12" model)
+
+
+
+-- INSERT WRAP
+
+
+insertWrap1 : Model -> Html Msg
+insertWrap1 model =
+    wrap model InsertWrap "insert-wrap1" <|
+        div []
+            [ div
+                [ class "target"
+                , class ("e" ++ count "insert-wrap1" model)
+                ]
+                [ text (count "insert-wrap1" model) ]
+            ]
+
+
+insertWrap2 : Model -> Html Msg
+insertWrap2 model =
+    wrap model InsertWrap "insert-wrap2" <|
+        div []
+            [ text (count "insert-wrap2" model)
+            , div
+                [ class "target"
+                , class ("e" ++ count "insert-wrap2" model)
+                ]
+                [ text (count "insert-wrap2" model) ]
+            ]
+
+
+insertWrap3 : Model -> Html Msg
+insertWrap3 model =
+    wrap model InsertWrap "insert-wrap3" <|
+        div []
+            [ div [ class ("e" ++ count "insert-wrap3" model) ] [ text (count "insert-wrap3" model) ]
+            , div
+                [ class "target"
+                , class ("e" ++ count "insert-wrap3" model)
+                ]
+                [ text (count "insert-wrap3" model) ]
+            ]
+
+
+insertWrap4 : Model -> Html Msg
+insertWrap4 model =
+    wrap model InsertWrap "insert-wrap4" <|
+        div []
+            [ p [ class ("e" ++ count "insert-wrap4" model) ] [ text (count "insert-wrap4" model) ]
+            , div
+                [ class "target"
+                , class ("e" ++ count "insert-wrap4" model)
+                ]
+                [ text (count "insert-wrap4" model) ]
+            ]
+
+
+insertWrap5 : Model -> Html Msg
+insertWrap5 model =
+    wrap model InsertWrap "insert-wrap4" <|
+        div []
+            (if beforeOrAfter "insert-wrap4" model == "before" then
+                [ div
+                    [ class "target"
+                    , class ("e" ++ count "insert-wrap4" model)
+                    ]
+                    []
+                ]
+
+             else
+                []
+            )
+
+
+insertWrap6 : Model -> Html Msg
+insertWrap6 model =
+    wrap model InsertWrap "insert-wrap6" <|
+        div []
+            (if beforeOrAfter "insert-wrap6" model == "before" then
+                [ div
+                    [ class "target"
+                    , class ("e" ++ count "insert-wrap6" model)
+                    ]
+                    []
+                ]
+
+             else
+                [ text "a" ]
+            )
+
+
+insertWrap7 : Model -> Html Msg
+insertWrap7 model =
+    wrap model InsertWrap "insert-wrap7" <|
+        div []
+            (if beforeOrAfter "insert-wrap7" model == "before" then
+                [ div
+                    [ class "target"
+                    , class ("e" ++ count "insert-wrap7" model)
+                    ]
+                    []
+                ]
+
+             else
+                [ div [] [ text "a" ] ]
+            )
+
+
+insertWrap8 : Model -> Html Msg
+insertWrap8 model =
+    wrap model InsertWrap "insert-wrap8" <|
+        div []
+            (if beforeOrAfter "insert-wrap8" model == "before" then
+                [ div
+                    [ class "target"
+                    , class ("e" ++ count "insert-wrap8" model)
+                    ]
+                    []
+                ]
+
+             else
+                [ p [] [ text "a" ] ]
+            )
+
+
+insertWrap9 : Model -> Html Msg
+insertWrap9 model =
+    wrap model InsertWrap "insert-wrap9" <|
+        div []
+            (if beforeOrAfter "insert-wrap9" model == "before" then
+                [ div
+                    [ class "target"
+                    , class ("e" ++ count "insert-wrap9" model)
+                    ]
+                    []
+                ]
+
+             else
+                [ text "a", text "a" ]
+            )
+
+
+insertWrap10 : Model -> Html Msg
+insertWrap10 model =
+    wrap model InsertWrap "insert-wrap10" <|
+        div []
+            (if beforeOrAfter "insert-wrap10" model == "before" then
+                [ div
+                    [ class "target"
+                    , class ("e" ++ count "insert-wrap10" model)
+                    ]
+                    []
+                ]
+
+             else
+                [ div [] [ text "a" ], div [] [ text "a" ] ]
+            )
+
+
+insertWrap11 : Model -> Html Msg
+insertWrap11 model =
+    wrap model InsertWrap "insert-wrap11" <|
+        div []
+            (if beforeOrAfter "insert-wrap11" model == "before" then
+                [ div
+                    [ class "target"
+                    , class ("e" ++ count "insert-wrap11" model)
+                    ]
+                    []
+                ]
+
+             else
+                [ p [] [ text "a" ], p [] [ text "a" ] ]
+            )
+
+
+
+-- SWAP
+
+
+swap1 : Model -> Html Msg
+swap1 model =
+    wrap model (Swap 0 1) "swap1" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap1" model)
+            ]
+            [ text "a"
+            , text (count "swap1" model)
+            ]
+
+
+swap2 : Model -> Html Msg
+swap2 model =
+    wrap model (Swap 0 1) "swap2" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap2" model)
+            ]
+            [ text (count "swap2" model)
+            , text "a"
+            ]
+
+
+swap3 : Model -> Html Msg
+swap3 model =
+    wrap model (Swap 0 1) "swap3" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap3" model)
+            ]
+            [ text (count "swap3" model)
+            , div [ class ("e" ++ count "swap3" model) ] [ text (count "swap3" model) ]
+            ]
+
+
+swap4 : Model -> Html Msg
+swap4 model =
+    wrap model (Swap 0 1) "swap4" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap4" model)
+            ]
+            [ div [ class ("e" ++ count "swap4" model) ] [ text (count "swap4" model) ]
+            , text (count "swap4" model)
+            ]
+
+
+swap5 : Model -> Html Msg
+swap5 model =
+    wrap model (Swap 0 1) "swap5" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap5" model)
+            ]
+            [ div [ class ("e" ++ count "swap5" model) ] [ text (count "swap5" model) ]
+            , span [ class ("e" ++ count "swap5" model) ] [ text (count "swap5" model) ]
+            ]
+
+
+swap6 : Model -> Html Msg
+swap6 model =
+    wrap model (Swap 0 1) "swap6" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap6" model)
+            ]
+            (if beforeOrAfter "swap6" model == "before" then
+                [ text (count "swap6" model)
+                , text (count "swap6" model)
+                ]
+
+             else
+                []
+            )
+
+
+swap7 : Model -> Html Msg
+swap7 model =
+    wrap model (Swap 0 1) "swap7" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap7" model)
+            ]
+            (if beforeOrAfter "swap7" model == "before" then
+                [ div [] [ text (count "swap7" model) ]
+                , div [] [ text (count "swap7" model) ]
+                ]
+
+             else
+                []
+            )
+
+
+swap8 : Model -> Html Msg
+swap8 model =
+    wrap model (Swap 0 1) "swap8" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap8" model)
+            ]
+            (if beforeOrAfter "swap8" model == "before" then
+                [ div [ class ("e" ++ count "swap8" model) ] [ text (count "swap8" model) ]
+                , text (count "swap8" model)
+                ]
+
+             else
+                [ text (count "swap8" model)
+                , div [ class ("e" ++ count "swap8" model) ] [ text (count "swap8" model) ]
+                ]
+            )
+
+
+swap9 : Model -> Html Msg
+swap9 model =
+    wrap model (Swap 0 1) "swap9" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap9" model)
+            ]
+            (if beforeOrAfter "swap9" model == "before" then
+                [ text (count "swap9" model)
+                , div [ class ("e" ++ count "swap9" model) ] [ text (count "swap9" model) ]
+                ]
+
+             else
+                [ div [ class ("e" ++ count "swap9" model) ] [ text (count "swap9" model) ]
+                , text (count "swap9" model)
+                ]
+            )
+
+
+swap10 : Model -> Html Msg
+swap10 model =
+    wrap model (Swap 0 1) "swap10" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap10" model)
+            ]
+            (if beforeOrAfter "swap10" model == "before" then
+                [ span [ class ("e" ++ count "swap10" model) ] [ text (count "swap10" model) ]
+                , div [ class ("e" ++ count "swap10" model) ] [ text (count "swap10" model) ]
+                ]
+
+             else
+                [ div [ class ("e" ++ count "swap10" model) ] [ text (count "swap10" model) ]
+                , span [ class ("e" ++ count "swap10" model) ] [ text (count "swap10" model) ]
+                ]
+            )
+
+
+swap11 : Model -> Html Msg
+swap11 model =
+    wrap model (Swap 0 1) "swap11" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap11" model)
+            ]
+            (if beforeOrAfter "swap11" model == "before" then
+                [ div [ class ("e" ++ count "swap11" model) ] [ text (count "swap11" model) ]
+                , div [ style "color" ("e" ++ count "swap11" model) ] [ text (count "swap11" model) ]
+                ]
+
+             else
+                [ div [ style "color" ("e" ++ count "swap11" model) ] [ text (count "swap11" model) ]
+                , div [ class ("e" ++ count "swap11" model) ] [ text (count "swap11" model) ]
+                ]
+            )
+
+
+swap12 : Model -> Html Msg
+swap12 model =
+    wrap model (Swap 0 1) "swap12" <|
+        div
+            [ class "target"
+            , class ("e" ++ count "swap12" model)
+            ]
+            (if beforeOrAfter "swap12" model == "before" then
+                [ div [ style "color" ("e" ++ count "swap12" model) ] [ text (count "swap12" model) ]
+                , div [ class ("e" ++ count "swap12" model) ] [ text (count "swap12" model) ]
+                ]
+
+             else
+                [ div [ class ("e" ++ count "swap12" model) ] [ text (count "swap12" model) ]
+                , div [ style "color" ("e" ++ count "swap12" model) ] [ text (count "swap12" model) ]
+                ]
+            )
+
+
+swap13 : Model -> Html Msg
+swap13 model =
+    wrap model (Swap 0 1) "swap13" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap13" model)
+            ]
+            [ ( "1", text "1" )
+            , ( "2", text (count "swap13" model) )
+            ]
+
+
+swap14 : Model -> Html Msg
+swap14 model =
+    wrap model (Swap 0 1) "swap14" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap14" model)
+            ]
+            [ ( "1", text (count "swap14" model) )
+            , ( "2", text "1" )
+            ]
+
+
+swap15 : Model -> Html Msg
+swap15 model =
+    wrap model (Swap 0 1) "swap15" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap15" model)
+            ]
+            [ ( "1", div [ class ("e" ++ count "swap15" model) ] [ text (count "swap15" model) ] )
+            , ( "2", text (count "swap15" model) )
+            ]
+
+
+swap16 : Model -> Html Msg
+swap16 model =
+    wrap model (Swap 0 1) "swap16" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap16" model)
+            ]
+            [ ( "1", text (count "swap16" model) )
+            , ( "2", div [ class ("e" ++ count "swap16" model) ] [ text (count "swap16" model) ] )
+            ]
+
+
+swap17 : Model -> Html Msg
+swap17 model =
+    wrap model (Swap 0 1) "swap17" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap17" model)
+            ]
+            [ ( "1", div [ class ("e" ++ count "swap17" model) ] [ text (count "swap17" model) ] )
+            , ( "2", text (count "swap17" model) )
+            ]
+
+
+swap18 : Model -> Html Msg
+swap18 model =
+    wrap model (Swap 0 1) "swap18" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap18" model)
+            ]
+            [ ( "1", span [ class ("e" ++ count "swap18" model) ] [ text (count "swap18" model) ] )
+            , ( "2", div [ class ("e" ++ count "swap18" model) ] [ text (count "swap18" model) ] )
+            ]
+
+
+swap19 : Model -> Html Msg
+swap19 model =
+    wrap model (Swap 0 1) "swap19" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap19" model)
+            ]
+            [ ( "1", div [] [] )
+            , ( "2", div [ class ("e" ++ count "swap19" model) ] [ text (count "swap19" model) ] )
+            ]
+
+
+swap20 : Model -> Html Msg
+swap20 model =
+    wrap model (Swap 0 1) "swap20" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap20" model)
+            ]
+            [ ( count "swap20" model, text (count "swap20" model) )
+            , ( "a", text (count "swap20" model) )
+            ]
+
+
+swap21 : Model -> Html Msg
+swap21 model =
+    wrap model (Swap 0 1) "swap21" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap21" model)
+            ]
+            [ ( "a", text (count "swap21" model) )
+            , ( count "swap21" model, text (count "swap21" model) )
+            ]
+
+
+swap22 : Model -> Html Msg
+swap22 model =
+    wrap model (Swap 0 1) "swap22" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap22" model)
+            ]
+            [ ( count "swap22" model, div [ class ("e" ++ count "swap22" model) ] [ text (count "swap22" model) ] )
+            , ( "a", text (count "swap22" model) )
+            ]
+
+
+swap23 : Model -> Html Msg
+swap23 model =
+    wrap model (Swap 0 1) "swap23" <|
+        Html.Keyed.node "div"
+            [ class "target"
+            , class ("e" ++ count "swap23" model)
+            ]
+            [ ( "a", text (count "swap23" model) )
+            , ( count "swap23" model, div [ class ("e" ++ count "swap23" model) ] [ text (count "swap23" model) ] )
+            ]
+
+
+swap24 : Model -> Html Msg
+swap24 model =
+    wrap model (Swap 0 1) "swap24" <|
+        Html.map Nest <|
+            div
+                [ class "target"
+                , Html.Attributes.map Nest <|
+                    class ("e" ++ count "swap24" model)
+                ]
+                [ text (count "swap24" model)
+                , Html.map Nest <|
+                    div
+                        [ Html.Attributes.map Nest <|
+                            onClick (Event (count "swap24" model))
+                        , class ("e" ++ count "swap24" model)
+                        ]
+                        [ text (count "swap24" model) ]
+                ]
+
+
+swap25 : Model -> Html Msg
+swap25 model =
+    wrap model (Swap 0 1) "swap25" <|
+        Html.map Nest <|
+            div
+                [ class "target"
+                , Html.Attributes.map Nest <|
+                    class ("e" ++ count "swap25" model)
+                ]
+                [ Html.map Nest <|
+                    div
+                        [ Html.Attributes.map Nest <|
+                            onClick (Event (count "swap25" model))
+                        , class ("e" ++ count "swap25" model)
+                        ]
+                        [ text (count "swap25" model) ]
+                , text (count "swap25" model)
+                ]
+
+
+swap26 : Model -> Html Msg
+swap26 model =
+    wrap model (Swap 0 1) "swap26" <|
+        Html.map Nest <|
+            Html.Keyed.node "div"
+                [ class "target"
+                , Html.Attributes.map Nest <|
+                    class ("e" ++ count "swap26" model)
+                ]
+                [ ( "1", text (count "swap26" model) )
+                , ( "2"
+                  , Html.map Nest <|
+                        div
+                            [ Html.Attributes.map Nest <|
+                                onClick (Event (count "swap26" model))
+                            , class ("e" ++ count "swap26" model)
+                            ]
+                            [ text (count "swap26" model) ]
+                  )
+                ]
+
+
+swap27 : Model -> Html Msg
+swap27 model =
+    wrap model (Swap 0 1) "swap27" <|
+        Html.map Nest <|
+            Html.Keyed.node "div"
+                [ class "target"
+                , Html.Attributes.map Nest <|
+                    class ("e" ++ count "swap27" model)
+                ]
+                [ ( "1"
+                  , Html.map Nest <|
+                        div
+                            [ Html.Attributes.map Nest <|
+                                onClick (Event (count "swap27" model))
+                            , class ("e" ++ count "swap27" model)
+                            ]
+                            [ text (count "swap27" model) ]
+                  )
+                , ( "2", text (count "swap27" model) )
+                ]
