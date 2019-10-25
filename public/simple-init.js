@@ -110,6 +110,28 @@ app.ports.removeInsertedNode.subscribe(id => {
   debugBody("After remove");
   app.ports.done.send(id);
 });
+// TODO
+// app.ports.insertBeforeAndWrapTarget.subscribe(id => {
+//   if (enableExtension) {
+//     const target = document.querySelector(`#${id} .target`);
+//     const parent = target.parentElement;
+//     const el = document.createElement(tag);
+//     el.classList.add("ext");
+//     el.append("EXTENSION NODE");
+//     parent.insertBefore(el, target);
+
+//     const wrapper = document.createElement("font"); // simulate Google Translate
+//     parent.insertBefore(wrapper, target);
+//     wrapper.appendChild(target);
+//   }
+//   app.ports.done.send(id);
+// });
+// app.ports.swap.subscribe(id => {
+//   if (enableExtension) {
+//     //TODO
+//   }
+//   app.ports.done.send(id);
+// });
 app.ports.disableExtension.subscribe(id => {
   enableExtension = false;
 });
