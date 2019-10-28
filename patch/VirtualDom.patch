@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-28 20:13:02.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-28 20:28:04.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -19,13 +19,14 @@
  
  	if (_VirtualDom_divertHrefToApp && vNode.__tag == 'a')
  	{
-@@ -1281,6 +1284,15 @@
+@@ -1281,6 +1284,16 @@
  				}
  			}
  		}
 +		else if (patchType === __3_TEXT)
 +		{
 +			// if(domNode.nodeType !== 3) {
++			// 	console.log("WARN 5: redrawing DOM")
 +			// 	domNode = _VirtualDom_doc.createTextNode("");
 +			// 	domNode.created_by_elm = true;
 +			// }
@@ -35,14 +36,8 @@
  		else
  		{
  			patch.__domNode = domNode;
-@@ -1311,16 +1323,64 @@
+@@ -1313,14 +1326,57 @@
  
- 	// tag must be __2_NODE or __2_KEYED_NODE at this point
- 
-+	// if(tag === __2_NODE && domNode.nodeType !== 1) {
-+	// 	_VirtualDom_applyPatchRedraw(domNode, vNode, eventNode)
-+	// }
-+
  	var vKids = vNode.__kids;
  	var childNodes = domNode.childNodes;
 -	for (var j = 0; j < vKids.length; j++)
@@ -74,7 +69,6 @@
 +			else
 +			{
 +				console.log("WARN 2: redrawing DOM")
-+				// console.log("domNode.nodeType", domNode.nodeType);
 +				domNode.appendChild(_VirtualDom_render(vKids[j], eventNode));
 +			}
 +		}
@@ -102,7 +96,7 @@
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1393,6 +1453,26 @@
+@@ -1393,6 +1449,26 @@
  
  		case __3_REMOVE_LAST:
  			var data = patch.__data;
@@ -129,7 +123,7 @@
  			for (var i = 0; i < data.__diff; i++)
  			{
  				domNode.removeChild(domNode.childNodes[data.__length]);
-@@ -1510,6 +1590,7 @@
+@@ -1510,6 +1586,7 @@
  
  function _VirtualDom_virtualize(node)
  {

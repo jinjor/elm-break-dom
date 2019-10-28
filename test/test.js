@@ -1695,7 +1695,7 @@ describe("Simple", function() {
             await waitForSuccessfulUpdate(page, 1);
           });
         });
-        describe.skip("Swap", function() {
+        describe.only("Swap", function() {
           async function assertChildrenCount(selector, expectedCount) {
             const count = await page.$eval(
               `${selector} .target`,
@@ -1839,7 +1839,7 @@ describe("Simple", function() {
             await assertChildrenCount("#swap27", 2);
           });
         });
-        describe("Performance and Compartibility", function() {
+        describe.only("Performance and Compartibility", function() {
           this.timeout(50 * 1000);
           if (version === "Patched-without-extension") {
             it("should not do extra operation when no extension exists", async function() {
@@ -1854,10 +1854,8 @@ describe("Simple", function() {
               const ids = await page.$$eval(
                 ".wrapper",
                 items =>
-                  items
-                    .map(i => i.id)
-                    .filter(id => !id.startsWith("boundary"))
-                    .filter(id => !id.startsWith("swap")) // TODO
+                  items.map(i => i.id).filter(id => !id.startsWith("boundary"))
+                // .filter(id => !id.startsWith("swap")) // TODO
               );
               console.log("start breaking");
               for (let id of ids) {
