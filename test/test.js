@@ -1649,7 +1649,7 @@ describe("Simple", function() {
             });
           });
         }
-        describe.only("Insert and Wrap", function() {
+        describe("Insert and Wrap", function() {
           it("[target]", async function() {
             await page.click("#insert-wrap1 button.break");
             await waitForSuccessfulUpdate(page, 1);
@@ -1695,7 +1695,7 @@ describe("Simple", function() {
             await waitForSuccessfulUpdate(page, 1);
           });
         });
-        describe.only("Swap", function() {
+        describe.skip("Swap", function() {
           async function assertChildrenCount(selector, expectedCount) {
             const count = await page.$eval(
               `${selector} .target`,
@@ -1865,6 +1865,7 @@ describe("Simple", function() {
               const len2 = warnings.length;
               console.log("start updating");
               for (let id of ids) {
+                console.log(id);
                 await page.click(`#${id} button.break`);
               }
               console.log("end updating");
