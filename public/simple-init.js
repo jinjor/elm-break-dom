@@ -129,14 +129,9 @@ app.ports.swap.subscribe(([id, index1, index2]) => {
   if (enableExtension) {
     const target = document.querySelector(`#${id} .target`);
     const children = target.childNodes;
-    // console.log(children[index1].tagName, children[index2].tagName);
     const tmp = children[index1];
     target.insertBefore(children[index2], children[index1]);
     target.insertBefore(tmp, children[index2]);
-    // console.log(
-    //   target.childNodes[index1].tagName,
-    //   target.childNodes[index2].tagName
-    // );
   }
   app.ports.done.send(id);
 });
