@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-23 20:44:01.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-28 19:09:16.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -19,8 +19,30 @@
  
  	if (_VirtualDom_divertHrefToApp && vNode.__tag == 'a')
  	{
-@@ -1313,14 +1316,57 @@
+@@ -1281,6 +1284,15 @@
+ 				}
+ 			}
+ 		}
++		else if (patchType === __3_TEXT)
++		{
++			if(domNode.nodeType !== 3) {
++				domNode = _VirtualDom_doc.createTextNode("");
++				domNode.created_by_elm = true;
++			}
++			patch.__domNode = domNode;
++			patch.__eventNode = eventNode;
++		}
+ 		else
+ 		{
+ 			patch.__domNode = domNode;
+@@ -1311,16 +1323,63 @@
  
+ 	// tag must be __2_NODE or __2_KEYED_NODE at this point
+ 
++	if(tag === __2_NODE && domNode.nodeType !== 1) {
++		_VirtualDom_applyPatchRedraw(domNode, vNode, eventNode)
++	}
++
  	var vKids = vNode.__kids;
  	var childNodes = domNode.childNodes;
 -	for (var j = 0; j < vKids.length; j++)
@@ -34,7 +56,7 @@
 +		if(childNodes.length > vKids.length)
 +		{
 +			// skip them
-+			while(!childNodes[k].created_by_elm)
++			while(childNodes.length - k > vKids.length - j && !childNodes[k].created_by_elm)
 +			{
 +				console.log("INFO 1: skipping DOM")
 +				k++
@@ -47,12 +69,12 @@
 +			{
 +				// replace tha node using the old vdom
 +				console.log("WARN 1: redrawing DOM")
-+				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
++				_VirtualDom_applyPatchRedraw(childNodes[k], vKid, eventNode)
 +			}
 +			else
 +			{
 +				console.log("WARN 2: redrawing DOM")
-+				domNode.appendChild(_VirtualDom_render(vKids[j], eventNode));
++				domNode.appendChild(_VirtualDom_render(vKid, eventNode));
 +			}
 +		}
 +		// 3. if existing node has been replaced with unknown node
@@ -62,14 +84,14 @@
 +			{
 +				// replace tha node using the old vdom
 +				console.log("WARN 3: redrawing DOM")
-+				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
++				_VirtualDom_applyPatchRedraw(childNodes[k], vKid, eventNode)
 +			}
 +		}
 +		// 4. this is needed for some edge cases
-+		if(vKids[j].$ === __2_NODE && (childNodes[k].tagName || "").toLowerCase() !== vKids[j].__tag)
++		if(vKids[j].$ === __2_NODE && (childNodes[k].tagName || "").toLowerCase() !== vKid.__tag)
 +		{
 +			console.log("WARN 4: redrawing DOM")
-+			_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
++			_VirtualDom_applyPatchRedraw(childNodes[k], vKid, eventNode)
 +		}
 +
  		if (low <= index && index <= nextLow)
@@ -79,7 +101,7 @@
  			if (!(patch = patches[i]) || (index = patch.__index) > high)
  			{
  				return i;
-@@ -1393,6 +1439,26 @@
+@@ -1393,6 +1452,26 @@
  
  		case __3_REMOVE_LAST:
  			var data = patch.__data;
@@ -106,7 +128,7 @@
  			for (var i = 0; i < data.__diff; i++)
  			{
  				domNode.removeChild(domNode.childNodes[data.__length]);
-@@ -1510,6 +1576,7 @@
+@@ -1510,6 +1589,7 @@
  
  function _VirtualDom_virtualize(node)
  {
