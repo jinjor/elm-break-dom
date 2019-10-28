@@ -1851,8 +1851,13 @@ describe("Simple", function() {
             });
             it("should not redraw too much", async function() {
               const len1 = warnings.length;
-              const ids = await page.$$eval(".wrapper", items =>
-                items.map(i => i.id).filter(id => !id.startsWith("boundary"))
+              const ids = await page.$$eval(
+                ".wrapper",
+                items =>
+                  items
+                    .map(i => i.id)
+                    .filter(id => !id.startsWith("boundary"))
+                    .filter(id => !id.startsWith("swap")) // TODO
               );
               console.log("start breaking");
               for (let id of ids) {
@@ -1865,7 +1870,7 @@ describe("Simple", function() {
               const len2 = warnings.length;
               console.log("start updating");
               for (let id of ids) {
-                console.log(id);
+                // console.log(id);
                 await page.click(`#${id} button.break`);
               }
               console.log("end updating");

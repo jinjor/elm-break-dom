@@ -1,5 +1,5 @@
 --- Kernel/original_VirtualDom.js	2019-10-05 04:17:25.000000000 +0900
-+++ Kernel/VirtualDom.js	2019-10-28 19:38:07.000000000 +0900
++++ Kernel/VirtualDom.js	2019-10-28 20:13:02.000000000 +0900
 @@ -419,7 +419,9 @@
  
  	if (tag === __2_TEXT)
@@ -25,10 +25,10 @@
  		}
 +		else if (patchType === __3_TEXT)
 +		{
-+			if(domNode.nodeType !== 3) {
-+				domNode = _VirtualDom_doc.createTextNode("");
-+				domNode.created_by_elm = true;
-+			}
++			// if(domNode.nodeType !== 3) {
++			// 	domNode = _VirtualDom_doc.createTextNode("");
++			// 	domNode.created_by_elm = true;
++			// }
 +			patch.__domNode = domNode;
 +			patch.__eventNode = eventNode;
 +		}
@@ -69,13 +69,13 @@
 +			{
 +				// replace tha node using the old vdom
 +				console.log("WARN 1: redrawing DOM")
-+				_VirtualDom_applyPatchRedraw(childNodes[k], vKid, eventNode)
++				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
 +			}
 +			else
 +			{
 +				console.log("WARN 2: redrawing DOM")
-+				console.log("domNode.nodeType", domNode.nodeType);
-+				domNode.appendChild(_VirtualDom_render(vKid, eventNode));
++				// console.log("domNode.nodeType", domNode.nodeType);
++				domNode.appendChild(_VirtualDom_render(vKids[j], eventNode));
 +			}
 +		}
 +		// 3. if existing node has been replaced with unknown node
@@ -85,14 +85,14 @@
 +			{
 +				// replace tha node using the old vdom
 +				console.log("WARN 3: redrawing DOM")
-+				_VirtualDom_applyPatchRedraw(childNodes[k], vKid, eventNode)
++				_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
 +			}
 +		}
 +		// 4. this is needed for some edge cases
-+		if(vKids[j].$ === __2_NODE && (childNodes[k].tagName || "").toLowerCase() !== vKid.__tag)
++		if(vKids[j].$ === __2_NODE && (childNodes[k].tagName || "").toLowerCase() !== vKids[j].__tag)
 +		{
 +			console.log("WARN 4: redrawing DOM")
-+			_VirtualDom_applyPatchRedraw(childNodes[k], vKid, eventNode)
++			_VirtualDom_applyPatchRedraw(childNodes[k], vKids[j], eventNode)
 +		}
 +
  		if (low <= index && index <= nextLow)
