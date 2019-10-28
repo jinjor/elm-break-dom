@@ -69,7 +69,7 @@ app.ports.wrapTarget.subscribe(id => {
     const target = document.querySelector(`#${id} .target`);
     const parent = target.parentElement;
     const wrapper = document.createElement("font"); // simulate Google Translate
-    parent.appendChild(wrapper);
+    parent.insertBefore(wrapper, target);
     wrapper.appendChild(target);
   }
   app.ports.done.send(id);
@@ -108,6 +108,31 @@ app.ports.removeInsertedNode.subscribe(id => {
     el.remove();
   }
   debugBody("After remove");
+  app.ports.done.send(id);
+});
+app.ports.insertBeforeAndWrapTarget.subscribe(id => {
+  if (enableExtension) {
+    const target = document.querySelector(`#${id} .target`);
+    const parent = target.parentElement;
+    const el = document.createElement(tag);
+    el.classList.add("ext");
+    el.append("EXTENSION NODE");
+    parent.insertBefore(el, target);
+
+    const wrapper = document.createElement("font"); // simulate Google Translate
+    parent.insertBefore(wrapper, target);
+    wrapper.appendChild(target);
+  }
+  app.ports.done.send(id);
+});
+app.ports.swap.subscribe(([id, index1, index2]) => {
+  if (enableExtension) {
+    const target = document.querySelector(`#${id} .target`);
+    const children = target.childNodes;
+    const tmp = children[index1];
+    target.insertBefore(children[index2], children[index1]);
+    target.insertBefore(tmp, children[index2]);
+  }
   app.ports.done.send(id);
 });
 app.ports.disableExtension.subscribe(id => {

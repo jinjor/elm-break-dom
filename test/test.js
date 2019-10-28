@@ -1649,7 +1649,197 @@ describe("Simple", function() {
             });
           });
         }
-        describe("Performance and Compartibility", function() {
+        describe("Insert and Wrap", function() {
+          it("[target]", async function() {
+            await page.click("#insert-wrap1 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("[text, target]", async function() {
+            await page.click("#insert-wrap2 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("[div, target]", async function() {
+            await page.click("#insert-wrap3 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("[p, target]", async function() {
+            await page.click("#insert-wrap4 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("[target] -> []", async function() {
+            await page.click("#insert-wrap5 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("[target] -> [text]", async function() {
+            await page.click("#insert-wrap6 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("[target] -> [div]", async function() {
+            await page.click("#insert-wrap7 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("[target] -> [p]", async function() {
+            await page.click("#insert-wrap8 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("[target] -> [text, text]", async function() {
+            await page.click("#insert-wrap9 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("[target] -> [div, div]", async function() {
+            await page.click("#insert-wrap10 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+          it("[target] -> [p, p]", async function() {
+            await page.click("#insert-wrap11 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+          });
+        });
+        describe.only("Swap", function() {
+          async function assertChildrenCount(selector, expectedCount) {
+            const count = await page.$eval(
+              `${selector} .target`,
+              e => e.childNodes.length
+            );
+            assert.equal(count, expectedCount);
+          }
+          it("swap texts and update second", async function() {
+            await page.click("#swap1 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap1", 2);
+          });
+          it("swap texts and update first", async function() {
+            await page.click("#swap2 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap2", 2);
+          });
+          it("swap [text,div] and update", async function() {
+            await page.click("#swap3 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap3", 2);
+          });
+          it("swap [div,text] and update", async function() {
+            await page.click("#swap4 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap4", 2);
+          });
+          it("swap [text,span] and update", async function() {
+            await page.click("#swap5 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap5", 2);
+          });
+          it("swap [text,text] and remove both", async function() {
+            await page.click("#swap6 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap6", 0);
+          });
+          it("swap [div,div] and remove both", async function() {
+            await page.click("#swap7 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap7", 0);
+          });
+          it("swap [div,text] and swap them", async function() {
+            await page.click("#swap8 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap8", 2);
+          });
+          it("swap [text,div] and swap them", async function() {
+            await page.click("#swap9 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap9", 2);
+          });
+          it("swap [div,span] and swap them", async function() {
+            await page.click("#swap10 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap10", 2);
+          });
+          it("swap [div,div] and swap [style, class]", async function() {
+            await page.click("#swap11 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap11", 2);
+          });
+          it("swap [div,div] and swap [class, style]", async function() {
+            await page.click("#swap12 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap12", 2);
+          });
+          it("swap keyed texts and update second", async function() {
+            await page.click("#swap13 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap13", 2);
+          });
+          it("swap keyed texts and update first", async function() {
+            await page.click("#swap14 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap14", 2);
+          });
+          it("swap keyed [div, text] and update", async function() {
+            await page.click("#swap15 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap15", 2);
+          });
+          it("swap keyed [text, div] and update", async function() {
+            await page.click("#swap16 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap16", 2);
+          });
+          it("swap keyed [div, text] and update", async function() {
+            await page.click("#swap17 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap17", 2);
+          });
+          it("swap keyed [span, div] and update", async function() {
+            await page.click("#swap18 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap18", 2);
+          });
+          it("swap keyed [div(empty), div] and update", async function() {
+            await page.click("#swap19 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap19", 2);
+          });
+          it("swap keyed text and update first key", async function() {
+            await page.click("#swap20 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap20", 2);
+          });
+          it("swap keyed text and update second key", async function() {
+            await page.click("#swap21 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap21", 2);
+          });
+          it("swap keyed [div, text] and update first key", async function() {
+            await page.click("#swap22 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap22", 2);
+          });
+          it("swap keyed [text, div] and update second key", async function() {
+            await page.click("#swap23 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap23", 2);
+          });
+          it("swap mapped [text, div] and update", async function() {
+            await page.click("#swap24 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap24", 2);
+          });
+          it("swap mapped [div, text] and update", async function() {
+            await page.click("#swap25 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap25", 2);
+          });
+          it("swap keyed & mapped [text, div] and update", async function() {
+            await page.click("#swap26 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap26", 2);
+          });
+          it("swap keyed & mapped [div, text] and update", async function() {
+            await page.click("#swap27 button.break");
+            await waitForSuccessfulUpdate(page, 1);
+            await assertChildrenCount("#swap27", 2);
+          });
+        });
+        describe.only("Performance and Compartibility", function() {
           this.timeout(50 * 1000);
           if (version === "Patched-without-extension") {
             it("should not do extra operation when no extension exists", async function() {
@@ -1661,8 +1851,11 @@ describe("Simple", function() {
             });
             it("should not redraw too much", async function() {
               const len1 = warnings.length;
-              const ids = await page.$$eval(".wrapper", items =>
-                items.map(i => i.id).filter(id => !id.startsWith("boundary"))
+              const ids = await page.$$eval(
+                ".wrapper",
+                items =>
+                  items.map(i => i.id).filter(id => !id.startsWith("boundary"))
+                // .filter(id => !id.startsWith("swap")) // TODO
               );
               console.log("start breaking");
               for (let id of ids) {
@@ -1675,6 +1868,7 @@ describe("Simple", function() {
               const len2 = warnings.length;
               console.log("start updating");
               for (let id of ids) {
+                // console.log(id);
                 await page.click(`#${id} button.break`);
               }
               console.log("end updating");
