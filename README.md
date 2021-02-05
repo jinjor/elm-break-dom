@@ -19,7 +19,7 @@ This table describes where and when an element is inserted, thanks to the discus
 | [Google Translate][gtr] (10,000,000+) | **middle**             | translate the page       |                                                                            | `<meta name="google" content="notranslate">` in `<head>` |
 | Google Translate                      | bottom                 | select words             | [rough patch][patch], use `Browser.element`                                |                                                          |
 | [Grammarly][grammarly] (10,000,000+)  | **middle**             | focus on `<textarea>`    |                                                                            | [`data-gramm_editor="false"`][w-grammarly]               |
-| [Dark Reader][dark] (1,763,020)       | **middle (sometimes)** | laod                     | [make `<style>` the last child][w-dark], avoid using `<style>` in `<body>` |                                                          |
+| [Dark Reader][dark] (1,763,020)       | **middle (sometimes)** | load                     | [make `<style>` the last child][w-dark], avoid using `<style>` in `<body>` |                                                          |
 | [ChromeVox][chrome-vox] (161,918)     | top                    | load, focus on something | [rough patch][patch], use `Browser.element`                                |                                                          |
 | [Viber][viber] (133,220)              | top, bottom            | load                     | [rough patch][patch], use `Browser.element`                                |                                                          |
 
